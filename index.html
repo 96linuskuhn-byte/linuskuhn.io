@@ -78,7 +78,8 @@ nav{
 }
 nav.scrolled{border-bottom-color:var(--line)}
 .nav-meta{font-size:.72rem;color:var(--grey);letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap}
-.nav-meta .tag-box{background:var(--blue);color:#fff;font-weight:700;padding:5px 12px;border-radius:var(--r)}
+.nav-meta .tag-box{background:var(--blue);color:#fff;font-weight:700;padding:5px 12px;border-radius:var(--r);display:inline-block;transition:transform .15s}
+.nav-meta a.tag-box:hover{transform:translateY(-1px)}
 .brand{font-family:'Archivo';font-weight:800;font-size:1.15rem;letter-spacing:.01em}
 .nav-links{display:flex;gap:8px;justify-content:flex-end}
 .nav-links .boxlink{padding:5px 12px}
@@ -86,7 +87,7 @@ nav.scrolled{border-bottom-color:var(--line)}
   nav{justify-content:flex-end}
   .nav-meta{display:none}
   .nav-links{gap:6px}
-  .nav-links .boxlink:nth-child(2){display:none}
+  .nav-links .boxlink.me{display:none}
 }
 
 /* ---------- HERO ---------- */
@@ -101,27 +102,30 @@ nav.scrolled{border-bottom-color:var(--line)}
 }
 .hero .net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .hero .inner{
-  position:relative;z-index:2;margin-left:auto;text-align:right;max-width:720px;
+  position:relative;z-index:2;margin-left:auto;text-align:right;max-width:800px;
   padding:clamp(32px,4vw,56px) clamp(32px,4.5vw,64px);
   border-radius:28px;
 }
 .hero .loc{
   font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
-  color:#fff;margin-bottom:22px;
+  color:#fff;margin-bottom:22px;text-shadow:0 1px 12px rgba(0,0,0,.25);
 }
 .hero h1{
   font-size:clamp(3.2rem,9vw,6.8rem);
   color:#fff;
   text-transform:none;letter-spacing:-.02em;
+  text-shadow:0 1px 16px rgba(0,0,0,.25);
 }
 .hero .tagline{
   font-size:clamp(.95rem,1.8vw,1.35rem);color:#fff;
   margin-top:18px;letter-spacing:.04em;
+  text-shadow:0 1px 12px rgba(0,0,0,.25);
 }
 .hero .tagline span{opacity:.65;padding:0 .4em}
 .hero .sub{
-  margin:28px 0 0 auto;max-width:52ch;
-  font-size:.82rem;color:#eaedff;letter-spacing:.02em;line-height:1.9;
+  margin:28px 0 0 auto;max-width:76ch;
+  font-size:.9rem;font-weight:500;color:#fff;letter-spacing:.02em;line-height:1.9;
+  text-shadow:0 1px 12px rgba(0,0,0,.25);
 }
 .hero .cta{margin-top:40px;display:flex;gap:14px;justify-content:flex-end;flex-wrap:wrap}
 .hero .cta .boxlink{background:#fff;color:var(--blue)}
@@ -167,7 +171,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 }
 
 /* ---------- SECTION SHELL ---------- */
-section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
+section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,120px)}
 .shell-head h2{font-size:clamp(2.4rem,5.5vw,4rem)}
 .shell-head p{font-size:.82rem;color:var(--grey);max-width:52ch;margin-top:16px;line-height:1.9}
 .shell-head{margin-bottom:clamp(36px,5vw,64px)}
@@ -187,6 +191,7 @@ section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
   transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1);
 }
 .project.visible{opacity:1;transform:none}
+.project.visible:has(.p-info h3 a:hover){transform:scale(1.015);transition:transform .35s cubic-bezier(.2,.6,.2,1)}
 .project:nth-child(even) .p-media{order:-1}
 @media(max-width:860px){
   .project{grid-template-columns:1fr}
@@ -214,7 +219,6 @@ section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
   padding:4px 11px;background:#fff;border-radius:var(--r);
 }
 .p-media{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-img);border:1px solid var(--line)}
-.p-media.p-clickable{cursor:pointer}
 .p-media img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   transition:transform .6s cubic-bezier(.2,.6,.2,1);
@@ -240,6 +244,18 @@ section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
 }
 .p-media.slide img.active{opacity:1;pointer-events:auto}
 .p-media.slide img+img{margin-top:0}
+/* full-height edge zones: hover the left/right third of the image to page
+   through the slideshow, tinted with a blue gradient instead of a boxed button */
+.p-media.slide .sedge{
+  position:absolute;top:0;bottom:0;width:22%;max-width:120px;z-index:3;
+  cursor:pointer;border:none;background:none;padding:0;
+  display:flex;align-items:center;color:#fff;
+  font-family:'JetBrains Mono',monospace;font-size:1.1rem;line-height:1;
+  opacity:0;transition:opacity .25s ease;
+}
+.p-media.slide .sedge:hover{opacity:1}
+.p-media.slide .sedge.prev{left:0;justify-content:flex-start;padding-left:14px;background:linear-gradient(90deg,rgba(58,58,240,.28) 0%,rgba(58,58,240,0) 45%)}
+.p-media.slide .sedge.next{right:0;justify-content:flex-end;padding-right:14px;background:linear-gradient(270deg,rgba(58,58,240,.28) 0%,rgba(58,58,240,0) 45%)}
 .p-media .snav{
   position:absolute;top:50%;transform:translateY(-50%);z-index:3;
   width:36px;height:36px;border:none;cursor:pointer;border-radius:var(--r);
@@ -259,55 +275,7 @@ section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
   padding:3px 9px;opacity:0;transition:opacity .2s;border-radius:var(--r);
 }
 .p-media:hover .scount{opacity:1}
-/* 3D viewer */
-.p-media[class*="viewer3d"]{min-height:420px;cursor:grab;border:none}
-.p-media[class*="viewer3d"]:active{cursor:grabbing}
-.p-media[class*="viewer3d"] canvas{
-  position:absolute;inset:0;width:100%!important;height:100%!important;
-  opacity:0;transition:opacity .5s ease;
-}
-.p-media[class*="viewer3d"].ready canvas{opacity:1}
-.p-media[class*="viewer3d"].ready img{
-  opacity:0;transition:opacity .5s ease;transition-delay:.15s;
-}
-.p-media[class*="viewer3d"] .v3d-hint{
-  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:3;
-  font-size:.65rem;font-weight:700;letter-spacing:.08em;color:var(--grey);
-  background:rgba(250,249,245,.8);padding:3px 10px;pointer-events:none;
-  opacity:0;transition:opacity .3s;white-space:nowrap;
-}
-.p-media[class*="viewer3d"] .v3d-label{
-  position:absolute;z-index:4;pointer-events:none;
-  font-family:'Permanent Marker',cursive;font-size:1.5rem;color:var(--ink);
-  text-shadow:0 1px 0 rgba(250,249,245,.9),0 0 14px rgba(250,249,245,.9);
-  transform:translate(0,-50%) rotate(-4deg);
-  opacity:0;transition:opacity .35s ease;white-space:nowrap;
-}
-.p-media[class*="viewer3d"] .v3d-label.on{opacity:1}
-.p-media[class*="viewer3d"] .v3d-line{
-  position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;
-  opacity:0;transition:opacity .35s ease;
-}
-.p-media[class*="viewer3d"] .v3d-line.on{opacity:1}
-.p-media[class*="viewer3d"].ready .v3d-hint{opacity:1}
-.p-media[class*="viewer3d"].ready:hover .v3d-hint{opacity:0}
-/* pinned 3D project: card stays while model does a full turn */
-@media(min-width:861px){
-  .project.pin3d{display:block;height:230vh;padding:0}
-  .project.pin3d .pin-inner{
-    position:sticky;top:0;min-height:100vh;
-    display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
-    align-items:center;align-content:center;
-    padding:clamp(32px,4.5vw,64px) 0;
-  }
-}
 @media(max-width:860px){.p-media{min-height:230px}}
-/* scroll-scrubbed turntable video */
-.p-media[class*="scrollvid"]{min-height:420px;border:none}
-.p-media[class*="scrollvid"] img{display:none}
-.p-media[class*="scrollvid"] video{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
-}
 
 /* ---------- RESUME ---------- */
 .resume{background:var(--panel)}
@@ -383,27 +351,28 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 
 <nav id="nav">
   <div class="nav-meta">
-    <span class="tag-box">Portfolio&nbsp;&bull;&nbsp;2026</span>
+    <a class="tag-box" href="#top">Portfolio&nbsp;&bull;&nbsp;2026</a>
   </div>
   <div class="nav-links">
+    <a class="boxlink arrow me" href="#about">Me</a>
     <a class="boxlink arrow" href="#projects">Projects</a>
-    <a class="boxlink arrow" href="#about">About</a>
     <a class="boxlink arrow" href="#cv">CV</a>
     <a class="boxlink arrow" href="#skills">Skills</a>
     <a class="boxlink inv arrow" href="#contact">Contact</a>
   </div>
 </nav>
 
-<div class="hero-pin">
+<div id="top" class="hero-pin">
 <header class="hero">
   <canvas class="net" id="mesh"></canvas>
   <div class="inner">
     <div class="loc">Product Development &bull; Mechanical Engineering</div>
     <h1>Linus Kuhn</h1>
     <div class="tagline">create<span>|</span>prototype<span>|</span>refine</div>
-    <p class="sub">I design, simulate and build things that move — from FEM-driven
-    optimization of electric machines to hand-laminated carbon fiber prototypes.
-    M.Sc. Product Development, Pforzheim University.</p>
+    <p class="sub">I develop ideas into prototypes and strive to accelerate this process.</p>
+    <p class="sub">To do so, I use, learn and create tools that make this possible.<br>
+    I believe that team-based, focused decisions, rapid iterations and the right
+    returns are key to develop great products.</p>
     <div class="cta">
       <a class="boxlink arrow" href="#projects">View Projects</a>
       <a class="boxlink inv arrow" href="#contact">Say Hello</a>
@@ -420,10 +389,12 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     <div class="top reveal">
       <h2>Where engineering meets real products</h2>
       <div>
-        <p class="desc">I develop ideas into prototypes and strive to accelerate
-        this process. To do so, I use, learn and create tools that make this
-        possible. I believe that team-based, focused decisions, rapid iterations
-        and the right returns are key for great products.</p>
+        <p class="desc">Hi, my name is Linus Kuhn, I'm 29 years old and I was born
+        and raised in Stuttgart, Germany. Ever since childhood I've been
+        fascinated by mechanical things that work and that could be taken
+        apart. Since studying mechanical engineering, I've learned how to put
+        them together professionally, and I've been striving ever since to
+        develop exciting products more efficiently and better.</p>
         <p class="passion">Passionate for<br>
         <span>#productdevelopment</span> <span>#robotics</span> <span>#design</span></p>
       </div>
@@ -629,7 +600,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     const fx=1+rnd()*4, ft=.8+rnd()*2.7;
     comps.push({fx,ft,p1:rnd()*6.2832,p2:rnd()*6.2832,a:(.3+rnd()*.7)/(fx*.6+ft*.4)});
   }
-  const NU=80, NV=34;
+  const NU=80, NV=34, ROWSUB=4, NUF=(NU-1)*ROWSUB+1;
   let W,H;
   function resize(){
     const dpr=Math.min(devicePixelRatio||1,2);
@@ -659,37 +630,42 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
   }
 
   const P=new Array(NV);
-  for(let i=0;i<NV;i++)P[i]=new Array(NU);
+  for(let i=0;i<NV;i++)P[i]=new Array(NUF);
 
   function draw(ph){
     ctx.clearRect(0,0,W,H);
     for(let i=0;i<NV;i++){
       const t=i/(NV-1);
-      for(let j=0;j<NU;j++){
-        P[i][j]=project(j/(NU-1),t,zval(j/(NU-1),t,ph));
+      for(let j=0;j<NUF;j++){
+        const u=j/(NUF-1);
+        P[i][j]=project(u,t,zval(u,t,ph));
       }
     }
-    ctx.lineCap='round';
-    // rows
+    ctx.lineCap='butt';
+    // rows: drawn as many small segments to trace the sine curve smoothly,
+    // with no rounded joints between segments (avoids dot artifacts)
     for(let i=0;i<NV;i++){
       const t=i/(NV-1), op=.14+.5*t, lw=.7+1.2*t;
       const col=t>.4?'255,255,255':'205,216,244';
       ctx.lineWidth=lw;
-      for(let j=0;j<NU-1;j++){
+      for(let j=0;j<NUF-1;j++){
         const a=P[i][j],b=P[i][j+1];
         ctx.strokeStyle=`rgba(${col},${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
         ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
       }
     }
-    // columns: lines running front-to-back, spanning the net
+    // columns: lines running front-to-back, spanning the net.
+    // Kept at the original NU spacing (independent of the row subdivision)
+    // so the receding lines stay evenly spaced.
     for(let j=0;j<NU;j++){
+      const fj=j*ROWSUB;
       const major=j%4===0;
       ctx.lineWidth=major?1.0:.7;
       const base=major?.30:.16;
       for(let i=0;i<NV-1;i++){
         const t=i/(NV-1);
         const op=base*(.5+.5*t);
-        const a=P[i][j],b=P[i+1][j];
+        const a=P[i][fj],b=P[i+1][fj];
         ctx.strokeStyle=`rgba(232,238,253,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
         ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
       }
@@ -725,6 +701,7 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
 
 /* ===== smooth-scroll for anchor nav links (decoupled from wheel easing below) ===== */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  if(a.closest('#nav'))return; // nav-bar links get their own offset-aware handler below
   a.addEventListener('click',e=>{
     const id=a.getAttribute('href');
     const target=id.length>1&&document.querySelector(id);
@@ -734,29 +711,42 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
+/* ===== nav-bar links: land a bit further up than the fixed nav bar's edge ===== */
+function offsetTop(el){let y=0;while(el){y+=el.offsetTop;el=el.offsetParent;}return y;}
+document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    const target=id.length>1&&document.querySelector(id);
+    if(!target)return;
+    e.preventDefault();
+    const navH=nav.offsetHeight;
+    const extra=-24; // reduce the gap between the nav bar and the heading
+    const targetY=offsetTop(target);
+    const y=targetY-navH-extra;
+    // reveal-on-scroll elements above the jump target won't have been
+    // scrolled past yet, so force them visible immediately — otherwise a
+    // direct nav jump can land on content that's still invisible/mid-fade
+    document.querySelectorAll('.reveal,.project').forEach(el=>{
+      if(offsetTop(el)<=targetY+innerHeight)el.classList.add('visible');
+    });
+    scrollTo({top:Math.max(0,y),left:0,behavior:'smooth'});
+  });
+});
+
 /* ===== soft scroll gates =====
    Real scroll-speed easing (not a visual effect): the wheel input itself
-   gets damped in two small zones, so the page actually accelerates gently
-   right at the very start, and actually decelerates gently just before it
-   reaches the pinned video section — like easing into and braking out of
-   a ride, rather than an instant jump to full speed. Everywhere else,
+   gets damped right at the very start, so the page actually accelerates
+   gently instead of jumping to full speed instantly. Everywhere else,
    scrolling is completely untouched (native, full speed). */
 (function(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const heroPin=document.querySelector('.hero-pin');
-  const videoHolder=document.querySelector('.p-media[class*="scrollvid"]');
-  const videoArt=videoHolder&&videoHolder.closest('article.project');
 
   const zones=[];
   if(heroPin){
     /* ease-IN: right at the top of the page, scrolling starts slow and
        ramps up to full speed over a short distance */
     zones.push({start:0,end:()=>heroPin.offsetHeight*.22,strength:.5,fallOut:false});
-  }
-  if(videoArt){
-    /* ease-DOWN: in the stretch just before the pinned video card,
-       scrolling gradually slows to a gentle crawl right as it arrives */
-    zones.push({start:()=>Math.max(0,videoArt.offsetTop-320),end:()=>videoArt.offsetTop,strength:.35,fallOut:true});
   }
   if(!zones.length)return;
 
@@ -827,6 +817,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
   const imgs=[...m.querySelectorAll('img')];
   if(imgs.length<2)return;
   m.classList.add('slide');
+  // frame's aspect ratio follows each active image (border adapts per picture)
   const applyRatio=im=>{
     if(im.naturalWidth)m.style.aspectRatio=im.naturalWidth+' / '+im.naturalHeight;
   };
@@ -843,7 +834,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
   upd();
   const mk=(cls,txt,d)=>{
     const b=document.createElement('button');
-    b.className='snav '+cls;b.type='button';b.textContent=txt;
+    b.className='sedge '+cls;b.type='button';b.textContent=txt;
     b.setAttribute('aria-label',d<0?'Previous image':'Next image');
     b.addEventListener('click',()=>{
       imgs[idx].classList.remove('active');
@@ -856,399 +847,10 @@ document.querySelectorAll('.p-media').forEach(m=>{
   m.appendChild(count);
 });
 
-/* ===== click a project's image to open its subpage (skip slideshow arrows) ===== */
-document.querySelectorAll('.project').forEach(art=>{
-  const link=art.querySelector('.p-info h3 a');
-  const media=art.querySelector('.p-media');
-  if(!link||!media)return;
-  if(/viewer3d|scrollvid/.test(media.className))return;
-  media.classList.add('p-clickable');
-  media.addEventListener('click',e=>{
-    if(e.target.closest('.snav'))return;
-    location.href=link.getAttribute('href');
-  });
-});
-
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
 }),{threshold:.12,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
 </script>
-<script type="importmap">
-{"imports":{
-  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-}}
-</script>
-<script type="module">
-/* ===== 3D viewers (models mapped by class) ===== */
-const MODELS={'viewer3d-grinder':'models/grinder.glb'};
-const holders=[...document.querySelectorAll('.p-media')].filter(m=>[...m.classList].some(c=>MODELS[c]));
-if(holders.length){
-  /* start loading well ahead of time so the model is already ready
-     by the time the project scrolls into view — avoids the visible
-     "static image, then pop to 3D" flash */
-  const started=new WeakSet();
-  const start=h=>{if(started.has(h))return;started.add(h);initViewer(h).catch(err=>console.error('3D viewer:',err));};
-  const lazy=new IntersectionObserver(es=>{
-    for(const e of es)if(e.isIntersecting)start(e.target);
-  },{rootMargin:'1500px'});
-  holders.forEach(h=>lazy.observe(h));
-  /* also kick off loading right after the page settles, regardless of scroll position */
-  (window.requestIdleCallback||(cb=>setTimeout(cb,300)))(()=>holders.forEach(start));
-
-  async function initViewer(holder){
-    const cls=[...holder.classList].find(c=>MODELS[c]);
-    const [THREE,{GLTFLoader},{DRACOLoader},{OrbitControls},{RoomEnvironment}]=await Promise.all([
-      import('three'),
-      import('three/addons/loaders/GLTFLoader.js'),
-      import('three/addons/loaders/DRACOLoader.js'),
-      import('three/addons/controls/OrbitControls.js'),
-      import('three/addons/environments/RoomEnvironment.js')
-    ]);
-    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-    renderer.toneMapping=THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure=.92;
-    renderer.shadowMap.enabled=true;
-    renderer.shadowMap.type=THREE.VSMShadowMap;
-    const scene=new THREE.Scene();
-    const pmrem=new THREE.PMREMGenerator(renderer);
-
-    scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;
-    scene.environmentIntensity=.55; /* less flat ambient, more directional drama */
-    const camera=new THREE.PerspectiveCamera(32,1,.01,100);
-
-    const draco=new DRACOLoader();
-    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-    const loader=new GLTFLoader();
-    loader.setDRACOLoader(draco);
-    const gltf=await loader.loadAsync(MODELS[cls]);
-    const model=gltf.scene;
-    model.rotation.x=-Math.PI/2; /* upright */
-    model.rotation.z=Math.PI;   /* face front */
-
-    /* procedural walnut texture */
-    function walnutTexture(){
-      const cv=document.createElement('canvas');cv.width=cv.height=1024;
-      const g=cv.getContext('2d');
-      g.fillStyle='#5a3a20';g.fillRect(0,0,1024,1024);
-      for(let i=0;i<140;i++){
-        const x=Math.random()*1024, w=2+Math.random()*10;
-        const l=18+Math.random()*22, a=.12+Math.random()*.25;
-        g.strokeStyle=`hsla(${24+Math.random()*10},45%,${l}%,${a})`;
-        g.lineWidth=w;g.beginPath();
-        let px=x;g.moveTo(px,0);
-        for(let y=0;y<=1024;y+=32){px+=(Math.random()-.5)*14;g.lineTo(px,y);}
-        g.stroke();
-      }
-      const t=new THREE.CanvasTexture(cv);
-      t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;
-      t.anisotropy=8;
-      return t;
-    }
-    const woodMap=walnutTexture();
-    const isNamed=(o,re)=>{for(let p=o;p;p=p.parent){if(re.test(p.name||''))return true}return false};
-    /* CAD files often lack usable UVs — project box UVs so the grain shows */
-    function boxUV(geo){
-      geo.computeBoundingBox();
-      const bb=geo.boundingBox;
-      const s=new THREE.Vector3().subVectors(bb.max,bb.min);
-      const dims=[['x',s.x],['y',s.y],['z',s.z]].sort((a,b)=>b[1]-a[1]);
-      const a1=dims[0][0], a2=dims[1][0];
-      const p=geo.attributes.position;
-      const sc=Math.max(s.x,s.y,s.z)||1;
-      const get={x:i=>p.getX(i),y:i=>p.getY(i),z:i=>p.getZ(i)};
-      const uv=new Float32Array(p.count*2);
-      for(let i=0;i<p.count;i++){
-        uv[2*i]  =(get[a1](i)-bb.min[a1])/sc*2;
-        uv[2*i+1]=(get[a2](i)-bb.min[a2])/sc*2;
-      }
-      geo.setAttribute('uv',new THREE.BufferAttribute(uv,2));
-    }
-
-    /* clickable parts -> labels */
-    const parts={
-      glass:{re:/glas/i,label:'GLASS',meshes:[]},
-      wood:{re:/holz/i,label:'WALNUT WOOD',meshes:[]},
-      frame:{re:/gestell/i,label:'ALUMINIUM FRAME',meshes:[]}
-    };
-    /* materials: name-based (Holz/Glas), otherwise by CAD base color */
-    model.traverse(o=>{
-      if(!o.isMesh)return;
-      const c=o.material&&o.material.color?o.material.color:null;
-      let mat;
-      if(isNamed(o,/glas/i)){
-        mat=new THREE.MeshPhysicalMaterial({
-          color:0xffffff,metalness:0,roughness:.05,
-          transmission:1,thickness:1.5,ior:1.5,
-          transparent:true,depthWrite:false
-        });
-      }else if(isNamed(o,/holz/i)||(c&&c.r>.25&&c.r>c.g&&c.g>c.b)){
-        boxUV(o.geometry);
-        mat=new THREE.MeshStandardMaterial({
-          map:woodMap,color:0x8a6240,roughness:.45,metalness:0
-        });
-      }else if(c&&c.r<.15){
-        mat=new THREE.MeshStandardMaterial({color:0x1a1a1e,roughness:.5,metalness:.3});
-      }else{
-        mat=new THREE.MeshStandardMaterial({color:0xc0c3c7,roughness:.44,metalness:1});
-      }
-      o.material=mat;
-      o.castShadow=true;
-      o.receiveShadow=true;
-      for(const k in parts)if(isNamed(o,parts[k].re))parts[k].meshes.push(o);
-    });
-
-    /* center + frame */
-    const box=new THREE.Box3().setFromObject(model);
-    const size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
-    model.position.sub(center);
-    const spin=new THREE.Group();
-    spin.add(model);
-    scene.add(spin);
-    const d=Math.max(size.x,size.y,size.z);
-
-    /* key light + soft ground shadow */
-    const key=new THREE.DirectionalLight(0xffffff,2.2);
-    key.position.set(d*.5,d*1.5,d*2.1); /* from the front-top: shadow falls backwards */
-    key.castShadow=true;
-    key.shadow.mapSize.set(2048,2048);
-    key.shadow.camera.left=-d*1.4;key.shadow.camera.right=d*1.4;
-    key.shadow.camera.top=d*1.4;key.shadow.camera.bottom=-d*1.4;
-    key.shadow.camera.near=.1;key.shadow.camera.far=d*8;
-    key.shadow.bias=-.0002;
-    key.shadow.radius=16;key.shadow.blurSamples=20; /* soft falloff on the ground */
-    scene.add(key);
-    const fill=new THREE.DirectionalLight(0xdde6ff,.6);
-    fill.position.set(-d*1.4,d*.6,-d);
-    scene.add(fill);
-    const ground=new THREE.Mesh(
-      new THREE.PlaneGeometry(d*6,d*6),
-      new THREE.ShadowMaterial({opacity:.24})
-    );
-    ground.rotation.x=-Math.PI/2;
-    ground.position.y=-size.y/2-.001*d;
-    ground.receiveShadow=true;
-    scene.add(ground);
-
-    camera.position.set(d*1.55,d*.75,d*1.75);
-    camera.lookAt(0,0,0);
-
-    const controls=new OrbitControls(camera,renderer.domElement);
-    controls.enableDamping=true;controls.dampingFactor=.06;
-    controls.enablePan=false;controls.enableZoom=false;
-    /* zoom only while ctrl/cmd is held, so page scrolling stays untouched */
-    addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey)controls.enableZoom=true;});
-    addEventListener('keyup',e=>{if(!e.ctrlKey&&!e.metaKey)controls.enableZoom=false;});
-    addEventListener('blur',()=>controls.enableZoom=false);
-    controls.minPolarAngle=.6;controls.maxPolarAngle=2.1;
-    controls.minDistance=d*.7;controls.maxDistance=d*3.2;
-
-    /* pin the project card and map scroll to one full rotation */
-    const art=holder.closest('article.project');
-    if(art&&innerWidth>860){
-      const inner=document.createElement('div');
-      inner.className='pin-inner';
-      while(art.firstChild)inner.appendChild(art.firstChild);
-      art.appendChild(inner);
-      art.classList.add('pin3d');
-      const updSpin=()=>{
-        const r=art.getBoundingClientRect();
-        const range=art.offsetHeight-innerHeight;
-        const p=Math.max(0,Math.min(1,-r.top/range));
-        spin.rotation.y=p*Math.PI*2;
-      };
-      addEventListener('scroll',updSpin,{passive:true});
-      updSpin();
-    }else{
-      controls.autoRotate=true;controls.autoRotateSpeed=1.1;
-    }
-
-    holder.appendChild(renderer.domElement);
-
-    /* click a part -> handwritten label that follows the part */
-    const label=document.createElement('span');
-    label.className='v3d-label';
-    holder.appendChild(label);
-    const lineSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    lineSvg.setAttribute('class','v3d-line');
-    lineSvg.innerHTML='<line x1="0" y1="0" x2="0" y2="0" stroke="#17171d" stroke-width="1.5" stroke-linecap="round"/><circle r="3.5" fill="#17171d"/>';
-    holder.appendChild(lineSvg);
-    const line=lineSvg.querySelector('line'),dot=lineSvg.querySelector('circle');
-    let active=null,anchor=null,flashT=0;
-    const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
-    function pick(e){
-      const rect=renderer.domElement.getBoundingClientRect();
-      ndc.x=((e.clientX-rect.left)/rect.width)*2-1;
-      ndc.y=-((e.clientY-rect.top)/rect.height)*2+1;
-      ray.setFromCamera(ndc,camera);
-      const hits=ray.intersectObject(spin,true);
-      let found=null,pt=null;
-      for(const h of hits){
-        for(const k in parts)if(isNamed(h.object,parts[k].re)){found=k;pt=h.point;break}
-        if(found)break;
-      }
-      if(!found||found===active){active=null;label.classList.remove('on');return}
-      active=found;
-      anchor=spin.worldToLocal(pt.clone());
-      label.textContent=parts[found].label;
-      label.classList.add('on');
-      flashT=performance.now();
-    }
-    let downPos=null;
-    renderer.domElement.addEventListener('pointerdown',e=>{downPos=[e.clientX,e.clientY]});
-    renderer.domElement.addEventListener('pointerup',e=>{
-      if(!downPos)return;
-      const dx=e.clientX-downPos[0],dy=e.clientY-downPos[1];downPos=null;
-      if(dx*dx+dy*dy<26)pick(e);
-    });
-    const _tmp=new THREE.Vector3(),_c=new THREE.Vector3(),_e=new THREE.Vector3();
-    function updateLabel(){
-      /* flash the picked part briefly */
-      const k=Math.max(0,1-(performance.now()-flashT)/600);
-      for(const key in parts)for(const m of parts[key].meshes)
-        m.material.emissive.setScalar(key===active?.22*k:0);
-      if(!active||!anchor){label.classList.remove('on');lineSvg.classList.remove('on');return}
-      _tmp.copy(anchor);spin.localToWorld(_tmp);_tmp.project(camera);
-      if(_tmp.z>1){label.classList.remove('on');lineSvg.classList.remove('on');return}
-      const w=holder.clientWidth,h=holder.clientHeight;
-      const px=(_tmp.x*.5+.5)*w, py=(-_tmp.y*.5+.5)*h;
-      /* fixed padding right of the grinder: project its right silhouette edge */
-      const rad=Math.max(size.x,size.z)*.5;
-      _c.set(0,0,0).project(camera);
-      _e.set(1,0,0).applyQuaternion(camera.quaternion).multiplyScalar(rad).project(camera);
-      const edgeX=Math.max((_c.x*.5+.5)*w,(_e.x*.5+.5)*w);
-      let lx=edgeX+26;
-      lx=Math.min(lx,w-label.offsetWidth-14); /* keep text fully readable */
-      const ly=Math.max(36,Math.min(h-36,py));
-      label.classList.add('on');lineSvg.classList.add('on');
-      label.style.left=lx+'px';
-      label.style.top=ly+'px';
-      line.setAttribute('x1',px);line.setAttribute('y1',py);
-      line.setAttribute('x2',lx-6);line.setAttribute('y2',ly);
-      dot.setAttribute('cx',px);dot.setAttribute('cy',py);
-    }
-
-    const hint=document.createElement('span');
-    hint.className='v3d-hint';hint.textContent='3D — drag \u00b7 click parts \u00b7 ctrl + scroll to zoom';
-    holder.appendChild(hint);
-    holder.classList.add('ready');
-
-    /* flip between 3D view and the photos; fixed container height -> no jumping */
-    const photos=[...holder.querySelectorAll('img')];
-    if(photos.length){
-      const views=[renderer.domElement,...photos];
-      let vi=0;
-      const cnt=document.createElement('span');cnt.className='scount';
-      const updv=()=>{
-        views.forEach((el,k)=>{
-          el.style.display='block';
-          el.style.transition='opacity .45s ease';
-          el.style.opacity=k===vi?'1':'0';
-          el.style.pointerEvents=k===vi?'auto':'none';
-        });
-        hint.style.visibility=vi===0?'visible':'hidden';
-        cnt.textContent=(vi===0?'3D':vi)+' / '+views.length;
-      };
-      const mkv=(cls,txt,d)=>{
-        const b=document.createElement('button');
-        b.className='snav '+cls;b.type='button';b.textContent=txt;
-        b.setAttribute('aria-label',d<0?'Previous view':'Next view');
-        b.addEventListener('click',()=>{vi=(vi+d+views.length)%views.length;updv();});
-        holder.appendChild(b);
-      };
-      mkv('prev','←',-1);mkv('next','→',1);
-      holder.appendChild(cnt);
-      updv();
-    }
-
-    function resize(){
-      const w=holder.clientWidth,h=holder.clientHeight;
-      renderer.setSize(w,h,false);
-      camera.aspect=w/h;camera.updateProjectionMatrix();
-    }
-    new ResizeObserver(resize).observe(holder);
-    resize();
-    renderer.setAnimationLoop(()=>{controls.update();updateLabel();renderer.render(scene,camera);});
-  }
-}
-
-/* ===== scroll-scrubbed turntable video (replaces the 3D viewer for the grinder) ===== */
-const vidHolders=[...document.querySelectorAll('.p-media[class*="scrollvid"]')];
-vidHolders.forEach(holder=>{
-  const video=holder.querySelector('video');
-  if(!video)return;
-  video.pause();
-  /* browsers throttle <video preload="auto"> heavily while it's off-screen
-     (only metadata gets fetched), which is why the poster image keeps showing
-     briefly even after scrolling in. Fetching the file ourselves and handing
-     the browser a blob sidesteps that heuristic — by the time the user
-     scrolls here the whole clip is already in memory, no network wait. */
-  fetch(video.currentSrc||video.src)
-    .then(r=>r.blob())
-    .then(b=>{
-      video.src=URL.createObjectURL(b);
-      video.load(); /* explicit load() forces real buffering even while
-                        off-screen — Chrome's off-screen throttling only
-                        overrides the *implicit* preload="auto" behavior,
-                        not a script-driven load() call */
-    })
-    .catch(()=>{}); /* keep the plain src as fallback if this fails */
-  const art=holder.closest('article.project');
-
-  if(art&&innerWidth>860){
-    /* desktop: pin the card, map scroll position to playback time (like the 3D turntable) */
-    const inner=document.createElement('div');
-    inner.className='pin-inner';
-    while(art.firstChild)inner.appendChild(art.firstChild);
-    art.appendChild(inner);
-    art.classList.add('pin3d');
-    /* throttle seeks to one per animation frame — firing currentTime on every raw
-       scroll event can queue up seeks faster than the decoder can keep up, which
-       looks like the video freezing entirely */
-    let pending=false;
-    const applyFrame=()=>{
-      pending=false;
-      if(!(video.duration>0))return;
-      const range=art.offsetHeight-innerHeight;
-      const r=art.getBoundingClientRect();
-      const p=Math.max(0,Math.min(1,-r.top/range));
-      const t=p*video.duration;
-      if(Math.abs(video.currentTime-t)>0.004)video.currentTime=t;
-    };
-    const updScrub=()=>{
-      if(pending)return;
-      pending=true;
-      requestAnimationFrame(applyFrame);
-    };
-    video.addEventListener('loadedmetadata',updScrub);
-    addEventListener('scroll',updScrub,{passive:true});
-    if(video.readyState>=1)updScrub(); /* metadata may already be loaded (e.g. cached) */
-
-    /* Chrome keeps showing the poster until the video has actually rendered
-       a real frame at least once — merely setting currentTime isn't enough.
-       "Prime" it with a near-instant muted play/pause the moment a frame is
-       available, so the poster swap happens as soon as possible instead of
-       waiting for the user to physically scroll near it. */
-    let primed=false;
-    const prime=()=>{
-      if(primed||video.readyState<2)return; /* HAVE_CURRENT_DATA */
-      primed=true;
-      const p=video.play();
-      if(p&&p.then)p.then(()=>{video.pause();applyFrame();}).catch(()=>{applyFrame();});
-      else{video.pause();applyFrame();}
-    };
-    video.addEventListener('loadeddata',prime);
-    video.addEventListener('canplay',prime);
-    if(video.readyState>=2)prime();
-  }else{
-    /* mobile/narrow: just loop it as a normal autoplaying clip */
-    video.loop=true;video.autoplay=true;video.setAttribute('playsinline','');
-    video.play().catch(()=>{});
-  }
-});
-</script>
-
 </body>
 </html>
