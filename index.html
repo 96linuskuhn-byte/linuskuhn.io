@@ -440,7 +440,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <p class="txt">Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.</p>
         <div class="p-tags"><span>Industrial Design</span><span>Sketching</span><span>Prototyping</span><span>CMF</span></div>
       </div>
-      <div class="p-media multi"><img src="img/grinder-poster.jpg" alt="Manual Coffee Grinder Inspired by Charles Eames" loading="lazy">
+      <div class="p-media multi" style="aspect-ratio:1280/854"><img src="img/grinder-poster.jpg" alt="Manual Coffee Grinder Inspired by Charles Eames" width="1280" height="854">
         <img src="img/grinder-sketch-1.jpg" alt="Manual Coffee Grinder — early concept sketches" loading="lazy">
         <img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" loading="lazy">
         <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy"></div>
@@ -465,7 +465,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <p class="txt">An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles.</p>
         <div class="p-tags"><span>Surface Modeling</span><span>Rendering</span><span>Aerodynamics</span><span>Carbon Fiber</span></div>
       </div>
-      <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy"></div>
+      <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy" width="1400" height="990"></div>
     </article>
 
     <article class="project">
@@ -498,7 +498,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <p class="txt">An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all.</p>
         <div class="p-tags"><span>Fusion 360</span><span>Thermodynamics</span><span>Engine Engineering</span></div>
       </div>
-      <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy"></div>
+      <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy" width="965" height="542"></div>
     </article>
 
     <article class="project">
@@ -509,7 +509,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <p class="txt">To implement a lightweight functional Design of a Steer by Wire Application</p>
         <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
       </div>
-      <div class="p-media multi"><img src="img/Steering.png" alt="Steer by Wire " loading="lazy">
+      <div class="p-media multi" style="aspect-ratio:1338/1058"><img src="img/Steering.png" alt="Steer by Wire " width="1338" height="1058">
         <img src="img/Steering2.png" alt="Steer by Wire " loading="lazy"></div>
     </article>
 
@@ -713,6 +713,20 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 
 /* ===== nav-bar links: land a bit further up than the fixed nav bar's edge ===== */
 function offsetTop(el){let y=0;while(el){y+=el.offsetTop;el=el.offsetParent;}return y;}
+// self-driven smooth scroll: native scrollTo({behavior:'smooth'}) can silently
+// fail to animate in some browser states, so this animates the scroll
+// position manually via rAF instead of relying on the browser to do it
+function animateScrollTo(y,duration=1100){
+  const startY=scrollY,dy=y-startY,startT=performance.now();
+  if(Math.abs(dy)<1)return;
+  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+  function step(now){
+    const t=Math.min(1,(now-startT)/duration);
+    scrollTo(0,startY+dy*ease(t));
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     const id=a.getAttribute('href');
@@ -721,15 +735,30 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
     e.preventDefault();
     const navH=nav.offsetHeight;
     const extra=-24; // reduce the gap between the nav bar and the heading
-    const targetY=offsetTop(target);
-    const y=targetY-navH-extra;
-    // reveal-on-scroll elements above the jump target won't have been
-    // scrolled past yet, so force them visible immediately — otherwise a
-    // direct nav jump can land on content that's still invisible/mid-fade
-    document.querySelectorAll('.reveal,.project').forEach(el=>{
-      if(offsetTop(el)<=targetY+innerHeight)el.classList.add('visible');
-    });
-    scrollTo({top:Math.max(0,y),left:0,behavior:'smooth'});
+    const go=()=>{
+      const targetY=offsetTop(target);
+      const y=targetY-navH-extra;
+      // reveal-on-scroll elements above the jump target won't have been
+      // scrolled past yet, so force them visible immediately — otherwise a
+      // direct nav jump can land on content that's still invisible/mid-fade
+      document.querySelectorAll('.reveal,.project').forEach(el=>{
+        if(offsetTop(el)<=targetY+innerHeight)el.classList.add('visible');
+      });
+      animateScrollTo(Math.max(0,y));
+      return y;
+    };
+    const y1=go();
+    // on first load, images and webfonts can still change the page's layout
+    // height shortly after this click fires, making a target further down
+    // undershoot. Re-check a moment later and, if the real position has
+    // moved, jump again to the corrected spot.
+    const correct=()=>{
+      const y2=offsetTop(target)-navH-extra;
+      // a fast, short snap reads as far less jarring than a second slow glide
+      if(Math.abs(y2-y1)>6)animateScrollTo(Math.max(0,y2),100);
+    };
+    setTimeout(correct,1150); // right as the initial glide finishes, so it reads as one motion
+    setTimeout(correct,1800);
   });
 });
 
