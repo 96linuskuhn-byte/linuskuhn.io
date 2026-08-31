@@ -90,7 +90,12 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
 .p-body{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
 @media(max-width:860px){.p-body{grid-template-columns:1fr}}
 .p-media{overflow:hidden}
+.p-media figure{margin:0}
 .p-media img{width:100%;height:auto;box-sizing:border-box;background:var(--panel);border-radius:var(--r-img);border:1px solid var(--line)}
+.p-media figcaption{
+  margin-top:8px;font-size:.7rem;color:var(--grey);letter-spacing:.04em;
+  text-align:center;text-transform:uppercase;
+}
 .p-media.multi{display:flex;flex-direction:column;gap:20px}
 
 .p-text .txt{font-size:.85rem;color:var(--ink);line-height:1.95;margin-bottom:20px}
@@ -130,7 +135,7 @@ const PROJECTS=[
     tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
     txt:'YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.',
     more:'The thesis combined design-of-experiments sampling with an actively updated surrogate model, so every additional 3D-FEM simulation was spent where it improved prediction accuracy the most rather than covering the design space uniformly. This cut the number of expensive transient simulations substantially while keeping the surrogate reliable across the full parameter range. The constraint cascade was built to automatically reject infeasible or irrelevant designs early, letting the optimizer focus purely on machine geometries that were both manufacturable and electromagnetically meaningful.',
-    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true}
+    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring'}
   },
   {
     slug:'coffee-grinder',
@@ -141,11 +146,10 @@ const PROJECTS=[
     txt:'Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.',
     more:'Starting from dozens of hand sketches exploring proportion and grip, the concept was refined into a CAD model balancing the warmth of solid walnut against a satin-finished aluminium frame. Material and manufacturing choices were made with hand-tool workshop fabrication in mind — the wood body was turned and hand-finished, while the frame was CNC-machined to keep tight tolerances around the burr mechanism. The result is a fully functional grinder that channels Eames-era material honesty into a small, everyday object.',
     media:{type:'multi',imgs:[
-      {src:'img/grinder-poster.jpg',alt:'Manual Coffee Grinder Inspired by Charles Eames'},
-      {src:'img/grinder-sketch-1.jpg',alt:'Manual Coffee Grinder — early concept sketches'},
-      {src:'img/grinder-sketch-2.jpg',alt:'Manual Coffee Grinder — material and mechanism sketches'},
-      {src:'img/grinder-render-1.jpg',alt:'Manual Coffee Grinder — CAD rendering'},
-      {src:'img/grinder-render-2.jpg',alt:'Manual Coffee Grinder — CAD rendering side view'}
+      {src:'img/grinder-poster.jpg',alt:'Manual Coffee Grinder Inspired by Charles Eames',caption:'Front view of the finished coffee grinder concept'},
+      {src:'img/grinder-sketch-1.jpg',alt:'Manual Coffee Grinder — early concept sketches',caption:'First hand sketches'},
+      {src:'img/grinder-render-1.jpg',alt:'Manual Coffee Grinder — CAD rendering',caption:'Front view of the final coffee grinder concept'},
+      {src:'img/grinder-render-2.jpg',alt:'Manual Coffee Grinder — CAD rendering side view',caption:'Back view of the final coffee grinder concept'}
     ]}
   },
   {
@@ -156,7 +160,7 @@ const PROJECTS=[
     tags:['Mechatronics','Sensors','Stakeholder Management','Functional Prototypes'],
     txt:'Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.',
     more:'The robot needed to reproduce pedestrian and obstacle behavior around a test vehicle with centimeter-level positioning repeatability, driven by RTK-GPS and closed-loop motor control. Beyond the hardware, the thesis involved close coordination with test engineers to translate real test scenarios into robot behavior, and the platform was designed to be extendable — later test scenarios reused the same chassis and control architecture with different sensor payloads, turning a single prototype into a small fleet used in day-to-day validation work.',
-    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation'}
+    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform'}
   },
   {
     slug:'velomobil',
@@ -166,7 +170,7 @@ const PROJECTS=[
     tags:['Surface Modeling','Rendering','Aerodynamics','Carbon Fiber'],
     txt:'An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles.',
     more:'The project was an exercise in class-A surface modeling: shaping a smooth, low-drag envelope around a recumbent riding position and off-the-shelf bicycle drivetrain components. The carbon fiber monocoque concept was developed to keep weight low while giving the shell enough stiffness to serve as the primary structure, eliminating the need for a separate frame. Renderings were used throughout to iterate on proportions and surface transitions before committing to any tooling decisions.',
-    media:{type:'natural',img:'img/velomobil.jpg',alt:'Velomobil — Aerodynamic Pedal Vehicle'}
+    media:{type:'natural',img:'img/velomobil.jpg',alt:'Velomobil — Aerodynamic Pedal Vehicle',caption:'Velomobil concept in different styles'}
   },
   {
     slug:'automated-window',
@@ -176,7 +180,7 @@ const PROJECTS=[
     tags:['Kinematics','Arduino','3D Printing','Electronics','Project Management'],
     txt:'A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.',
     more:'Built to retrofit onto an existing window frame without modification, the system combines a 3D-printed linkage mechanism, an Arduino-based control unit and a sound-level sensor to automatically ventilate a room when it gets noisy outside and close again once it quiets down. The project covered the full stack from kinematic design of the opening mechanism to firmware and enclosure design, and was run with a small team — giving early hands-on experience in coordinating mechanical, electronic and software work streams on a tight timeline.',
-    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true}
+    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true,caption:'Front view of the retrofittable system for automatically opening and closing the window'}
   },
   {
     slug:'raceboat',
@@ -186,7 +190,7 @@ const PROJECTS=[
     tags:['Mold Making','Composite Lamination','3D Printing'],
     txt:'A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer.',
     more:'The hull shape was designed in CAD and split into 3D-printed negative mold segments, which were then used to hand-laminate a lightweight carbon fiber shell. Getting a fair, low-drag hull out of a segmented mold — and finishing the seams to a race-ready surface — was the core challenge of the build. Propulsion came from a 500W brushless DC motor paired with a turboprop drive, making this one of the first projects where CAD design, 3D-printed tooling and composite fabrication all came together end to end.',
-    media:{type:'single',img:'img/raceboat.jpg',alt:'Remote Controlled Carbon Fiber Raceboat'}
+    media:{type:'single',img:'img/raceboat.jpg',alt:'Remote Controlled Carbon Fiber Raceboat',caption:'Carbon fiber raceboat on the water'}
   },
   {
     slug:'rotary-engine',
@@ -196,7 +200,7 @@ const PROJECTS=[
     tags:['Fusion 360','Thermodynamics','Engine Engineering'],
     txt:'An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all.',
     more:'Rather than a conventional reciprocating piston, this concept explores a rotating piston geometry where the combustion chamber is formed dynamically by moving valves as the rotor turns. As an early self-directed project, it was as much about learning parametric CAD modeling in Fusion 360 as it was about working through the thermodynamic cycle and sealing challenges inherent to rotary combustion designs. It marks the starting point of the hands-on, design-driven approach carried through every project since.',
-    media:{type:'natural',img:'img/engine.jpg',alt:'Rotary Combustion Engine'}
+    media:{type:'natural',img:'img/engine.jpg',alt:'Rotary Combustion Engine',caption:'Final concept of a rotating piston motor'}
   },
   {
     slug:'steer-by-wire',
@@ -206,15 +210,15 @@ const PROJECTS=[
     tags:['CAD','Prototyping'],
     txt:'To implement a lightweight functional design of a Steer by Wire application.',
     more:'An ongoing project developing a lightweight, functional steer-by-wire setup — removing the mechanical link between steering wheel and wheels in favor of a sensor-and-actuator-driven system. Work so far has focused on the mechanical layout and packaging of the actuator unit in CAD, with functional prototyping planned as the next step to validate steering feel and response.',
-    media:{type:'multi',imgs:[{src:'img/Steering.png',alt:'Steer by Wire'},{src:'img/Steering2.png',alt:'Steer by Wire'}]}
+    media:{type:'multi',imgs:[{src:'img/Steering.png',alt:'Steer by Wire',caption:'Explosion view steering system top'},{src:'img/Steering2.png',alt:'Steer by Wire',caption:'Explosion view steering system down'}]}
   }
 ];
 
 function mediaHTML(m){
   if(m.type==='multi'){
-    return `<div class="p-media multi">${m.imgs.map(i=>`<img src="${i.src}" alt="${i.alt}" loading="lazy">`).join('')}</div>`;
+    return `<div class="p-media multi">${m.imgs.map(i=>`<figure><img src="${i.src}" alt="${i.alt}" loading="lazy">${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
   }
-  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><img src="${m.img}" alt="${m.alt}" loading="lazy"></div>`;
+  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><figure><img src="${m.img}" alt="${m.alt}" loading="lazy">${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
 }
 
 const params=new URLSearchParams(location.search);
