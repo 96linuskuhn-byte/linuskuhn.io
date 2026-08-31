@@ -1,0 +1,7 @@
+# unused/leftover source files (kept locally, not needed on the live site)
+img/grinder-render-1.png
+img/grinder-render-2.png
+img/grinder-sketch-1.png
+img/grinder-sketch-2.png
+models/
+.DS_Store

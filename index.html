@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linus Kuhn — Engineered to Build</title>
+<meta name="description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preload" href="videos/grinder-turntable.mp4" as="fetch" crossorigin>
+<style>
+:root{
+  --bg:#faf9f5;
+  --panel:#f1efe8;
+  --blue:#3a3af0;
+  --blue-soft:#eceafe;
+  --ink:#17171d;
+  --grey:#6d6d78;
+  --line:rgba(23,23,29,.14);
+  --dash:1px solid rgba(23,23,29,.16);
+  --r:4px;
+  --r-img:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,.display{
+  font-family:'Archivo',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  line-height:.98;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--blue);color:#fff}
+img{display:block}
+
+/* ---------- BOXED UI ELEMENTS ---------- */
+.boxlink{
+  display:inline-block;
+  background:var(--ink);
+  color:#fff;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:6px 12px;
+  border-radius:var(--r);
+  transition:background .15s,color .15s,transform .15s;
+}
+.boxlink:hover{background:var(--blue);transform:translateY(-1px)}
+.boxlink.inv{
+  background:transparent;color:var(--ink);
+  border:1px solid var(--ink);
+}
+.boxlink.inv:hover{background:var(--ink);color:#fff}
+.arrow::after{content:"\2192";margin-left:6px}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:14px clamp(16px,3vw,40px);
+  background:rgba(250,249,245,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s;
+}
+nav.scrolled{border-bottom-color:var(--line)}
+.nav-meta{font-size:.72rem;color:var(--grey);letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap}
+.nav-meta .tag-box{background:var(--blue);color:#fff;font-weight:700;padding:5px 12px;border-radius:var(--r)}
+.brand{font-family:'Archivo';font-weight:800;font-size:1.15rem;letter-spacing:.01em}
+.nav-links{display:flex;gap:8px;justify-content:flex-end}
+.nav-links .boxlink{padding:5px 12px}
+@media(max-width:900px){
+  nav{justify-content:flex-end}
+  .nav-meta{display:none}
+  .nav-links{gap:6px}
+  .nav-links .boxlink:nth-child(2){display:none}
+}
+
+/* ---------- HERO ---------- */
+.hero-pin{height:145vh}
+.hero{
+  height:100svh;
+  position:sticky;top:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px clamp(20px,6vw,96px) 90px;
+  overflow:hidden;
+  background:linear-gradient(115deg,#d9e6fa 0%,#b6cbf3 28%,#7b92e0 60%,#4050d6 85%,#2b2bee 100%);
+}
+.hero .net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .inner{
+  position:relative;z-index:2;margin-left:auto;text-align:right;max-width:720px;
+  padding:clamp(32px,4vw,56px) clamp(32px,4.5vw,64px);
+  border-radius:28px;
+}
+.hero .loc{
+  font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;margin-bottom:22px;
+}
+.hero h1{
+  font-size:clamp(3.2rem,9vw,6.8rem);
+  color:#fff;
+  text-transform:none;letter-spacing:-.02em;
+}
+.hero .tagline{
+  font-size:clamp(.95rem,1.8vw,1.35rem);color:#fff;
+  margin-top:18px;letter-spacing:.04em;
+}
+.hero .tagline span{opacity:.65;padding:0 .4em}
+.hero .sub{
+  margin:28px 0 0 auto;max-width:52ch;
+  font-size:.82rem;color:#eaedff;letter-spacing:.02em;line-height:1.9;
+}
+.hero .cta{margin-top:40px;display:flex;gap:14px;justify-content:flex-end;flex-wrap:wrap}
+.hero .cta .boxlink{background:#fff;color:var(--blue)}
+.hero .cta .boxlink:hover{background:var(--ink);color:#fff}
+.hero .cta .boxlink.inv{background:transparent;color:#fff;border:1px solid #fff}
+.hero .cta .boxlink.inv:hover{background:#fff;color:var(--blue)}
+.hero .corner{
+  position:absolute;bottom:24px;z-index:2;
+  font-size:.74rem;font-weight:700;letter-spacing:.06em;
+}
+.hero .corner.l{left:clamp(20px,6vw,96px);color:var(--grey)}
+.hero .corner.r{right:clamp(20px,6vw,96px);color:#fff}
+.hero .x{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#5b6ac9;font-size:.7rem;z-index:2;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
+@media(max-width:760px){
+  .hero{background:linear-gradient(150deg,#dfe4f7 0%,#8d9de0 40%,#3a3af0 100%)}
+  .hero .inner{margin:0 auto;text-align:center;padding:28px 24px}
+  .hero .cta{justify-content:center}
+  .hero .sub{margin:28px auto 0}
+  .hero .corner{display:none}
+}
+
+/* ---------- SPLIT / ABOUT ---------- */
+.split{display:grid;grid-template-columns:1.05fr .95fr;min-height:88vh}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.split .blue{
+  background:var(--blue);color:#fff;
+  padding:clamp(40px,6vw,72px) clamp(24px,4vw,56px);
+  display:flex;flex-direction:column;justify-content:space-between;gap:56px;
+}
+.split .blue .top{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}
+@media(max-width:1200px){.split .blue .top{grid-template-columns:1fr}}
+.split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#fff}
+.split .desc{font-size:.8rem;line-height:2;color:#eef;font-weight:500}
+.split .passion{margin-top:26px;font-size:.8rem;line-height:2;color:#fff;font-weight:700}
+.split .passion span{display:inline-block;background:rgba(255,255,255,.14);padding:2px 10px;margin:4px 6px 0 0;font-weight:500}
+.stats{display:flex;gap:clamp(28px,5vw,72px);flex-wrap:wrap}
+.stat .n{font-family:'Archivo';font-weight:800;font-size:clamp(2.4rem,4vw,3.4rem);line-height:1}
+.stat .l{font-size:.75rem;font-weight:700;letter-spacing:.06em;margin-top:10px}
+.split .media{position:relative;min-height:380px;background:var(--panel);overflow:hidden;border-radius:var(--r-img);border:1px solid var(--line)}
+.split .media img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+
+/* ---------- SECTION SHELL ---------- */
+section.shell{padding:clamp(72px,9vw,120px) clamp(16px,4vw,48px)}
+.shell-head h2{font-size:clamp(2.4rem,5.5vw,4rem)}
+.shell-head p{font-size:.82rem;color:var(--grey);max-width:52ch;margin-top:16px;line-height:1.9}
+.shell-head{margin-bottom:clamp(36px,5vw,64px)}
+
+/* ---------- PROJECTS ---------- */
+.frame{border:1px solid var(--line);padding:clamp(16px,2.5vw,32px);border-radius:var(--r)}
+.frame-top{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding-bottom:clamp(16px,2.5vw,28px);flex-wrap:wrap;
+}
+.frame-top .tag-box{background:var(--blue-soft);color:var(--blue);font-size:.75rem;font-weight:700;padding:5px 14px;letter-spacing:.04em;border-radius:var(--r)}
+.project{
+  border-top:1px solid var(--line);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
+  padding:clamp(32px,4.5vw,64px) 0;
+  opacity:0;transform:translateY(42px);
+  transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1);
+}
+.project.visible{opacity:1;transform:none}
+.project:nth-child(even) .p-media{order:-1}
+@media(max-width:860px){
+  .project{grid-template-columns:1fr}
+  .project:nth-child(even) .p-media{order:0}
+}
+.p-info{display:flex;flex-direction:column;justify-content:center}
+.p-label{
+  display:inline-block;align-self:flex-start;
+  background:var(--blue-soft);color:var(--blue);
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  padding:4px 12px;margin-bottom:20px;border-radius:var(--r);
+}
+.p-year{
+  font-family:'Archivo';font-weight:800;font-size:.95rem;letter-spacing:.1em;
+  color:var(--blue);margin-bottom:10px;
+}
+.p-info h3{font-size:clamp(1.5rem,2.6vw,2.2rem);margin-bottom:18px}
+.p-info h3 a{display:inline;transition:color .2s}
+.p-info h3 a:hover,.p-info h3 a:focus-visible{color:var(--blue)}
+.p-info .txt{font-size:.8rem;color:var(--grey);line-height:1.95}
+.p-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.p-tags span{
+  font-size:.7rem;font-weight:500;letter-spacing:.03em;
+  border:1px solid var(--line);color:var(--ink);
+  padding:4px 11px;background:#fff;border-radius:var(--r);
+}
+.p-media{position:relative;min-height:300px;overflow:hidden;border-radius:var(--r-img);border:1px solid var(--line)}
+.p-media.p-clickable{cursor:pointer}
+.p-media img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .6s cubic-bezier(.2,.6,.2,1);
+}
+.p-media:hover img{transform:scale(1.03)}
+.p-media.trans img{object-fit:contain}
+.p-media.natural{min-height:0;align-self:start}
+.p-media.natural img{position:static;width:100%;height:auto;min-height:220px}
+.p-media img+img{margin-top:14px}
+.p-media.multi{min-height:0;align-self:start;border:none}
+.p-media.multi img{
+  position:static;width:100%;height:auto;min-height:220px;
+  box-sizing:border-box;border:1px solid var(--line);border-radius:var(--r-img);background:var(--panel);
+}
+.p-media.multi:not(.slide):hover img{transform:none}
+/* slideshow (auto-enabled for projects with multiple images) */
+.p-media.slide{min-height:300px;border:1px solid var(--line);transition:aspect-ratio .4s ease}
+.p-media.slide img{
+  display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;margin:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease,transform .6s cubic-bezier(.2,.6,.2,1);
+  border:none;border-radius:0;background:none;
+}
+.p-media.slide img.active{opacity:1;pointer-events:auto}
+.p-media.slide img+img{margin-top:0}
+.p-media .snav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:36px;height:36px;border:none;cursor:pointer;border-radius:var(--r);
+  background:var(--ink);color:#fff;
+  font-family:'JetBrains Mono',monospace;font-size:1rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s,background .15s;
+}
+.p-media:hover .snav{opacity:1}
+.p-media .snav:hover{background:var(--blue)}
+.p-media .snav.prev{left:12px}
+.p-media .snav.next{right:12px}
+.p-media .scount{
+  position:absolute;bottom:10px;right:12px;z-index:3;
+  background:rgba(23,23,29,.72);color:#fff;
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;
+  padding:3px 9px;opacity:0;transition:opacity .2s;border-radius:var(--r);
+}
+.p-media:hover .scount{opacity:1}
+/* 3D viewer */
+.p-media[class*="viewer3d"]{min-height:420px;cursor:grab;border:none}
+.p-media[class*="viewer3d"]:active{cursor:grabbing}
+.p-media[class*="viewer3d"] canvas{
+  position:absolute;inset:0;width:100%!important;height:100%!important;
+  opacity:0;transition:opacity .5s ease;
+}
+.p-media[class*="viewer3d"].ready canvas{opacity:1}
+.p-media[class*="viewer3d"].ready img{
+  opacity:0;transition:opacity .5s ease;transition-delay:.15s;
+}
+.p-media[class*="viewer3d"] .v3d-hint{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:3;
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;color:var(--grey);
+  background:rgba(250,249,245,.8);padding:3px 10px;pointer-events:none;
+  opacity:0;transition:opacity .3s;white-space:nowrap;
+}
+.p-media[class*="viewer3d"] .v3d-label{
+  position:absolute;z-index:4;pointer-events:none;
+  font-family:'Permanent Marker',cursive;font-size:1.5rem;color:var(--ink);
+  text-shadow:0 1px 0 rgba(250,249,245,.9),0 0 14px rgba(250,249,245,.9);
+  transform:translate(0,-50%) rotate(-4deg);
+  opacity:0;transition:opacity .35s ease;white-space:nowrap;
+}
+.p-media[class*="viewer3d"] .v3d-label.on{opacity:1}
+.p-media[class*="viewer3d"] .v3d-line{
+  position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;
+  opacity:0;transition:opacity .35s ease;
+}
+.p-media[class*="viewer3d"] .v3d-line.on{opacity:1}
+.p-media[class*="viewer3d"].ready .v3d-hint{opacity:1}
+.p-media[class*="viewer3d"].ready:hover .v3d-hint{opacity:0}
+/* pinned 3D project: card stays while model does a full turn */
+@media(min-width:861px){
+  .project.pin3d{display:block;height:230vh;padding:0}
+  .project.pin3d .pin-inner{
+    position:sticky;top:0;min-height:100vh;
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
+    align-items:center;align-content:center;
+    padding:clamp(32px,4.5vw,64px) 0;
+  }
+}
+@media(max-width:860px){.p-media{min-height:230px}}
+/* scroll-scrubbed turntable video */
+.p-media[class*="scrollvid"]{min-height:420px;border:none}
+.p-media[class*="scrollvid"] img{display:none}
+.p-media[class*="scrollvid"] video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+}
+
+/* ---------- RESUME ---------- */
+.resume{background:var(--panel)}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px)}
+@media(max-width:860px){.res-grid{grid-template-columns:1fr}}
+.res-col .colhead{
+  display:inline-block;background:var(--blue);color:#fff;
+  font-size:.75rem;font-weight:700;letter-spacing:.04em;padding:5px 14px;
+  margin-bottom:8px;border-radius:var(--r);
+}
+.rlist{list-style:none}
+.rlist li{
+  border-bottom:1px solid var(--line);
+  padding:20px 0;
+  display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:baseline;
+}
+.rlist .when{color:var(--blue);font-size:.75rem;font-weight:700;letter-spacing:.04em}
+.rlist .what{font-family:'Archivo';font-weight:700;font-size:.95rem;text-transform:uppercase;letter-spacing:.02em}
+.rlist .where{display:block;font-family:'JetBrains Mono';font-weight:400;text-transform:none;letter-spacing:0;color:var(--grey);font-size:.76rem;margin-top:6px}
+@media(max-width:520px){.rlist li{grid-template-columns:1fr;gap:6px}}
+
+/* ---------- SKILLS ---------- */
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:900px){.skill-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.skill-grid{grid-template-columns:1fr}}
+.skill{
+  padding:clamp(24px,3vw,40px);
+  border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  transition:background .2s;
+}
+.skill:hover{background:var(--blue-soft)}
+.skill h4{
+  font-family:'Archivo';font-weight:800;text-transform:uppercase;
+  font-size:1rem;margin-bottom:14px;
+}
+.skill h4::before{content:"// ";color:var(--blue)}
+.skill p{font-size:.76rem;color:var(--grey);line-height:1.9}
+
+/* ---------- CONTACT ---------- */
+.contact{
+  background:var(--blue);color:#fff;
+  text-align:center;
+  padding:clamp(80px,11vw,150px) clamp(16px,4vw,48px);
+}
+.contact .k{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;opacity:.85}
+.contact h2{font-size:clamp(2.6rem,6.5vw,5rem);color:#fff}
+.contact p{font-size:.82rem;color:#e9e9ff;max-width:50ch;margin:26px auto 40px;line-height:1.9}
+.contact .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.contact .boxlink{background:#fff;color:var(--blue)}
+.contact .boxlink:hover{background:var(--ink);color:#fff}
+.contact .boxlink.inv{background:transparent;color:#fff;border-color:#fff}
+.contact .boxlink.inv:hover{background:#fff;color:var(--blue)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  padding:36px clamp(16px,4vw,48px);
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+footer .logo-box{
+  border:1px solid var(--line);
+  font-family:'Archivo';font-weight:800;font-size:1rem;
+  padding:8px 18px;border-radius:var(--r);
+}
+footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+
+<body>
+
+
+<nav id="nav">
+  <div class="nav-meta">
+    <span class="tag-box">Portfolio&nbsp;&bull;&nbsp;2026</span>
+  </div>
+  <div class="nav-links">
+    <a class="boxlink arrow" href="#projects">Projects</a>
+    <a class="boxlink arrow" href="#about">About</a>
+    <a class="boxlink arrow" href="#skills">Skills</a>
+    <a class="boxlink inv arrow" href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="hero-pin">
+<header class="hero">
+  <canvas class="net" id="mesh"></canvas>
+  <div class="inner">
+    <div class="loc">Product Development &bull; Mechanical Engineering</div>
+    <h1>Linus Kuhn</h1>
+    <div class="tagline">create<span>|</span>prototype<span>|</span>refine</div>
+    <p class="sub">I design, simulate and build things that move — from FEM-driven
+    optimization of electric machines to hand-laminated carbon fiber prototypes.
+    M.Sc. Product Development, Pforzheim University.</p>
+    <div class="cta">
+      <a class="boxlink arrow" href="#projects">View Projects</a>
+      <a class="boxlink inv arrow" href="#contact">Say Hello</a>
+    </div>
+  </div>
+  <div class="corner l">Pforzheim &bull; Germany</div>
+  <div class="x">scroll &darr;</div>
+  <div class="corner r">7 Projects &bull; 2017&ndash;2025</div>
+</header>
+</div>
+
+<section id="about" class="split">
+  <div class="blue">
+    <div class="top reveal">
+      <h2>Where engineering meets real products</h2>
+      <div>
+        <p class="desc">I develop ideas into prototypes and strive to accelerate
+        this process. To do so, I use, learn and create tools that make this
+        possible. I believe that team-based, focused decisions, rapid iterations
+        and the right returns are key for great products.</p>
+        <p class="passion">Passionate for<br>
+        <span>#productdevelopment</span> <span>#robotics</span> <span>#design</span></p>
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><div class="n">7+</div><div class="l">Projects Built</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">Years of Making</div></div>
+      <div class="stat"><div class="n">4+</div><div class="l">Years Industry Experience</div></div>
+    </div>
+  </div>
+  <div class="media reveal"><img src="img/portrait.jpg" alt="Portrait of Linus Kuhn" loading="lazy"></div>
+</section>
+
+<section id="projects" class="shell">
+  <div class="shell-head reveal">
+    <h2>Selected Projects</h2>
+    <p>Eight years of building — sorted from the latest research back to
+    the first print.</p>
+  </div>
+
+  <div class="frame">
+    <div class="frame-top">
+      <span class="tag-box">2017 &mdash; 2025 &bull; 7 Projects</span>
+      <a class="boxlink arrow" href="#contact">Get in touch</a>
+    </div>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Master Thesis &bull; Pforzheim University</span>
+        <div class="p-year">2025</div>
+        <h3><a href="project.html?slug=axial-flux-machine">Axial Flux Machine — Surrogate-Based Topology Optimization</a></h3>
+        <p class="txt">YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.</p>
+        <div class="p-tags"><span>Ansys</span><span>FEM</span><span>Surrogate Modeling</span><span>Electric Machines</span><span>Optimization</span></div>
+      </div>
+      <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Physical Prototype &bull; Pforzheim University</span>
+        <div class="p-year">2024</div>
+        <h3><a href="project.html?slug=coffee-grinder">Manual Coffee Grinder Inspired by Charles Eames</a></h3>
+        <p class="txt">Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.</p>
+        <div class="p-tags"><span>Industrial Design</span><span>Sketching</span><span>Prototyping</span><span>CMF</span></div>
+      </div>
+      <div class="p-media multi"><img src="img/grinder-poster.jpg" alt="Manual Coffee Grinder Inspired by Charles Eames" loading="lazy">
+        <img src="img/grinder-sketch-1.jpg" alt="Manual Coffee Grinder — early concept sketches" loading="lazy">
+        <img src="img/grinder-sketch-2.jpg" alt="Manual Coffee Grinder — material and mechanism sketches" loading="lazy">
+        <img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" loading="lazy">
+        <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Bachelor Thesis &bull; Evomotiv GmbH</span>
+        <div class="p-year">2022</div>
+        <h3><a href="project.html?slug=autonomous-robot">Autonomous Robot for Vehicle Test Automation</a></h3>
+        <p class="txt">Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.</p>
+        <div class="p-tags"><span>Mechatronics</span><span>Sensors</span><span>Stakeholder Management</span><span>Functional Prototypes</span></div>
+      </div>
+      <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Concept &bull; Own Project</span>
+        <div class="p-year">2021</div>
+        <h3><a href="project.html?slug=velomobil">Velomobil — Aerodynamic Pedal Vehicle</a></h3>
+        <p class="txt">An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles.</p>
+        <div class="p-tags"><span>Surface Modeling</span><span>Rendering</span><span>Aerodynamics</span><span>Carbon Fiber</span></div>
+      </div>
+      <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Physical Prototype &bull; Karlsruhe University</span>
+        <div class="p-year">2021</div>
+        <h3><a href="project.html?slug=automated-window">Automated Window</a></h3>
+        <p class="txt">A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.</p>
+        <div class="p-tags"><span>Kinematics</span><span>Arduino</span><span>3D Printing</span><span>Electronics</span><span>Project Management</span></div>
+      </div>
+      <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Physical Prototype &bull; Own Project</span>
+        <div class="p-year">2019</div>
+        <h3><a href="project.html?slug=raceboat">Remote Controlled Carbon Fiber Raceboat</a></h3>
+        <p class="txt">A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer.</p>
+        <div class="p-tags"><span>Mold Making</span><span>Composite Lamination</span><span>3D Printing</span></div>
+      </div>
+      <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Concept &bull; Own Project</span>
+        <div class="p-year">2017</div>
+        <h3><a href="project.html?slug=rotary-engine">Rotary Combustion Engine</a></h3>
+        <p class="txt">An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all.</p>
+        <div class="p-tags"><span>Fusion 360</span><span>Thermodynamics</span><span>Engine Engineering</span></div>
+      </div>
+      <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy"></div>
+    </article>
+
+    <article class="project">
+      <div class="p-info">
+        <span class="p-label">Project &bull; Own Project</span>
+        <div class="p-year">2026</div>
+        <h3><a href="project.html?slug=steer-by-wire">Steer by Wire </a></h3>
+        <p class="txt">To implement a lightweight functional Design of a Steer by Wire Application</p>
+        <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
+      </div>
+      <div class="p-media multi"><img src="img/Steering.png" alt="Steer by Wire " loading="lazy">
+        <img src="img/Steering2.png" alt="Steer by Wire " loading="lazy"></div>
+    </article>
+
+
+
+
+
+
+
+  </div>
+</section>
+
+<section class="shell resume">
+  <div class="shell-head reveal">
+    <h2>Experience &amp; Education</h2>
+  </div>
+  <div class="res-grid">
+    <div class="res-col reveal">
+      <span class="colhead">Work Experience</span>
+      <ul class="rlist">
+        <li><span class="when">Since 11/2025</span><span class="what">Master's Thesis — Axial Flux Optimization<span class="where">Pforzheim University of Applied Sciences</span></span></li>
+        <li><span class="when">Since 10/2024</span><span class="what">Development Engineer (Part-Time)<span class="where">Evomotiv GmbH, Weissach — alongside Master's degree</span></span></li>
+        <li><span class="when">2022 – 2024</span><span class="what">Development Engineer (Full-Time)<span class="where">Evomotiv GmbH, Weissach</span></span></li>
+        <li><span class="when">2021 – 2022</span><span class="what">Bachelor's Thesis — Autonomous Robot<span class="where">Evomotiv GmbH</span></span></li>
+        <li><span class="when">2020</span><span class="what">Rapid Prototyping Intern<span class="where">Bosch Engineering GmbH, Abstatt</span></span></li>
+      </ul>
+    </div>
+    <div class="res-col reveal">
+      <span class="colhead">Education</span>
+      <ul class="rlist">
+        <li><span class="when">2024 – 2026</span><span class="what">M.Sc. Product Development<span class="where">Pforzheim University of Applied Sciences</span></span></li>
+        <li><span class="when">2017 – 2022</span><span class="what">B.Eng. Mechanical Engineering<span class="where">Karlsruhe University of Applied Sciences (HKA)</span></span></li>
+        <li><span class="when">2014 – 2017</span><span class="what">Technical Grammar School<span class="where">Wilhelm-Maybach Gymnasium, Stuttgart</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="shell">
+  <div class="shell-head reveal">
+    <h2>Skills &amp; Tools</h2>
+  </div>
+  <div class="skill-grid reveal">
+    <div class="skill"><h4>CAD</h4><p>Autodesk Fusion 360 &middot; Inventor &middot; SolidWorks &middot; Catia</p></div>
+    <div class="skill"><h4>CAE &amp; Simulation</h4><p>Ansys Maxwell &middot; Ansys optiSLang &middot; FEM &middot; Surrogate Modeling</p></div>
+    <div class="skill"><h4>Prototyping</h4><p>3D Printing (Orca Slicer, Bambu Studio, Simplify3D) &middot; Mold Making &middot; Carbon Fiber Lamination</p></div>
+    <div class="skill"><h4>Creative</h4><p>Blender &middot; Adobe Creative Suite &middot; Affinity &middot; Rendering &amp; Surface Modeling</p></div>
+    <div class="skill"><h4>Code</h4><p>Python &middot; Arduino IDE</p></div>
+    <div class="skill"><h4>Beyond Work</h4><p>Making music &middot; Hiking &middot; Tennis &amp; Hockey</p></div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="reveal">
+    <div class="k">Open for opportunities &bull; 2026</div>
+    <h2>Let's build something</h2>
+    <p>Open for roles and internships in product development, simulation and
+    prototyping. Drop me a line — I usually answer fast.</p>
+    <div class="cta">
+      <a class="boxlink arrow" href="mailto:linus-kuhn@t-online.de">linus-kuhn@t-online.de</a>
+      <a class="boxlink inv arrow" href="https://www.linkedin.com/in/linus-kuhn-7713a2288/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo-box">Linus Kuhn</div>
+  <div class="meta">
+    <span>&copy; 2026 Linus Kuhn</span>
+    <span>Pforzheim, Germany</span>
+    <span>Designed &amp; engineered with care.</span>
+  </div>
+</footer>
+
+<script>
+/* ===== GP wave mesh (canvas, scroll-driven) ===== */
+(function(){
+  const cv=document.getElementById('mesh');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const pin=document.querySelector('.hero-pin');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // deterministic random wave components
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  const rnd=mulberry32(5), comps=[];
+  for(let i=0;i<14;i++){
+    const fx=1+rnd()*4, ft=.8+rnd()*2.7;
+    comps.push({fx,ft,p1:rnd()*6.2832,p2:rnd()*6.2832,a:(.3+rnd()*.7)/(fx*.6+ft*.4)});
+  }
+  const NU=80, NV=34;
+  let W,H;
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    W=cv.clientWidth;H=cv.clientHeight;
+    cv.width=W*dpr;cv.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function zval(u,t,ph){
+    let s=0;
+    for(const c of comps)s+=c.a*Math.sin(6.2832*c.fx*u+c.p1+ph)*Math.sin(6.2832*c.ft*t+c.p2+ph*.6);
+    return .5+.5*Math.tanh(s*1.4);
+  }
+  function project(u,t,zn){
+    const persp=.45+.55*Math.pow(t,1.3);
+    const x=W/2+(u-.5)*W*1.5*persp;
+    const ybase=H*.33+Math.pow(t,1.35)*H*.72;
+    const amp=H*.10+H*.33*Math.pow(t,1.2);
+    return [x,ybase-zn*amp];
+  }
+  // fade so lines stay pale behind the text
+  const mobile=()=>W<760;
+  function fade(x,y){
+    const cx=mobile()?W*.5:W*.72, cy=H*.44, R=Math.max(W,H)*.34;
+    const d=Math.hypot(x-cx,y-cy);
+    return d>=R?1:.22+.78*Math.pow(d/R,2);
+  }
+
+  const P=new Array(NV);
+  for(let i=0;i<NV;i++)P[i]=new Array(NU);
+
+  function draw(ph){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<NV;i++){
+      const t=i/(NV-1);
+      for(let j=0;j<NU;j++){
+        P[i][j]=project(j/(NU-1),t,zval(j/(NU-1),t,ph));
+      }
+    }
+    ctx.lineCap='round';
+    // rows
+    for(let i=0;i<NV;i++){
+      const t=i/(NV-1), op=.14+.5*t, lw=.7+1.2*t;
+      const col=t>.4?'255,255,255':'205,216,244';
+      ctx.lineWidth=lw;
+      for(let j=0;j<NU-1;j++){
+        const a=P[i][j],b=P[i][j+1];
+        ctx.strokeStyle=`rgba(${col},${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
+        ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+      }
+    }
+    // columns: lines running front-to-back, spanning the net
+    for(let j=0;j<NU;j++){
+      const major=j%4===0;
+      ctx.lineWidth=major?1.0:.7;
+      const base=major?.30:.16;
+      for(let i=0;i<NV-1;i++){
+        const t=i/(NV-1);
+        const op=base*(.5+.5*t);
+        const a=P[i][j],b=P[i+1][j];
+        ctx.strokeStyle=`rgba(232,238,253,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
+        ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+      }
+    }
+  }
+
+  let prog=0;
+  const inner=document.querySelector('.hero .inner');
+  function onScroll(){
+    const range=pin.offsetHeight-innerHeight;
+    prog=Math.max(0,Math.min(1,(scrollY-pin.offsetTop)/range));
+  }
+  function loop(now){
+    const idle=reduced?0:now*.00012;
+    const ph=idle+prog*3.5;
+    draw(ph);
+    // soft hand-over: content starts drifting up before the pin releases,
+    // so real scrolling continues the motion seamlessly
+    const out=Math.max(0,(prog-.55)/.45);
+    const eased=out*out;
+    inner.style.transform=`translateY(${(-60-70*eased).toFixed(1)}px)`;
+    inner.style.opacity=(1-.2*eased).toFixed(3);
+    requestAnimationFrame(loop);
+  }
+  addEventListener('resize',()=>{resize();},{passive:true});
+  addEventListener('scroll',onScroll,{passive:true});
+  resize();onScroll();
+  requestAnimationFrame(loop);
+})();
+
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+
+/* ===== smooth-scroll for anchor nav links (decoupled from wheel easing below) ===== */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    const target=id.length>1&&document.querySelector(id);
+    if(!target)return;
+    e.preventDefault();
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+/* ===== soft scroll gates =====
+   Real scroll-speed easing (not a visual effect): the wheel input itself
+   gets damped in two small zones, so the page actually accelerates gently
+   right at the very start, and actually decelerates gently just before it
+   reaches the pinned video section — like easing into and braking out of
+   a ride, rather than an instant jump to full speed. Everywhere else,
+   scrolling is completely untouched (native, full speed). */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const heroPin=document.querySelector('.hero-pin');
+  const videoHolder=document.querySelector('.p-media[class*="scrollvid"]');
+  const videoArt=videoHolder&&videoHolder.closest('article.project');
+
+  const zones=[];
+  if(heroPin){
+    /* ease-IN: right at the top of the page, scrolling starts slow and
+       ramps up to full speed over a short distance */
+    zones.push({start:0,end:()=>heroPin.offsetHeight*.22,strength:.5,fallOut:false});
+  }
+  if(videoArt){
+    /* ease-DOWN: in the stretch just before the pinned video card,
+       scrolling gradually slows to a gentle crawl right as it arrives */
+    zones.push({start:()=>Math.max(0,videoArt.offsetTop-320),end:()=>videoArt.offsetTop,strength:.35,fallOut:true});
+  }
+  if(!zones.length)return;
+
+  function smooth(t){return t*t*(3-2*t)}
+  function factorAt(y){
+    for(const z of zones){
+      const s=typeof z.start==='function'?z.start():z.start;
+      const e=typeof z.end==='function'?z.end():z.end;
+      if(e<=s)continue;
+      if(y<s||y>e)continue;
+      const t=(y-s)/(e-s);
+      return z.fallOut
+        ? 1-(1-z.strength)*smooth(t)   /* normal speed -> slow, approaching the boundary */
+        : z.strength+(1-z.strength)*smooth(t); /* slow -> normal speed, leaving the start */
+    }
+    return 1;
+  }
+
+  /* Always intercept and drive scrolling ourselves — never toggle between
+     native and manual handling mid-gesture. Chrome commits a whole trackpad
+     gesture to either native or main-thread handling based on the FIRST
+     wheel event; conditionally calling preventDefault() only once a zone is
+     entered gets that later preventDefault() ignored for the rest of the
+     gesture (that's why this previously froze scrolling in Chrome but only
+     janked in Safari). The damping factor now only scales how much of the
+     accumulated wheel input actually moves the page each frame, so outside
+     the zones (factor 1) this behaves like native scrolling. */
+  const maxY=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
+  let pending=0,ticking=false;
+  function tick(){
+    const consume=pending*.35;
+    pending-=consume;
+    const step=consume*factorAt(scrollY);
+    scrollTo({top:Math.max(0,Math.min(maxY(),scrollY+step)),left:0,behavior:'auto'});
+    if(Math.abs(pending)>.4){
+      requestAnimationFrame(tick);
+    }else{
+      pending=0;ticking=false;
+    }
+  }
+  function onWheel(e){
+    if(e.ctrlKey||e.metaKey)return; /* leave pinch-zoom / 3D-viewer zoom alone */
+    e.preventDefault();
+    pending+=e.deltaY;
+    if(!ticking){ticking=true;requestAnimationFrame(tick);}
+  }
+  addEventListener('wheel',onWheel,{passive:false});
+})();
+
+/* ===== sort projects: newest year first ===== */
+(function(){
+  const frame=document.querySelector('#projects .frame');
+  if(!frame)return;
+  const arts=[...frame.querySelectorAll('article.project')];
+  arts.sort((a,b)=>{
+    const y=el=>parseInt((el.querySelector('.p-year')||{}).textContent)||0;
+    return y(b)-y(a);
+  });
+  arts.forEach(a=>frame.appendChild(a));
+  // update the range badge (min year — max year • count)
+  const years=arts.map(a=>parseInt(a.querySelector('.p-year').textContent)||0).filter(Boolean);
+  const badge=frame.querySelector('.frame-top .tag-box');
+  if(badge&&years.length)badge.innerHTML=`${Math.min(...years)} — ${Math.max(...years)} • ${arts.length} Projects`;
+})();
+
+/* ===== slideshow for projects with multiple images ===== */
+document.querySelectorAll('.p-media').forEach(m=>{
+  const imgs=[...m.querySelectorAll('img')];
+  if(imgs.length<2)return;
+  m.classList.add('slide');
+  const applyRatio=im=>{
+    if(im.naturalWidth)m.style.aspectRatio=im.naturalWidth+' / '+im.naturalHeight;
+  };
+  const setRatio=i=>{
+    const im=imgs[i];
+    im.complete?applyRatio(im):im.addEventListener('load',()=>applyRatio(im),{once:true});
+  };
+  let idx=0;
+  imgs[idx].classList.add('active');
+  setRatio(idx);
+  const count=document.createElement('span');
+  count.className='scount';
+  const upd=()=>count.textContent=(idx+1)+' / '+imgs.length;
+  upd();
+  const mk=(cls,txt,d)=>{
+    const b=document.createElement('button');
+    b.className='snav '+cls;b.type='button';b.textContent=txt;
+    b.setAttribute('aria-label',d<0?'Previous image':'Next image');
+    b.addEventListener('click',()=>{
+      imgs[idx].classList.remove('active');
+      idx=(idx+d+imgs.length)%imgs.length;
+      imgs[idx].classList.add('active');upd();setRatio(idx);
+    });
+    m.appendChild(b);
+  };
+  mk('prev','←',-1);mk('next','→',1);
+  m.appendChild(count);
+});
+
+/* ===== click a project's image to open its subpage (skip slideshow arrows) ===== */
+document.querySelectorAll('.project').forEach(art=>{
+  const link=art.querySelector('.p-info h3 a');
+  const media=art.querySelector('.p-media');
+  if(!link||!media)return;
+  if(/viewer3d|scrollvid/.test(media.className))return;
+  media.classList.add('p-clickable');
+  media.addEventListener('click',e=>{
+    if(e.target.closest('.snav'))return;
+    location.href=link.getAttribute('href');
+  });
+});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+}),{threshold:.12,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
+</script>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+/* ===== 3D viewers (models mapped by class) ===== */
+const MODELS={'viewer3d-grinder':'models/grinder.glb'};
+const holders=[...document.querySelectorAll('.p-media')].filter(m=>[...m.classList].some(c=>MODELS[c]));
+if(holders.length){
+  /* start loading well ahead of time so the model is already ready
+     by the time the project scrolls into view — avoids the visible
+     "static image, then pop to 3D" flash */
+  const started=new WeakSet();
+  const start=h=>{if(started.has(h))return;started.add(h);initViewer(h).catch(err=>console.error('3D viewer:',err));};
+  const lazy=new IntersectionObserver(es=>{
+    for(const e of es)if(e.isIntersecting)start(e.target);
+  },{rootMargin:'1500px'});
+  holders.forEach(h=>lazy.observe(h));
+  /* also kick off loading right after the page settles, regardless of scroll position */
+  (window.requestIdleCallback||(cb=>setTimeout(cb,300)))(()=>holders.forEach(start));
+
+  async function initViewer(holder){
+    const cls=[...holder.classList].find(c=>MODELS[c]);
+    const [THREE,{GLTFLoader},{DRACOLoader},{OrbitControls},{RoomEnvironment}]=await Promise.all([
+      import('three'),
+      import('three/addons/loaders/GLTFLoader.js'),
+      import('three/addons/loaders/DRACOLoader.js'),
+      import('three/addons/controls/OrbitControls.js'),
+      import('three/addons/environments/RoomEnvironment.js')
+    ]);
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure=.92;
+    renderer.shadowMap.enabled=true;
+    renderer.shadowMap.type=THREE.VSMShadowMap;
+    const scene=new THREE.Scene();
+    const pmrem=new THREE.PMREMGenerator(renderer);
+
+    scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;
+    scene.environmentIntensity=.55; /* less flat ambient, more directional drama */
+    const camera=new THREE.PerspectiveCamera(32,1,.01,100);
+
+    const draco=new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    const loader=new GLTFLoader();
+    loader.setDRACOLoader(draco);
+    const gltf=await loader.loadAsync(MODELS[cls]);
+    const model=gltf.scene;
+    model.rotation.x=-Math.PI/2; /* upright */
+    model.rotation.z=Math.PI;   /* face front */
+
+    /* procedural walnut texture */
+    function walnutTexture(){
+      const cv=document.createElement('canvas');cv.width=cv.height=1024;
+      const g=cv.getContext('2d');
+      g.fillStyle='#5a3a20';g.fillRect(0,0,1024,1024);
+      for(let i=0;i<140;i++){
+        const x=Math.random()*1024, w=2+Math.random()*10;
+        const l=18+Math.random()*22, a=.12+Math.random()*.25;
+        g.strokeStyle=`hsla(${24+Math.random()*10},45%,${l}%,${a})`;
+        g.lineWidth=w;g.beginPath();
+        let px=x;g.moveTo(px,0);
+        for(let y=0;y<=1024;y+=32){px+=(Math.random()-.5)*14;g.lineTo(px,y);}
+        g.stroke();
+      }
+      const t=new THREE.CanvasTexture(cv);
+      t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;
+      t.anisotropy=8;
+      return t;
+    }
+    const woodMap=walnutTexture();
+    const isNamed=(o,re)=>{for(let p=o;p;p=p.parent){if(re.test(p.name||''))return true}return false};
+    /* CAD files often lack usable UVs — project box UVs so the grain shows */
+    function boxUV(geo){
+      geo.computeBoundingBox();
+      const bb=geo.boundingBox;
+      const s=new THREE.Vector3().subVectors(bb.max,bb.min);
+      const dims=[['x',s.x],['y',s.y],['z',s.z]].sort((a,b)=>b[1]-a[1]);
+      const a1=dims[0][0], a2=dims[1][0];
+      const p=geo.attributes.position;
+      const sc=Math.max(s.x,s.y,s.z)||1;
+      const get={x:i=>p.getX(i),y:i=>p.getY(i),z:i=>p.getZ(i)};
+      const uv=new Float32Array(p.count*2);
+      for(let i=0;i<p.count;i++){
+        uv[2*i]  =(get[a1](i)-bb.min[a1])/sc*2;
+        uv[2*i+1]=(get[a2](i)-bb.min[a2])/sc*2;
+      }
+      geo.setAttribute('uv',new THREE.BufferAttribute(uv,2));
+    }
+
+    /* clickable parts -> labels */
+    const parts={
+      glass:{re:/glas/i,label:'GLASS',meshes:[]},
+      wood:{re:/holz/i,label:'WALNUT WOOD',meshes:[]},
+      frame:{re:/gestell/i,label:'ALUMINIUM FRAME',meshes:[]}
+    };
+    /* materials: name-based (Holz/Glas), otherwise by CAD base color */
+    model.traverse(o=>{
+      if(!o.isMesh)return;
+      const c=o.material&&o.material.color?o.material.color:null;
+      let mat;
+      if(isNamed(o,/glas/i)){
+        mat=new THREE.MeshPhysicalMaterial({
+          color:0xffffff,metalness:0,roughness:.05,
+          transmission:1,thickness:1.5,ior:1.5,
+          transparent:true,depthWrite:false
+        });
+      }else if(isNamed(o,/holz/i)||(c&&c.r>.25&&c.r>c.g&&c.g>c.b)){
+        boxUV(o.geometry);
+        mat=new THREE.MeshStandardMaterial({
+          map:woodMap,color:0x8a6240,roughness:.45,metalness:0
+        });
+      }else if(c&&c.r<.15){
+        mat=new THREE.MeshStandardMaterial({color:0x1a1a1e,roughness:.5,metalness:.3});
+      }else{
+        mat=new THREE.MeshStandardMaterial({color:0xc0c3c7,roughness:.44,metalness:1});
+      }
+      o.material=mat;
+      o.castShadow=true;
+      o.receiveShadow=true;
+      for(const k in parts)if(isNamed(o,parts[k].re))parts[k].meshes.push(o);
+    });
+
+    /* center + frame */
+    const box=new THREE.Box3().setFromObject(model);
+    const size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    const spin=new THREE.Group();
+    spin.add(model);
+    scene.add(spin);
+    const d=Math.max(size.x,size.y,size.z);
+
+    /* key light + soft ground shadow */
+    const key=new THREE.DirectionalLight(0xffffff,2.2);
+    key.position.set(d*.5,d*1.5,d*2.1); /* from the front-top: shadow falls backwards */
+    key.castShadow=true;
+    key.shadow.mapSize.set(2048,2048);
+    key.shadow.camera.left=-d*1.4;key.shadow.camera.right=d*1.4;
+    key.shadow.camera.top=d*1.4;key.shadow.camera.bottom=-d*1.4;
+    key.shadow.camera.near=.1;key.shadow.camera.far=d*8;
+    key.shadow.bias=-.0002;
+    key.shadow.radius=16;key.shadow.blurSamples=20; /* soft falloff on the ground */
+    scene.add(key);
+    const fill=new THREE.DirectionalLight(0xdde6ff,.6);
+    fill.position.set(-d*1.4,d*.6,-d);
+    scene.add(fill);
+    const ground=new THREE.Mesh(
+      new THREE.PlaneGeometry(d*6,d*6),
+      new THREE.ShadowMaterial({opacity:.24})
+    );
+    ground.rotation.x=-Math.PI/2;
+    ground.position.y=-size.y/2-.001*d;
+    ground.receiveShadow=true;
+    scene.add(ground);
+
+    camera.position.set(d*1.55,d*.75,d*1.75);
+    camera.lookAt(0,0,0);
+
+    const controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;controls.dampingFactor=.06;
+    controls.enablePan=false;controls.enableZoom=false;
+    /* zoom only while ctrl/cmd is held, so page scrolling stays untouched */
+    addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey)controls.enableZoom=true;});
+    addEventListener('keyup',e=>{if(!e.ctrlKey&&!e.metaKey)controls.enableZoom=false;});
+    addEventListener('blur',()=>controls.enableZoom=false);
+    controls.minPolarAngle=.6;controls.maxPolarAngle=2.1;
+    controls.minDistance=d*.7;controls.maxDistance=d*3.2;
+
+    /* pin the project card and map scroll to one full rotation */
+    const art=holder.closest('article.project');
+    if(art&&innerWidth>860){
+      const inner=document.createElement('div');
+      inner.className='pin-inner';
+      while(art.firstChild)inner.appendChild(art.firstChild);
+      art.appendChild(inner);
+      art.classList.add('pin3d');
+      const updSpin=()=>{
+        const r=art.getBoundingClientRect();
+        const range=art.offsetHeight-innerHeight;
+        const p=Math.max(0,Math.min(1,-r.top/range));
+        spin.rotation.y=p*Math.PI*2;
+      };
+      addEventListener('scroll',updSpin,{passive:true});
+      updSpin();
+    }else{
+      controls.autoRotate=true;controls.autoRotateSpeed=1.1;
+    }
+
+    holder.appendChild(renderer.domElement);
+
+    /* click a part -> handwritten label that follows the part */
+    const label=document.createElement('span');
+    label.className='v3d-label';
+    holder.appendChild(label);
+    const lineSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    lineSvg.setAttribute('class','v3d-line');
+    lineSvg.innerHTML='<line x1="0" y1="0" x2="0" y2="0" stroke="#17171d" stroke-width="1.5" stroke-linecap="round"/><circle r="3.5" fill="#17171d"/>';
+    holder.appendChild(lineSvg);
+    const line=lineSvg.querySelector('line'),dot=lineSvg.querySelector('circle');
+    let active=null,anchor=null,flashT=0;
+    const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
+    function pick(e){
+      const rect=renderer.domElement.getBoundingClientRect();
+      ndc.x=((e.clientX-rect.left)/rect.width)*2-1;
+      ndc.y=-((e.clientY-rect.top)/rect.height)*2+1;
+      ray.setFromCamera(ndc,camera);
+      const hits=ray.intersectObject(spin,true);
+      let found=null,pt=null;
+      for(const h of hits){
+        for(const k in parts)if(isNamed(h.object,parts[k].re)){found=k;pt=h.point;break}
+        if(found)break;
+      }
+      if(!found||found===active){active=null;label.classList.remove('on');return}
+      active=found;
+      anchor=spin.worldToLocal(pt.clone());
+      label.textContent=parts[found].label;
+      label.classList.add('on');
+      flashT=performance.now();
+    }
+    let downPos=null;
+    renderer.domElement.addEventListener('pointerdown',e=>{downPos=[e.clientX,e.clientY]});
+    renderer.domElement.addEventListener('pointerup',e=>{
+      if(!downPos)return;
+      const dx=e.clientX-downPos[0],dy=e.clientY-downPos[1];downPos=null;
+      if(dx*dx+dy*dy<26)pick(e);
+    });
+    const _tmp=new THREE.Vector3(),_c=new THREE.Vector3(),_e=new THREE.Vector3();
+    function updateLabel(){
+      /* flash the picked part briefly */
+      const k=Math.max(0,1-(performance.now()-flashT)/600);
+      for(const key in parts)for(const m of parts[key].meshes)
+        m.material.emissive.setScalar(key===active?.22*k:0);
+      if(!active||!anchor){label.classList.remove('on');lineSvg.classList.remove('on');return}
+      _tmp.copy(anchor);spin.localToWorld(_tmp);_tmp.project(camera);
+      if(_tmp.z>1){label.classList.remove('on');lineSvg.classList.remove('on');return}
+      const w=holder.clientWidth,h=holder.clientHeight;
+      const px=(_tmp.x*.5+.5)*w, py=(-_tmp.y*.5+.5)*h;
+      /* fixed padding right of the grinder: project its right silhouette edge */
+      const rad=Math.max(size.x,size.z)*.5;
+      _c.set(0,0,0).project(camera);
+      _e.set(1,0,0).applyQuaternion(camera.quaternion).multiplyScalar(rad).project(camera);
+      const edgeX=Math.max((_c.x*.5+.5)*w,(_e.x*.5+.5)*w);
+      let lx=edgeX+26;
+      lx=Math.min(lx,w-label.offsetWidth-14); /* keep text fully readable */
+      const ly=Math.max(36,Math.min(h-36,py));
+      label.classList.add('on');lineSvg.classList.add('on');
+      label.style.left=lx+'px';
+      label.style.top=ly+'px';
+      line.setAttribute('x1',px);line.setAttribute('y1',py);
+      line.setAttribute('x2',lx-6);line.setAttribute('y2',ly);
+      dot.setAttribute('cx',px);dot.setAttribute('cy',py);
+    }
+
+    const hint=document.createElement('span');
+    hint.className='v3d-hint';hint.textContent='3D — drag \u00b7 click parts \u00b7 ctrl + scroll to zoom';
+    holder.appendChild(hint);
+    holder.classList.add('ready');
+
+    /* flip between 3D view and the photos; fixed container height -> no jumping */
+    const photos=[...holder.querySelectorAll('img')];
+    if(photos.length){
+      const views=[renderer.domElement,...photos];
+      let vi=0;
+      const cnt=document.createElement('span');cnt.className='scount';
+      const updv=()=>{
+        views.forEach((el,k)=>{
+          el.style.display='block';
+          el.style.transition='opacity .45s ease';
+          el.style.opacity=k===vi?'1':'0';
+          el.style.pointerEvents=k===vi?'auto':'none';
+        });
+        hint.style.visibility=vi===0?'visible':'hidden';
+        cnt.textContent=(vi===0?'3D':vi)+' / '+views.length;
+      };
+      const mkv=(cls,txt,d)=>{
+        const b=document.createElement('button');
+        b.className='snav '+cls;b.type='button';b.textContent=txt;
+        b.setAttribute('aria-label',d<0?'Previous view':'Next view');
+        b.addEventListener('click',()=>{vi=(vi+d+views.length)%views.length;updv();});
+        holder.appendChild(b);
+      };
+      mkv('prev','←',-1);mkv('next','→',1);
+      holder.appendChild(cnt);
+      updv();
+    }
+
+    function resize(){
+      const w=holder.clientWidth,h=holder.clientHeight;
+      renderer.setSize(w,h,false);
+      camera.aspect=w/h;camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(holder);
+    resize();
+    renderer.setAnimationLoop(()=>{controls.update();updateLabel();renderer.render(scene,camera);});
+  }
+}
+
+/* ===== scroll-scrubbed turntable video (replaces the 3D viewer for the grinder) ===== */
+const vidHolders=[...document.querySelectorAll('.p-media[class*="scrollvid"]')];
+vidHolders.forEach(holder=>{
+  const video=holder.querySelector('video');
+  if(!video)return;
+  video.pause();
+  /* browsers throttle <video preload="auto"> heavily while it's off-screen
+     (only metadata gets fetched), which is why the poster image keeps showing
+     briefly even after scrolling in. Fetching the file ourselves and handing
+     the browser a blob sidesteps that heuristic — by the time the user
+     scrolls here the whole clip is already in memory, no network wait. */
+  fetch(video.currentSrc||video.src)
+    .then(r=>r.blob())
+    .then(b=>{
+      video.src=URL.createObjectURL(b);
+      video.load(); /* explicit load() forces real buffering even while
+                        off-screen — Chrome's off-screen throttling only
+                        overrides the *implicit* preload="auto" behavior,
+                        not a script-driven load() call */
+    })
+    .catch(()=>{}); /* keep the plain src as fallback if this fails */
+  const art=holder.closest('article.project');
+
+  if(art&&innerWidth>860){
+    /* desktop: pin the card, map scroll position to playback time (like the 3D turntable) */
+    const inner=document.createElement('div');
+    inner.className='pin-inner';
+    while(art.firstChild)inner.appendChild(art.firstChild);
+    art.appendChild(inner);
+    art.classList.add('pin3d');
+    /* throttle seeks to one per animation frame — firing currentTime on every raw
+       scroll event can queue up seeks faster than the decoder can keep up, which
+       looks like the video freezing entirely */
+    let pending=false;
+    const applyFrame=()=>{
+      pending=false;
+      if(!(video.duration>0))return;
+      const range=art.offsetHeight-innerHeight;
+      const r=art.getBoundingClientRect();
+      const p=Math.max(0,Math.min(1,-r.top/range));
+      const t=p*video.duration;
+      if(Math.abs(video.currentTime-t)>0.004)video.currentTime=t;
+    };
+    const updScrub=()=>{
+      if(pending)return;
+      pending=true;
+      requestAnimationFrame(applyFrame);
+    };
+    video.addEventListener('loadedmetadata',updScrub);
+    addEventListener('scroll',updScrub,{passive:true});
+    if(video.readyState>=1)updScrub(); /* metadata may already be loaded (e.g. cached) */
+
+    /* Chrome keeps showing the poster until the video has actually rendered
+       a real frame at least once — merely setting currentTime isn't enough.
+       "Prime" it with a near-instant muted play/pause the moment a frame is
+       available, so the poster swap happens as soon as possible instead of
+       waiting for the user to physically scroll near it. */
+    let primed=false;
+    const prime=()=>{
+      if(primed||video.readyState<2)return; /* HAVE_CURRENT_DATA */
+      primed=true;
+      const p=video.play();
+      if(p&&p.then)p.then(()=>{video.pause();applyFrame();}).catch(()=>{applyFrame();});
+      else{video.pause();applyFrame();}
+    };
+    video.addEventListener('loadeddata',prime);
+    video.addEventListener('canplay',prime);
+    if(video.readyState>=2)prime();
+  }else{
+    /* mobile/narrow: just loop it as a normal autoplaying clip */
+    video.loop=true;video.autoplay=true;video.setAttribute('playsinline','');
+    video.play().catch(()=>{});
+  }
+});
+</script>
+
+</body>
+</html>

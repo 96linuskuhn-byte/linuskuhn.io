@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projekt-Editor — Linus Kuhn</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf9f5;--blue:#3a3af0;--blue-soft:#eceafe;--ink:#17171d;--grey:#6d6d78;--line:rgba(23,23,29,.16)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.6;padding:32px clamp(16px,5vw,64px) 120px}
+h1,h2{font-family:'Archivo',sans-serif;text-transform:uppercase;letter-spacing:-.01em}
+h1{font-size:1.6rem;margin-bottom:6px}
+.hint{color:var(--grey);font-size:.75rem;max-width:70ch;margin-bottom:24px}
+button{font-family:inherit;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  background:var(--ink);color:#fff;border:none;padding:8px 14px;cursor:pointer}
+button:hover{background:var(--blue)}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+button.ghost:hover{background:var(--ink);color:#fff}
+button.danger{background:transparent;color:#b3261e;border:1px solid #b3261e}
+button.danger:hover{background:#b3261e;color:#fff}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;position:sticky;top:0;background:var(--bg);padding:12px 0;z-index:10;border-bottom:1px solid var(--line)}
+.card{border:1px solid var(--line);background:#fff;padding:20px;margin-bottom:22px}
+.card .head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.card .head .t{font-family:'Archivo';font-weight:800;font-size:1rem;text-transform:uppercase}
+.card .head .btns{display:flex;gap:8px}
+label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin:14px 0 4px}
+input[type=text],textarea{width:100%;font-family:inherit;font-size:.82rem;padding:9px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--blue)}
+.row{display:grid;grid-template-columns:120px 1fr;gap:14px}
+@media(max-width:640px){.row{grid-template-columns:1fr}}
+.imgs{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.imgbox{position:relative;width:150px}
+.imgbox img{width:100%;height:100px;object-fit:cover;border:1px solid var(--line);display:block}
+.imgbox .name{font-size:.62rem;color:var(--grey);word-break:break-all;margin-top:3px}
+.imgbox .rm{position:absolute;top:4px;right:4px;padding:2px 7px;font-size:.65rem;background:#b3261e}
+.addimg{width:150px;height:100px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--grey);cursor:pointer;font-size:.7rem;text-align:center}
+.addimg:hover{border-color:var(--blue);color:var(--blue)}
+#status{position:fixed;bottom:0;left:0;right:0;background:var(--ink);color:#fff;padding:10px 24px;font-size:.72rem;display:none}
+#status.ok{background:#0a7d43;display:block}
+#status.err{background:#b3261e;display:block}
+#start{border:1px dashed var(--line);padding:40px;text-align:center;color:var(--grey)}
+#start button{margin-top:14px}
+.badge{background:var(--blue-soft);color:var(--blue);font-size:.68rem;font-weight:700;padding:3px 10px}
+</style>
+</head>
+<body>
+<h1>Projekt-Editor</h1>
+<p class="hint">Bearbeitet die Projekte deiner <span class="badge">index.html</span> direkt: Texte ändern, Bilder hinzufügen, neue Projekte anlegen.
+Elementtypen pro Projekt: <b>// Beschreibung</b> (Label), <b>Jahreszahl</b>, <b>Bezeichnung</b> (Titel), <b>Text</b>, <b>Tags</b> und <b>Bilder</b>.
+Tipp: „•" im Label als <code>&amp;bull;</code> schreiben. Am besten in Chrome oder Edge nutzen.</p>
+
+<div id="start">
+  <p>Wähle den Website-Ordner (der Ordner, in dem <b>index.html</b> und <b>img/</b> liegen).</p>
+  <button id="open">Website-Ordner öffnen</button>
+  <p style="margin-top:14px;font-size:.7rem">Browser ohne Ordnerzugriff (Safari/Firefox):
+  <label style="display:inline;color:var(--blue);cursor:pointer;text-decoration:underline">index.html laden<input type="file" id="fileload" accept=".html" hidden></label>
+  — Bilder werden dann in die Datei eingebettet, Speichern lädt eine neue index.html herunter.</p>
+</div>
+
+<div id="app" style="display:none">
+  <div class="toolbar">
+    <button id="save">💾 Speichern</button>
+    <button class="ghost" id="add">+ Neues Projekt</button>
+    <span style="align-self:center;color:var(--grey);font-size:.7rem" id="mode"></span>
+  </div>
+  <div id="list"></div>
+</div>
+
+<div id="status"></div>
+
+<script>
+let dirHandle=null, fileHandle=null, rawHtml="", projects=[], fsMode=false;
+const $=s=>document.querySelector(s);
+
+const ART_RE=/<article class="project">[\s\S]*?<\/article>/g;
+
+function esc(s){return s.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function parseProjects(html){
+  const out=[];
+  for(const m of html.match(ART_RE)||[]){
+    const g=(re)=>{const r=m.match(re);return r?r[1].trim():""};
+    const label=g(/class="p-label">([\s\S]*?)<\/span>/);
+    const year=g(/class="p-year">([\s\S]*?)<\/div>/);
+    const h3Raw=g(/<h3>([\s\S]*?)<\/h3>/);
+    const slugMatch=h3Raw.match(/slug=([a-z0-9-]+)/i);
+    const slug=slugMatch?slugMatch[1]:"";
+    const title=h3Raw.replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+    const text=g(/class="txt">([\s\S]*?)<\/p>/).replace(/\s+/g," ");
+    const tags=[...m.matchAll(/<span>([\s\S]*?)<\/span>/g)].map(x=>x[1].trim())
+      .filter(t=>t!==label);
+    const mediaCls=g(/class="p-media([^"]*)"/);
+    const imgs=[...m.matchAll(/<img[^>]*src="([^"]+)"[^>]*>/g)].map(x=>x[1]);
+    out.push({label,year,title,text,tags,mediaCls:mediaCls.trim(),imgs,newImgs:{},slug});
+  }
+  return out;
+}
+function slugify(s){return (s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"project"}
+function renderArticle(p){
+  const tags=p.tags.filter(t=>t).map(t=>`<span>${esc(t)}</span>`).join("");
+  const cls=p.imgs.length>1?"multi":p.mediaCls;
+  const imgs=p.imgs.map(s=>`<img src="${s}" alt="${esc(p.title).replace(/"/g,"&quot;")}" loading="lazy">`).join("\n        ");
+  const slug=p.slug||slugify(p.title);
+  return `<article class="project">
+      <div class="p-info">
+        <span class="p-label">${p.label}</span>
+        <div class="p-year">${esc(p.year)}</div>
+        <h3><a href="project.html?slug=${slug}">${p.title}</a></h3>
+        <p class="txt">${p.text}</p>
+        <div class="p-tags">${tags}</div>
+      </div>
+      <div class="p-media ${cls}">${imgs}</div>
+    </article>`;
+}
+
+function ui(){
+  const list=$("#list");list.innerHTML="";
+  projects.forEach((p,i)=>{
+    const c=document.createElement("div");c.className="card";
+    c.innerHTML=`
+      <div class="head">
+        <span class="t">${p.title||"Neues Projekt"}</span>
+        <div class="btns">
+          <button class="ghost up">↑</button>
+          <button class="ghost down">↓</button>
+          <button class="danger del">Löschen</button>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>Jahreszahl</label><input type="text" class="f-year" value=""></div>
+        <div><label>// Beschreibung (Label)</label><input type="text" class="f-label" value=""></div>
+      </div>
+      <label>Bezeichnung (Titel)</label><input type="text" class="f-title" value="">
+      <label>Text</label><textarea class="f-text"></textarea>
+      <label>Tags (mit Komma getrennt)</label><input type="text" class="f-tags" value="">
+      <label>Bilder</label>
+      <div class="imgs"></div>`;
+    c.querySelector(".f-year").value=p.year;
+    c.querySelector(".f-label").value=p.label;
+    c.querySelector(".f-title").value=p.title;
+    c.querySelector(".f-text").value=p.text;
+    c.querySelector(".f-tags").value=p.tags.join(", ");
+    ["year","label","title","text"].forEach(k=>{
+      c.querySelector(".f-"+k).addEventListener("input",e=>{p[k]=e.target.value;
+        if(k==="title")c.querySelector(".t").textContent=e.target.value||"Neues Projekt";});
+    });
+    c.querySelector(".f-tags").addEventListener("input",e=>{p.tags=e.target.value.split(",").map(s=>s.trim()).filter(Boolean)});
+    c.querySelector(".up").onclick=()=>{if(i>0){[projects[i-1],projects[i]]=[projects[i],projects[i-1]];ui();}};
+    c.querySelector(".down").onclick=()=>{if(i<projects.length-1){[projects[i+1],projects[i]]=[projects[i],projects[i+1]];ui();}};
+    c.querySelector(".del").onclick=()=>{if(confirm("Projekt wirklich löschen?")){projects.splice(i,1);ui();}};
+    const imgs=c.querySelector(".imgs");
+    p.imgs.forEach((src,k)=>{
+      const b=document.createElement("div");b.className="imgbox";
+      const shown=p.newImgs[src]?p.newImgs[src].preview:src;
+      b.innerHTML=`<img src="${shown}"><button class="rm">✕</button><div class="name">${src.startsWith("data:")?"eingebettet":src}</div>`;
+      b.querySelector(".rm").onclick=()=>{p.imgs.splice(k,1);delete p.newImgs[src];ui();};
+      imgs.appendChild(b);
+    });
+    const add=document.createElement("label");add.className="addimg";
+    add.innerHTML=`+ Bild hinzufügen<input type="file" accept="image/*" multiple hidden>`;
+    add.querySelector("input").addEventListener("change",async e=>{
+      for(const f of e.target.files){await addImage(p,f);}
+      ui();
+    });
+    imgs.appendChild(add);
+    list.appendChild(c);
+  });
+}
+
+async function addImage(p,file){
+  if(fsMode){
+    const name=file.name.replace(/[^\w.\-]/g,"_");
+    const imgDir=await dirHandle.getDirectoryHandle("img",{create:true});
+    const fh=await imgDir.getFileHandle(name,{create:true});
+    const w=await fh.createWritable();await w.write(file);await w.close();
+    const src="img/"+name;
+    p.newImgs[src]={preview:URL.createObjectURL(file)};
+    p.imgs.push(src);
+  }else{
+    const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(file);});
+    p.imgs.push(data);
+  }
+}
+
+function template(){
+  return {label:"Concept &bull; Own Project",year:new Date().getFullYear().toString(),
+    title:"New Project",text:"Describe the project here — what you built, how, and why it matters.",
+    tags:["CAD","Prototyping"],mediaCls:"natural",imgs:[],newImgs:{}};
+}
+
+function buildHtml(){
+  const arts=projects.map(renderArticle);
+  const matches=rawHtml.match(ART_RE)||[];
+  if(!matches.length){status("Keine Projekte in der index.html gefunden.","err");return null;}
+  let first=true, idx=0;
+  let out=rawHtml.replace(ART_RE,()=>{
+    if(first){first=false;return arts.join("\n\n    ");}
+    return "\x00REMOVE\x00";
+  });
+  out=out.replace(/[ \t]*\x00REMOVE\x00\n?/g,"");
+  return out;
+}
+
+async function save(){
+  const out=buildHtml();
+  if(!out)return;
+  rawHtml=out;
+  if(fsMode){
+    const w=await fileHandle.createWritable();await w.write(out);await w.close();
+    status("Gespeichert! index.html wurde aktualisiert — Seite neu laden zum Prüfen.","ok");
+  }else{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([out],{type:"text/html"}));
+    a.download="index.html";a.click();
+    status("index.html heruntergeladen — ersetze damit die alte Datei.","ok");
+  }
+}
+
+function status(msg,cls){const s=$("#status");s.textContent=msg;s.className=cls;
+  setTimeout(()=>{s.className="";},5000)}
+
+async function openDir(){
+  try{
+    dirHandle=await showDirectoryPicker({mode:"readwrite"});
+    fileHandle=await dirHandle.getFileHandle("index.html");
+    rawHtml=await (await fileHandle.getFile()).text();
+    fsMode=true;start();
+    $("#mode").textContent="Modus: direkter Ordnerzugriff";
+  }catch(e){if(e.name!=="AbortError")status("Fehler: "+e.message,"err");}
+}
+function start(){
+  projects=parseProjects(rawHtml);
+  if(!projects.length){status("Keine Projekte gefunden — ist das die richtige index.html?","err");return;}
+  $("#start").style.display="none";$("#app").style.display="block";ui();
+}
+$("#open").onclick=()=>{
+  if(window.showDirectoryPicker)openDir();
+  else status("Dein Browser unterstützt keinen Ordnerzugriff — nutze 'index.html laden'.","err");
+};
+$("#fileload").addEventListener("change",async e=>{
+  const f=e.target.files[0];if(!f)return;
+  rawHtml=await f.text();fsMode=false;start();
+  $("#mode").textContent="Modus: Datei-Import (Bilder werden eingebettet)";
+});
+$("#save").onclick=save;
+$("#add").onclick=()=>{projects.push(template());ui();scrollTo(0,document.body.scrollHeight);};
+</script>
+</body>
+</html>

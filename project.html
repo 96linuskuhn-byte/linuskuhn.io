@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — Linus Kuhn</title>
+<meta name="description" content="Project detail — Linus Kuhn, mechanical engineering &amp; product development.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf9f5;
+  --panel:#f1efe8;
+  --blue:#3a3af0;
+  --blue-soft:#eceafe;
+  --ink:#17171d;
+  --grey:#6d6d78;
+  --line:rgba(23,23,29,.14);
+  --r:4px;
+  --r-img:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,.display{
+  font-family:'Archivo',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  line-height:1.02;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--blue);color:#fff}
+img{display:block;max-width:100%}
+
+.boxlink{
+  display:inline-block;
+  background:var(--ink);
+  color:#fff;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:6px 12px;
+  border-radius:var(--r);
+  transition:background .15s,color .15s,transform .15s;
+}
+.boxlink:hover{background:var(--blue);transform:translateY(-1px)}
+.boxlink.inv{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.boxlink.inv:hover{background:var(--ink);color:#fff}
+.arrow-l::before{content:"\2190";margin-right:6px}
+.arrow::after{content:"\2192";margin-left:6px}
+
+.crumb-bar{
+  position:sticky;top:0;z-index:100;
+  padding:16px clamp(20px,5vw,40px);
+  background:rgba(250,249,245,.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+
+main{max-width:1100px;margin:0 auto;padding:30px clamp(20px,5vw,40px) 80px}
+
+.p-head{border-bottom:var(--dash,1px solid rgba(23,23,29,.16));padding-bottom:0;margin-bottom:34px}
+.p-label{
+  display:inline-block;align-self:flex-start;
+  background:var(--blue-soft);color:var(--blue);
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  padding:4px 12px;margin-bottom:20px;border-radius:var(--r);
+}
+.p-label::before{content:"// "}
+.p-year{
+  font-family:'Archivo';font-weight:800;font-size:.95rem;letter-spacing:.1em;
+  color:var(--blue);margin-bottom:10px;
+}
+h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
+.p-tags{display:flex;flex-wrap:wrap;gap:8px}
+.p-text .p-tags{margin-top:26px}
+.p-tags span{
+  font-size:.7rem;letter-spacing:.04em;color:var(--ink);
+  border:1px solid var(--line);padding:5px 11px;text-transform:uppercase;border-radius:var(--r);
+}
+
+.p-body{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
+@media(max-width:860px){.p-body{grid-template-columns:1fr}}
+.p-media{overflow:hidden}
+.p-media img{width:100%;height:auto;box-sizing:border-box;background:var(--panel);border-radius:var(--r-img);border:1px solid var(--line)}
+.p-media.multi{display:flex;flex-direction:column;gap:20px}
+
+.p-text .txt{font-size:.85rem;color:var(--ink);line-height:1.95;margin-bottom:20px}
+.p-text .more{font-size:.85rem;color:var(--grey);line-height:1.95}
+.p-text h2{font-size:1rem;margin:0 0 14px;letter-spacing:0}
+
+.p-nav{
+  margin-top:70px;padding-top:28px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+
+footer{
+  padding:28px clamp(16px,3vw,40px);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  border-top:1px solid var(--line);font-size:.72rem;color:var(--grey);
+}
+</style>
+</head>
+<body>
+
+<div class="crumb-bar"><a href="index.html#projects" class="boxlink inv arrow-l">Back to Portfolio</a></div>
+
+<main id="main"></main>
+
+<footer>
+  <span>&copy; 2026 Linus Kuhn</span>
+  <span>Pforzheim, Germany</span>
+</footer>
+
+<script>
+const PROJECTS=[
+  {
+    slug:'axial-flux-machine',
+    label:'Master Thesis &bull; Pforzheim University',
+    year:'2025',
+    title:'Axial Flux Machine — Surrogate-Based Topology Optimization',
+    tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
+    txt:'YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.',
+    more:'The thesis combined design-of-experiments sampling with an actively updated surrogate model, so every additional 3D-FEM simulation was spent where it improved prediction accuracy the most rather than covering the design space uniformly. This cut the number of expensive transient simulations substantially while keeping the surrogate reliable across the full parameter range. The constraint cascade was built to automatically reject infeasible or irrelevant designs early, letting the optimizer focus purely on machine geometries that were both manufacturable and electromagnetically meaningful.',
+    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true}
+  },
+  {
+    slug:'coffee-grinder',
+    label:'Physical Prototype &bull; Pforzheim University',
+    year:'2024',
+    title:'Manual Coffee Grinder Inspired by Charles Eames',
+    tags:['Industrial Design','Sketching','Prototyping','CMF'],
+    txt:'Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.',
+    more:'Starting from dozens of hand sketches exploring proportion and grip, the concept was refined into a CAD model balancing the warmth of solid walnut against a satin-finished aluminium frame. Material and manufacturing choices were made with hand-tool workshop fabrication in mind — the wood body was turned and hand-finished, while the frame was CNC-machined to keep tight tolerances around the burr mechanism. The result is a fully functional grinder that channels Eames-era material honesty into a small, everyday object.',
+    media:{type:'multi',imgs:[
+      {src:'img/grinder-poster.jpg',alt:'Manual Coffee Grinder Inspired by Charles Eames'},
+      {src:'img/grinder-sketch-1.jpg',alt:'Manual Coffee Grinder — early concept sketches'},
+      {src:'img/grinder-sketch-2.jpg',alt:'Manual Coffee Grinder — material and mechanism sketches'},
+      {src:'img/grinder-render-1.jpg',alt:'Manual Coffee Grinder — CAD rendering'},
+      {src:'img/grinder-render-2.jpg',alt:'Manual Coffee Grinder — CAD rendering side view'}
+    ]}
+  },
+  {
+    slug:'autonomous-robot',
+    label:'Bachelor Thesis &bull; Evomotiv GmbH',
+    year:'2022',
+    title:'Autonomous Robot for Vehicle Test Automation',
+    tags:['Mechatronics','Sensors','Stakeholder Management','Functional Prototypes'],
+    txt:'Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.',
+    more:'The robot needed to reproduce pedestrian and obstacle behavior around a test vehicle with centimeter-level positioning repeatability, driven by RTK-GPS and closed-loop motor control. Beyond the hardware, the thesis involved close coordination with test engineers to translate real test scenarios into robot behavior, and the platform was designed to be extendable — later test scenarios reused the same chassis and control architecture with different sensor payloads, turning a single prototype into a small fleet used in day-to-day validation work.',
+    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation'}
+  },
+  {
+    slug:'velomobil',
+    label:'Concept &bull; Own Project',
+    year:'2021',
+    title:'Velomobil — Aerodynamic Pedal Vehicle',
+    tags:['Surface Modeling','Rendering','Aerodynamics','Carbon Fiber'],
+    txt:'An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles.',
+    more:'The project was an exercise in class-A surface modeling: shaping a smooth, low-drag envelope around a recumbent riding position and off-the-shelf bicycle drivetrain components. The carbon fiber monocoque concept was developed to keep weight low while giving the shell enough stiffness to serve as the primary structure, eliminating the need for a separate frame. Renderings were used throughout to iterate on proportions and surface transitions before committing to any tooling decisions.',
+    media:{type:'natural',img:'img/velomobil.jpg',alt:'Velomobil — Aerodynamic Pedal Vehicle'}
+  },
+  {
+    slug:'automated-window',
+    label:'Physical Prototype &bull; Karlsruhe University',
+    year:'2021',
+    title:'Automated Window',
+    tags:['Kinematics','Arduino','3D Printing','Electronics','Project Management'],
+    txt:'A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.',
+    more:'Built to retrofit onto an existing window frame without modification, the system combines a 3D-printed linkage mechanism, an Arduino-based control unit and a sound-level sensor to automatically ventilate a room when it gets noisy outside and close again once it quiets down. The project covered the full stack from kinematic design of the opening mechanism to firmware and enclosure design, and was run with a small team — giving early hands-on experience in coordinating mechanical, electronic and software work streams on a tight timeline.',
+    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true}
+  },
+  {
+    slug:'raceboat',
+    label:'Physical Prototype &bull; Own Project',
+    year:'2019',
+    title:'Remote Controlled Carbon Fiber Raceboat',
+    tags:['Mold Making','Composite Lamination','3D Printing'],
+    txt:'A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer.',
+    more:'The hull shape was designed in CAD and split into 3D-printed negative mold segments, which were then used to hand-laminate a lightweight carbon fiber shell. Getting a fair, low-drag hull out of a segmented mold — and finishing the seams to a race-ready surface — was the core challenge of the build. Propulsion came from a 500W brushless DC motor paired with a turboprop drive, making this one of the first projects where CAD design, 3D-printed tooling and composite fabrication all came together end to end.',
+    media:{type:'single',img:'img/raceboat.jpg',alt:'Remote Controlled Carbon Fiber Raceboat'}
+  },
+  {
+    slug:'rotary-engine',
+    label:'Concept &bull; Own Project',
+    year:'2017',
+    title:'Rotary Combustion Engine',
+    tags:['Fusion 360','Thermodynamics','Engine Engineering'],
+    txt:'An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all.',
+    more:'Rather than a conventional reciprocating piston, this concept explores a rotating piston geometry where the combustion chamber is formed dynamically by moving valves as the rotor turns. As an early self-directed project, it was as much about learning parametric CAD modeling in Fusion 360 as it was about working through the thermodynamic cycle and sealing challenges inherent to rotary combustion designs. It marks the starting point of the hands-on, design-driven approach carried through every project since.',
+    media:{type:'natural',img:'img/engine.jpg',alt:'Rotary Combustion Engine'}
+  },
+  {
+    slug:'steer-by-wire',
+    label:'Project &bull; Own Project',
+    year:'2026',
+    title:'Steer by Wire',
+    tags:['CAD','Prototyping'],
+    txt:'To implement a lightweight functional design of a Steer by Wire application.',
+    more:'An ongoing project developing a lightweight, functional steer-by-wire setup — removing the mechanical link between steering wheel and wheels in favor of a sensor-and-actuator-driven system. Work so far has focused on the mechanical layout and packaging of the actuator unit in CAD, with functional prototyping planned as the next step to validate steering feel and response.',
+    media:{type:'multi',imgs:[{src:'img/Steering.png',alt:'Steer by Wire'},{src:'img/Steering2.png',alt:'Steer by Wire'}]}
+  }
+];
+
+function mediaHTML(m){
+  if(m.type==='multi'){
+    return `<div class="p-media multi">${m.imgs.map(i=>`<img src="${i.src}" alt="${i.alt}" loading="lazy">`).join('')}</div>`;
+  }
+  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><img src="${m.img}" alt="${m.alt}" loading="lazy"></div>`;
+}
+
+const params=new URLSearchParams(location.search);
+const slug=params.get('slug');
+const idx=PROJECTS.findIndex(p=>p.slug===slug);
+const proj=idx>=0?PROJECTS[idx]:null;
+const main=document.getElementById('main');
+
+if(!proj){
+  main.innerHTML=`
+    <h1 class="p-title">Project not found</h1>
+    <p class="txt" style="margin-top:16px">This project doesn't exist (anymore). Head back to see all projects.</p>
+  `;
+}else{
+  const prev=PROJECTS[(idx-1+PROJECTS.length)%PROJECTS.length];
+  const next=PROJECTS[(idx+1)%PROJECTS.length];
+  document.title=proj.title+' — Linus Kuhn';
+  main.innerHTML=`
+    <div class="p-head">
+      <span class="p-label">${proj.label}</span>
+      <div class="p-year">${proj.year}</div>
+      <h1 class="p-title">${proj.title}</h1>
+    </div>
+    <div class="p-body">
+      ${mediaHTML(proj.media)}
+      <div class="p-text">
+        <h2>Overview</h2>
+        <p class="txt">${proj.txt}</p>
+        <p class="more">${proj.more}</p>
+        <div class="p-tags">${proj.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="p-nav">
+      <a class="boxlink inv arrow-l" href="project.html?slug=${prev.slug}">${prev.title}</a>
+      <a class="boxlink arrow" href="project.html?slug=${next.slug}">${next.title}</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
