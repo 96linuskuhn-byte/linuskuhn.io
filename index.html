@@ -94,6 +94,8 @@ nav.scrolled{border-bottom-color:var(--line)}
 
 /* ---------- HERO ---------- */
 .hero-pin{height:145vh}
+.hero-pin.no-pin{height:auto}
+.hero-pin.no-pin .hero{position:relative;height:auto;min-height:100svh}
 .hero{
   height:100svh;
   position:sticky;top:0;
@@ -652,15 +654,15 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     const fx=1+rnd()*4, ft=.8+rnd()*2.7;
     comps.push({fx,ft,p1:rnd()*6.2832,p2:rnd()*6.2832,a:(.3+rnd()*.7)/(fx*.6+ft*.4)});
   }
-  // the full-resolution mesh means ~13,000 individual canvas stroke() calls
-  // per frame — fine on a desktop GPU, but enough to make phones stutter.
-  // Use a much coarser grid (and a capped device-pixel-ratio) on small/touch
-  // screens, where the fine detail isn't visible anyway.
+  // the animated, scroll-linked mesh is heavy to keep smooth on phones, so
+  // it's simply switched off there (static single frame, no scroll-jack)
+  // rather than trying to render a lower-quality version of it — full
+  // detail/quality stays exactly as before on devices that do run it.
   const lowPower=matchMedia('(max-width:760px)').matches||matchMedia('(pointer:coarse)').matches;
-  const NU=lowPower?36:80, NV=lowPower?16:34, ROWSUB=lowPower?2:4, NUF=(NU-1)*ROWSUB+1;
+  const NU=80, NV=34, ROWSUB=4, NUF=(NU-1)*ROWSUB+1;
   let W,H;
   function resize(){
-    const dpr=Math.min(devicePixelRatio||1,lowPower?1:2);
+    const dpr=Math.min(devicePixelRatio||1,2);
     W=cv.clientWidth;H=cv.clientHeight;
     cv.width=W*dpr;cv.height=H*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -735,28 +737,29 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     const range=pin.offsetHeight-innerHeight;
     prog=Math.max(0,Math.min(1,(scrollY-pin.offsetTop)/range));
   }
-  let lastDraw=0;
-  const frameInterval=lowPower?1000/30:0; // cap to ~30fps on phones, uncapped on desktop
   function loop(now){
-    if(now-lastDraw>=frameInterval){
-      lastDraw=now;
-      const idle=reduced?0:now*.00012;
-      const ph=idle+prog*3.5;
-      draw(ph);
-    }
+    const idle=reduced?0:now*.00012;
+    const ph=idle+prog*3.5;
+    draw(ph);
     // soft hand-over: content starts drifting up before the pin releases,
-    // so real scrolling continues the motion seamlessly — kept outside the
-    // frame cap so the text motion itself always stays smooth
+    // so real scrolling continues the motion seamlessly
     const out=Math.max(0,(prog-.55)/.45);
     const eased=out*out;
     inner.style.transform=`translateY(${(-60-70*eased).toFixed(1)}px)`;
     inner.style.opacity=(1-.2*eased).toFixed(3);
     requestAnimationFrame(loop);
   }
-  addEventListener('resize',()=>{resize();},{passive:true});
-  addEventListener('scroll',onScroll,{passive:true});
-  resize();onScroll();
-  requestAnimationFrame(loop);
+  resize();
+  if(lowPower){
+    // no scroll-jack / animation on phones — just draw one static frame
+    document.getElementById('top').classList.add('no-pin');
+    draw(0);
+  }else{
+    addEventListener('resize',()=>{resize();},{passive:true});
+    addEventListener('scroll',onScroll,{passive:true});
+    onScroll();
+    requestAnimationFrame(loop);
+  }
 })();
 
 const nav=document.getElementById('nav');
@@ -907,8 +910,16 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
 /* ===== mobile lightbox: tapping an image opens it full-width with the
    rest of the page blurred behind ===== */
 const isTouchDevice=window.matchMedia('(pointer:coarse)').matches;
-let lightboxEl=null;
-function openLightbox(img){
+let lightboxEl=null, lbGallery=null;
+function updateLightboxImage(){
+  const lbImg=lightboxEl.querySelector('img');
+  const img=lbGallery?lbGallery.getImgs()[lbGallery.getIdx()]:null;
+  if(!img)return;
+  lbImg.src=img.currentSrc||img.src;
+  lbImg.alt=img.alt||'';
+}
+function openLightbox(img,gallery){
+  lbGallery=gallery||null;
   if(!lightboxEl){
     lightboxEl=document.createElement('div');
     lightboxEl.className='lightbox';
@@ -920,6 +931,29 @@ function openLightbox(img){
     };
     lightboxEl.addEventListener('click',e=>{if(e.target===lightboxEl)closeLb();});
     lightboxEl.querySelector('.lb-close').addEventListener('click',closeLb);
+    // swipe left/right to move through the same gallery while the
+    // lightbox is open
+    let lsx=0,lsy=0,ltrack=false;
+    lightboxEl.addEventListener('touchstart',e=>{
+      lsx=e.touches[0].clientX;lsy=e.touches[0].clientY;ltrack=true;
+    },{passive:true});
+    lightboxEl.addEventListener('touchmove',e=>{
+      if(!ltrack||!lbGallery)return;
+      const dx=e.touches[0].clientX-lsx,dy=e.touches[0].clientY-lsy;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>10)e.preventDefault();
+    },{passive:false});
+    lightboxEl.addEventListener('touchend',e=>{
+      if(!ltrack)return;
+      ltrack=false;
+      if(!lbGallery)return;
+      const dx=e.changedTouches[0].clientX-lsx,dy=e.changedTouches[0].clientY-lsy;
+      if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){
+        const imgs=lbGallery.getImgs();
+        const next=(lbGallery.getIdx()+(dx<0?1:-1)+imgs.length)%imgs.length;
+        lbGallery.goTo(next);
+        updateLightboxImage();
+      }
+    });
   }
   const lbImg=lightboxEl.querySelector('img');
   lbImg.src=img.currentSrc||img.src;
@@ -931,7 +965,7 @@ function openLightbox(img){
 /* ===== hover-zoom (desktop) / tap-to-open-lightbox (mobile) for any
    project image, driven by JS class toggles rather than :hover so it
    can't lose a CSS specificity fight and works identically everywhere ===== */
-function wireZoom(m,getImg){
+function wireZoom(m,getImg,gallery){
   let wasSwipe=false;
   m.addEventListener('click',e=>{
     if(wasSwipe){wasSwipe=false;return;}
@@ -939,7 +973,7 @@ function wireZoom(m,getImg){
     const img=getImg();
     if(!img)return;
     if(isTouchDevice){
-      openLightbox(img);
+      openLightbox(img,gallery);
       return;
     }
     img.classList.remove('tap-zoom');
@@ -1014,7 +1048,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
   mk('prev','←',-1);mk('next','→',1);
   m.appendChild(dots);
 
-  const zoom=wireZoom(m,()=>m.querySelector('img.active'));
+  const zoom=wireZoom(m,()=>m.querySelector('img.active'),{getImgs:()=>imgs,getIdx:()=>idx,goTo});
 
   // swipe left/right to change image on touch devices
   let tsx=0,tsy=0,tracking=false;
