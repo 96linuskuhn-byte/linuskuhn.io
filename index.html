@@ -279,8 +279,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 
 /* ---------- RESUME ---------- */
 .resume{background:var(--panel)}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px)}
-@media(max-width:860px){.res-grid{grid-template-columns:1fr}}
+.res-grid{display:grid;grid-template-columns:1fr;gap:clamp(32px,5vw,72px)}
 .res-col .colhead{
   display:inline-block;background:var(--blue);color:#fff;
   font-size:.75rem;font-weight:700;letter-spacing:.04em;padding:5px 14px;
@@ -295,6 +294,16 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .rlist .when{color:var(--blue);font-size:.75rem;font-weight:700;letter-spacing:.04em}
 .rlist .what{font-family:'Archivo';font-weight:700;font-size:.95rem;text-transform:uppercase;letter-spacing:.02em}
 .rlist .where{display:block;font-family:'JetBrains Mono';font-weight:400;text-transform:none;letter-spacing:0;color:var(--grey);font-size:.76rem;margin-top:6px}
+.rlist .thesis-row{
+  display:inline-block;margin-top:8px;
+  font-family:'JetBrains Mono';text-transform:none;letter-spacing:0;font-size:.76rem;
+}
+.rlist .thesis-row b{color:var(--ink);font-weight:700}
+.rlist .thesis-link{
+  display:inline-block;font-weight:700;color:var(--blue);
+}
+.rlist .thesis-link::after{content:"\2192";margin-left:6px;transition:margin-left .15s}
+.rlist .thesis-row:hover .thesis-link::after{margin-left:10px}
 @media(max-width:520px){.rlist li{grid-template-columns:1fr;gap:6px}}
 
 /* ---------- SKILLS ---------- */
@@ -530,18 +539,16 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     <div class="res-col reveal">
       <span class="colhead">Work Experience</span>
       <ul class="rlist">
-        <li><span class="when">Since 11/2025</span><span class="what">Master's Thesis — Axial Flux Optimization<span class="where">Pforzheim University of Applied Sciences</span></span></li>
         <li><span class="when">Since 10/2024</span><span class="what">Development Engineer (Part-Time)<span class="where">Evomotiv GmbH, Weissach — alongside Master's degree</span></span></li>
         <li><span class="when">2022 – 2024</span><span class="what">Development Engineer (Full-Time)<span class="where">Evomotiv GmbH, Weissach</span></span></li>
-        <li><span class="when">2021 – 2022</span><span class="what">Bachelor's Thesis — Autonomous Robot<span class="where">Evomotiv GmbH</span></span></li>
         <li><span class="when">2020</span><span class="what">Rapid Prototyping Intern<span class="where">Bosch Engineering GmbH, Abstatt</span></span></li>
       </ul>
     </div>
     <div class="res-col reveal">
       <span class="colhead">Education</span>
       <ul class="rlist">
-        <li><span class="when">2024 – 2026</span><span class="what">M.Sc. Product Development<span class="where">Pforzheim University of Applied Sciences</span></span></li>
-        <li><span class="when">2017 – 2022</span><span class="what">B.Eng. Mechanical Engineering<span class="where">Karlsruhe University of Applied Sciences (HKA)</span></span></li>
+        <li><span class="when">2024 – 2026</span><span class="what">M.Sc. Product Development<span class="where">Pforzheim University of Applied Sciences</span><span class="thesis-row"><b>Masterthesis:</b> <a class="thesis-link" href="project.html?slug=axial-flux-machine">Axial Flux Machine</a></span></span></li>
+        <li><span class="when">2017 – 2022</span><span class="what">B.Eng. Mechanical Engineering<span class="where">Karlsruhe University of Applied Sciences (HKA)</span><span class="thesis-row"><b>Bachelorthesis:</b> <a class="thesis-link" href="project.html?slug=autonomous-robot">Autonomous Robot</a></span></span></li>
         <li><span class="when">2014 – 2017</span><span class="what">Technical Grammar School<span class="where">Wilhelm-Maybach Gymnasium, Stuttgart</span></span></li>
       </ul>
     </div>
