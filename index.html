@@ -142,7 +142,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .hero .x{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#5b6ac9;font-size:.7rem;z-index:2;animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
 @media(max-width:760px){
-  .hero{background:linear-gradient(150deg,#dfe4f7 0%,#8d9de0 40%,#3a3af0 100%)}
+  .hero{background:linear-gradient(150deg,#dfe4f7 0%,#8d9de0 40%,#3a3af0 100%);justify-content:flex-start;padding-top:110px;padding-bottom:40px;overflow-y:auto}
   .hero .inner{margin:0 auto;text-align:center;padding:28px 24px}
   .hero .cta{justify-content:center}
   .hero .sub{margin:28px auto 0}
@@ -238,7 +238,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 /* slideshow (auto-enabled for projects with multiple images) */
 .p-media.slide{min-height:300px;border:1px solid var(--line)}
 .p-media.slide img{
-  display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;margin:0;
+  display:block;position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:contain;margin:0;
   opacity:0;pointer-events:none;
   transition:opacity .45s ease,transform .6s cubic-bezier(.2,.6,.2,1);
   border:none;border-radius:0;background:none;
@@ -866,6 +866,9 @@ document.querySelectorAll('.p-media').forEach(m=>{
   const imgs=[...m.querySelectorAll('img')];
   if(imgs.length<2)return;
   m.classList.add('slide');
+  // load all gallery images right away (not lazily) so switching between
+  // them always has the real dimensions available for the frame's aspect ratio
+  imgs.forEach(im=>{ im.loading='eager'; im.removeAttribute('loading'); });
   // frame's aspect ratio follows each active image (border adapts per picture)
   const applyRatio=im=>{
     if(im.naturalWidth)m.style.aspectRatio=im.naturalWidth+' / '+im.naturalHeight;
