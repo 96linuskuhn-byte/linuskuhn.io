@@ -224,7 +224,8 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   transition:transform .6s cubic-bezier(.2,.6,.2,1);
 }
-@media(hover:hover)and(pointer:fine){.p-media:hover img{transform:scale(1.03)}}
+.p-media img.js-zoom{transform:scale(1.03)}
+.p-media img.tap-zoom{transform:scale(1.04)}
 .p-media.trans img{object-fit:contain}
 .p-media.natural{min-height:0;align-self:start}
 .p-media.natural img{position:static;width:100%;height:auto;min-height:220px}
@@ -234,17 +235,18 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   position:static;width:100%;height:auto;min-height:220px;
   box-sizing:border-box;border:1px solid var(--line);border-radius:var(--r-img);background:var(--panel);
 }
-.p-media.multi:not(.slide):hover img{transform:none}
 /* slideshow (auto-enabled for projects with multiple images) */
 .p-media.slide{min-height:300px;border:1px solid var(--line)}
 .p-media.slide.animate-h{transition:aspect-ratio .38s cubic-bezier(.2,.6,.2,1)}
 .p-media.slide img{
-  display:block;position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:contain;margin:0;
-  opacity:0;pointer-events:none;
-  transition:opacity .45s ease,transform .6s cubic-bezier(.2,.6,.2,1);
+  display:block;position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:fill;margin:0;
+  opacity:0;pointer-events:none;transform:scale(1.04);
+  transition:opacity .45s ease,transform .5s cubic-bezier(.2,.6,.2,1);
   border:none;border-radius:0;background:none;
 }
-.p-media.slide img.active{opacity:1;pointer-events:auto}
+.p-media.slide img.active{opacity:1;pointer-events:auto;transform:scale(1)}
+.p-media.slide img.active.js-zoom{transform:scale(1.03)}
+.p-media.slide img.active.tap-zoom{transform:scale(1.04)}
 .p-media.slide img+img{margin-top:0}
 /* full-height edge zones: hover the left/right third of the image to page
    through the slideshow, tinted with a blue gradient instead of a boxed button */
@@ -867,10 +869,36 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
   if(badge&&years.length)badge.innerHTML=`${Math.min(...years)} — ${Math.max(...years)} • ${arts.length} Projects`;
 })();
 
+/* ===== hover-zoom (desktop) / tap-zoom (mobile) for any project image,
+   driven by JS class toggles rather than :hover so it can't lose a CSS
+   specificity fight and works identically everywhere ===== */
+function wireZoom(m,getImg){
+  let wasSwipe=false;
+  m.addEventListener('click',e=>{
+    if(wasSwipe){wasSwipe=false;return;}
+    if(e.target.closest('.sedge,.sdot'))return;
+    const img=getImg();
+    if(!img)return;
+    img.classList.remove('tap-zoom');
+    void img.offsetWidth;
+    img.classList.add('tap-zoom');
+    setTimeout(()=>img.classList.remove('tap-zoom'),420);
+  });
+  if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    m.addEventListener('mouseenter',()=>{const img=getImg();if(img)img.classList.add('js-zoom');});
+    m.addEventListener('mouseleave',()=>{const img=getImg();if(img)img.classList.remove('js-zoom');});
+  }
+  return {markSwipe:()=>{wasSwipe=true;}};
+}
+
 /* ===== slideshow for projects with multiple images ===== */
 document.querySelectorAll('.p-media').forEach(m=>{
   const imgs=[...m.querySelectorAll('img')];
-  if(imgs.length<2)return;
+  if(imgs.length<2){
+    // single-image project: no gallery controls needed, just the zoom effects
+    if(imgs[0]){imgs[0].classList.add('active');wireZoom(m,()=>imgs[0]);}
+    return;
+  }
   m.classList.add('slide');
   // load all gallery images right away (not lazily) so switching between
   // them always has the real dimensions available for the frame's aspect ratio
@@ -923,6 +951,8 @@ document.querySelectorAll('.p-media').forEach(m=>{
   mk('prev','←',-1);mk('next','→',1);
   m.appendChild(dots);
 
+  const zoom=wireZoom(m,()=>m.querySelector('img.active'));
+
   // swipe left/right to change image on touch devices
   let tsx=0,tsy=0,tracking=false;
   m.addEventListener('touchstart',e=>{
@@ -937,7 +967,10 @@ document.querySelectorAll('.p-media').forEach(m=>{
     if(!tracking)return;
     tracking=false;
     const dx=e.changedTouches[0].clientX-tsx,dy=e.changedTouches[0].clientY-tsy;
-    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))go(dx<0?1:-1);
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){
+      zoom.markSwipe();
+      go(dx<0?1:-1);
+    }
   });
 });
 
