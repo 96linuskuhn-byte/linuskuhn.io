@@ -925,29 +925,36 @@ function openLightbox(img,gallery){
     lightboxEl.className='lightbox';
     lightboxEl.innerHTML='<button class="lb-close" type="button" aria-label="Close">✕</button><img alt="">';
     document.body.appendChild(lightboxEl);
+    const lbImgEl=lightboxEl.querySelector('img');
     const closeLb=()=>{
       lightboxEl.classList.remove('open');
       document.body.style.overflow='';
     };
     lightboxEl.addEventListener('click',e=>{if(e.target===lightboxEl)closeLb();});
     lightboxEl.querySelector('.lb-close').addEventListener('click',closeLb);
-    // swipe left/right to move through the same gallery while the
-    // lightbox is open
-    let lsx=0,lsy=0,ltrack=false;
+    // swipe left/right on the image to move through the same gallery while
+    // the lightbox is open; swipe up outside the image to dismiss, like
+    // iPhone users expect from the native Photos app
+    let lsx=0,lsy=0,ltrack=false,lsOnImg=false;
     lightboxEl.addEventListener('touchstart',e=>{
       lsx=e.touches[0].clientX;lsy=e.touches[0].clientY;ltrack=true;
+      lsOnImg=e.target===lbImgEl;
     },{passive:true});
     lightboxEl.addEventListener('touchmove',e=>{
-      if(!ltrack||!lbGallery)return;
+      if(!ltrack)return;
       const dx=e.touches[0].clientX-lsx,dy=e.touches[0].clientY-lsy;
-      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>10)e.preventDefault();
+      if(lsOnImg&&lbGallery&&Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>10)e.preventDefault();
+      else if(!lsOnImg&&dy<0&&Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>10)e.preventDefault();
     },{passive:false});
     lightboxEl.addEventListener('touchend',e=>{
       if(!ltrack)return;
       ltrack=false;
-      if(!lbGallery)return;
       const dx=e.changedTouches[0].clientX-lsx,dy=e.changedTouches[0].clientY-lsy;
-      if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){
+      if(!lsOnImg&&dy<-40&&Math.abs(dy)>Math.abs(dx)){
+        closeLb();
+        return;
+      }
+      if(lbGallery&&Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){
         const imgs=lbGallery.getImgs();
         const next=(lbGallery.getIdx()+(dx<0?1:-1)+imgs.length)%imgs.length;
         lbGallery.goTo(next);
@@ -1078,6 +1085,11 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
 
 /* ===== remember scroll position when leaving to a subpage (e.g. a project) ===== */
 (()=>{
+  // stop the browser's own native scroll-restoration-on-reload — it fights
+  // with the logic below and, on a plain reload, snaps the page straight
+  // back to wherever it was scrolled before, which skips the reveal
+  // fade-ins entirely since the page never actually scrolls past them
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
   const KEY='scrollPos:'+location.pathname;
   const save=()=>sessionStorage.setItem(KEY,window.scrollY);
   // iOS Safari doesn't reliably fire beforeunload for normal link taps, so
@@ -1092,9 +1104,22 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
     clearTimeout(scrollSaveT);
     scrollSaveT=setTimeout(save,200);
   },{passive:true});
+  // only restore on an actual back/forward navigation (e.g. tapping the
+  // browser's back button after opening a project) — not on a plain reload
+  // or a fresh visit, otherwise every reload during testing/browsing snaps
+  // straight to the old scroll position and the reveal-on-scroll fade-ins
+  // never get a chance to play since the page never scrolls past them.
+  const navEntry=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+  const isBackForward=navEntry?navEntry.type==='back_forward':(performance.navigation&&performance.navigation.type===2);
   const saved=sessionStorage.getItem(KEY);
-  if(saved){
+  if(saved&&isBackForward){
     const y=parseInt(saved,10);
+    // sections above the restored position won't be scrolled past by the
+    // user, so make them visible immediately without the fade transition —
+    // otherwise they can appear stuck invisible or awkwardly mid-fade
+    document.querySelectorAll('.reveal,.project').forEach(el=>{
+      if(offsetTop(el)<=y+innerHeight)el.classList.add('visible');
+    });
     const restore=()=>window.scrollTo(0,y);
     restore();
     // content (images, reveal animations) can still be settling right after
