@@ -190,8 +190,8 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   border-top:1px solid var(--line);
   display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
   padding:clamp(32px,4.5vw,64px) 0;
-  opacity:0;transform:translateY(42px);
-  transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1);
+  opacity:0;transform:translateY(18px);
+  transition:opacity .6s cubic-bezier(.2,.6,.2,1),transform .6s cubic-bezier(.2,.6,.2,1);
 }
 .project.visible{opacity:1;transform:none}
 .project.visible:has(.p-info h3 a:hover){transform:scale(1.015);transition:transform .35s cubic-bezier(.2,.6,.2,1)}
@@ -396,7 +396,7 @@ footer .logo-box{
 }
 footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
 
-.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s,transform .8s}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
 .reveal.visible{opacity:1;transform:none}
 </style>
 </head>
@@ -1080,7 +1080,13 @@ document.querySelectorAll('.p-media').forEach(m=>{
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
-}),{threshold:.12,rootMargin:'0px 0px -50px 0px'});
+}),isTouchDevice
+  // on phones the viewport is short, so waiting until an element is 50px
+  // inside it (like on desktop) means scrolling almost all the way to it
+  // first — grow the trigger zone below the viewport instead, so it starts
+  // fading in while still approaching from below
+  ?{threshold:0,rootMargin:'0px 0px 20% 0px'}
+  :{threshold:.12,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
 
 /* ===== remember scroll position when leaving to a subpage (e.g. a project) ===== */
