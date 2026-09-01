@@ -250,7 +250,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .p-media.slide .sedge{
   position:absolute;top:0;bottom:0;width:10%;max-width:56px;z-index:3;
   cursor:pointer;border:none;background:none;padding:0;
-  display:flex;align-items:center;color:var(--blue);
+  display:flex;align-items:center;color:var(--grey);
   font-family:'JetBrains Mono',monospace;font-size:1.45rem;line-height:1;
   opacity:0;transition:opacity .25s ease;
 }
@@ -269,13 +269,18 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .p-media .snav:hover{background:var(--blue)}
 .p-media .snav.prev{left:12px}
 .p-media .snav.next{right:12px}
-.p-media .scount{
-  position:absolute;bottom:10px;right:12px;z-index:3;
-  background:rgba(23,23,29,.72);color:#fff;
-  font-size:.65rem;font-weight:700;letter-spacing:.08em;
-  padding:3px 9px;opacity:0;transition:opacity .2s;border-radius:var(--r);
+.p-media .sdots{
+  position:absolute;bottom:10px;left:0;right:0;z-index:3;
+  display:flex;gap:6px;justify-content:center;align-items:center;
+  pointer-events:none;
 }
-.p-media:hover .scount{opacity:1}
+.p-media .sdot{
+  pointer-events:auto;
+  width:7px;height:7px;border-radius:50%;padding:0;
+  background:#fff;border:1px solid var(--grey);cursor:pointer;
+  transition:background .2s,transform .2s;
+}
+.p-media .sdot.active{background:var(--grey);transform:scale(1.15)}
 @media(max-width:860px){
   .p-media{min-height:230px}
   .p-media.slide{min-height:0}
@@ -869,26 +874,50 @@ document.querySelectorAll('.p-media').forEach(m=>{
   // load all gallery images right away (not lazily) so switching between
   // them always has the real dimensions available for the frame's aspect ratio
   imgs.forEach(im=>{ im.loading='eager'; im.removeAttribute('loading'); });
-  // frame's aspect ratio follows each active image (border adapts per picture)
-  const applyRatio=im=>{
-    if(im.naturalWidth)m.style.aspectRatio=im.naturalWidth+' / '+im.naturalHeight;
+  // frame's height follows each active image (border smoothly adapts per picture)
+  let sizeAnim=null;
+  const applyRatio=(im,animate)=>{
+    if(!im.naturalWidth)return;
+    const targetH=m.clientWidth*im.naturalHeight/im.naturalWidth;
+    if(sizeAnim)cancelAnimationFrame(sizeAnim);
+    if(!animate){m.style.height=targetH+'px';return;}
+    const startH=m.getBoundingClientRect().height||targetH;
+    const startT=performance.now(),dur=380;
+    const ease=t=>1-Math.pow(1-t,3);
+    const step=now=>{
+      const p=Math.min(1,(now-startT)/dur);
+      m.style.height=(startH+(targetH-startH)*ease(p))+'px';
+      sizeAnim=p<1?requestAnimationFrame(step):null;
+    };
+    sizeAnim=requestAnimationFrame(step);
   };
-  const setRatio=i=>{
+  const setRatio=(i,animate=true)=>{
     const im=imgs[i];
-    im.complete?applyRatio(im):im.addEventListener('load',()=>applyRatio(im),{once:true});
+    im.complete?applyRatio(im,animate):im.addEventListener('load',()=>applyRatio(im,animate),{once:true});
   };
   let idx=0;
   imgs[idx].classList.add('active');
-  setRatio(idx);
-  const count=document.createElement('span');
-  count.className='scount';
-  const upd=()=>count.textContent=(idx+1)+' / '+imgs.length;
+  setRatio(idx,false);
+  const dots=document.createElement('div');
+  dots.className='sdots';
+  const dotEls=imgs.map((_,i)=>{
+    const d=document.createElement('button');
+    d.className='sdot';d.type='button';
+    d.setAttribute('aria-label','Go to image '+(i+1));
+    d.addEventListener('click',()=>goTo(i));
+    dots.appendChild(d);
+    return d;
+  });
+  const upd=()=>{
+    dotEls.forEach((d,i)=>d.classList.toggle('active',i===idx));
+  };
   upd();
-  const go=d=>{
+  const goTo=i=>{
     imgs[idx].classList.remove('active');
-    idx=(idx+d+imgs.length)%imgs.length;
+    idx=(i+imgs.length)%imgs.length;
     imgs[idx].classList.add('active');upd();setRatio(idx);
   };
+  const go=d=>goTo(idx+d);
   const mk=(cls,txt,d)=>{
     const b=document.createElement('button');
     b.className='sedge '+cls;b.type='button';b.textContent=txt;
@@ -897,7 +926,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
     m.appendChild(b);
   };
   mk('prev','←',-1);mk('next','→',1);
-  m.appendChild(count);
+  m.appendChild(dots);
 
   // swipe left/right to change image on touch devices
   let tsx=0,tsy=0,tracking=false;
@@ -921,6 +950,25 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
 }),{threshold:.12,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
+
+/* ===== remember scroll position when leaving to a subpage (e.g. a project) ===== */
+(()=>{
+  const KEY='scrollPos:'+location.pathname;
+  window.addEventListener('beforeunload',()=>{
+    sessionStorage.setItem(KEY,window.scrollY);
+  });
+  const saved=sessionStorage.getItem(KEY);
+  if(saved){
+    const y=parseInt(saved,10);
+    const restore=()=>window.scrollTo(0,y);
+    restore();
+    // content (images, reveal animations) can still be settling right after
+    // load, so reapply a couple of times shortly after to land in the right spot
+    requestAnimationFrame(restore);
+    setTimeout(restore,150);
+    setTimeout(restore,500);
+  }
+})();
 </script>
 </body>
 </html>
