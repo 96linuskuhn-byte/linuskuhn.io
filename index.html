@@ -1085,7 +1085,7 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   // inside it (like on desktop) means scrolling almost all the way to it
   // first — grow the trigger zone below the viewport instead, so it starts
   // fading in while still approaching from below
-  ?{threshold:.1,rootMargin:'0px 0px -5% 0px'}
+  ?{threshold:0,rootMargin:'0px 0px 3% 0px'}
   :{threshold:.12,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
 
