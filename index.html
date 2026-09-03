@@ -168,8 +168,7 @@ nav.scrolled{border-bottom-color:var(--line)}
   padding:clamp(40px,6vw,72px) clamp(24px,4vw,56px);
   display:flex;flex-direction:column;justify-content:space-between;gap:56px;
 }
-.split .blue .top{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}
-@media(max-width:1200px){.split .blue .top{grid-template-columns:1fr}}
+.split .blue .top{display:flex;flex-direction:column;gap:20px}
 .split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#fff}
 .split .desc{font-size:.8rem;line-height:2;color:#eef;font-weight:500}
 .split .passion{margin-top:26px;font-size:.8rem;line-height:2;color:#fff;font-weight:700}
@@ -177,7 +176,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .stats{display:flex;gap:clamp(28px,5vw,72px);flex-wrap:wrap}
 .stat .n{font-family:'Archivo';font-weight:800;font-size:clamp(2.4rem,4vw,3.4rem);line-height:1}
 .stat .l{font-size:.75rem;font-weight:700;letter-spacing:.06em;margin-top:10px}
-.split .media{position:relative;min-height:380px;background:var(--panel);overflow:hidden;border-radius:var(--r-img);border:1px solid var(--line)}
+.split .media{position:relative;min-height:380px;background:var(--panel);overflow:hidden}
 .split .media img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
 }
@@ -453,9 +452,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <a class="boxlink inv arrow" href="#contact">Say Hello</a>
     </div>
   </div>
-  <div class="corner l">Pforzheim &bull; Germany</div>
   <div class="x">scroll &darr;</div>
-  <div class="corner r">7 Projects &bull; 2017&ndash;2025</div>
 </header>
 </div>
 
@@ -470,14 +467,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         apart. Since studying mechanical engineering, I've learned how to put
         them together professionally, and I've been striving ever since to
         develop exciting products more efficiently and better.</p>
-        <p class="passion">Passionate for<br>
-        <span>#productdevelopment</span> <span>#robotics</span> <span>#design</span></p>
       </div>
-    </div>
-    <div class="stats reveal">
-      <div class="stat"><div class="n">7+</div><div class="l">Projects Built</div></div>
-      <div class="stat"><div class="n">8</div><div class="l">Years of Making</div></div>
-      <div class="stat"><div class="n">4+</div><div class="l">Years Industry Experience</div></div>
     </div>
   </div>
   <div class="media reveal"><img src="img/portrait.jpg" alt="Portrait of Linus Kuhn" loading="lazy"></div>
@@ -648,10 +638,8 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 
 <section id="contact" class="contact">
   <div class="reveal">
-    <div class="k">Open for opportunities &bull; 2026</div>
     <h2>Let's build something</h2>
-    <p>Open for roles and internships in product development, simulation and
-    prototyping. Drop me a line — I usually answer fast.</p>
+    <p>I hope this Portfolio shows my motivation and my previous work well. If you're interested, I would be happy to hear from you!</p>
     <div class="cta">
       <a class="boxlink arrow" href="mailto:linus-kuhn@t-online.de">linus-kuhn@t-online.de</a>
       <a class="boxlink inv arrow" href="https://www.linkedin.com/in/linus-kuhn-7713a2288/" target="_blank" rel="noopener">LinkedIn</a>
@@ -660,7 +648,6 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 </section>
 
 <footer>
-  <div class="logo-box">Linus Kuhn</div>
   <div class="meta">
     <span>&copy; 2026 Linus Kuhn</span>
     <span>Pforzheim, Germany</span>

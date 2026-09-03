@@ -41,27 +41,25 @@ img{display:block;max-width:100%}
 
 .boxlink{
   display:inline-block;
-  background:var(--ink);
-  color:#fff;
-  font-size:.72rem;
-  font-weight:700;
-  letter-spacing:.08em;
+  font-family:'Archivo',sans-serif;
+  font-weight:500;
+  font-size:.85rem;
+  letter-spacing:-.02em;
   text-transform:uppercase;
-  padding:6px 12px;
-  border-radius:var(--r);
-  transition:background .15s,color .15s,transform .15s;
+  color:var(--ink);
+  transition:color .15s;
 }
-.boxlink:hover{background:var(--blue);transform:translateY(-1px)}
-.boxlink.inv{background:transparent;color:var(--ink);border:1px solid var(--ink)}
-.boxlink.inv:hover{background:var(--ink);color:#fff}
+.boxlink:hover{color:var(--blue)}
+.boxlink.inv{color:var(--ink)}
+.boxlink.inv:hover{color:var(--blue)}
 .arrow-l::before{content:"\2190";margin-right:6px}
 .arrow::after{content:"\2192";margin-left:6px}
 
 .crumb-bar{
   position:sticky;top:0;z-index:100;
   padding:16px clamp(20px,5vw,40px);
-  background:rgba(250,249,245,.9);
-  backdrop-filter:blur(12px);
+  background:rgba(250,249,245,.55);
+  backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
   transition:top .3s ease;
 }
