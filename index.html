@@ -232,6 +232,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
   padding:clamp(32px,4.5vw,64px) 0;
   opacity:0;transform:translateY(28px);
+  scroll-margin-top:100px;
   transition:opacity .7s cubic-bezier(.2,.6,.2,1),transform .7s cubic-bezier(.2,.6,.2,1);
 }
 .project.visible{opacity:1;transform:none}
@@ -518,7 +519,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 
   <div class="frame">
 
-    <article class="project">
+    <article class="project" data-slug="axial-flux-machine">
       <div class="p-info">
         <span class="p-label">Master Thesis &bull; Pforzheim University</span>
         <div class="p-year">2025</div>
@@ -529,7 +530,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="coffee-grinder">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Pforzheim University</span>
         <div class="p-year">2024</div>
@@ -538,12 +539,12 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <div class="p-tags"><span>Industrial Design</span><span>Sketching</span><span>Prototyping</span><span>CMF</span></div>
       </div>
       <div class="p-media multi" style="aspect-ratio:1280/854"><img src="img/grinder-poster.jpg" alt="Manual Coffee Grinder Inspired by Charles Eames" width="1280" height="854">
-        <img src="img/grinder-sketch-1.jpg" alt="Manual Coffee Grinder — early concept sketches" loading="lazy">
-        <img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" loading="lazy">
-        <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy"></div>
+        <img src="img/grinder-sketch-1.jpg" alt="Manual Coffee Grinder — early concept sketches" loading="lazy" width="1352" height="994">
+        <img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" loading="lazy" width="1400" height="748">
+        <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy" width="1400" height="744"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="autonomous-robot">
       <div class="p-info">
         <span class="p-label">Bachelor Thesis &bull; Evomotiv GmbH</span>
         <div class="p-year">2022</div>
@@ -554,7 +555,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="velomobil">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2021</div>
@@ -565,7 +566,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy" width="1400" height="990"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="automated-window">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Karlsruhe University</span>
         <div class="p-year">2021</div>
@@ -576,7 +577,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="raceboat">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Own Project</span>
         <div class="p-year">2019</div>
@@ -587,7 +588,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="rotary-engine">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2017</div>
@@ -598,7 +599,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy" width="965" height="542"></div>
     </article>
 
-    <article class="project">
+    <article class="project" data-slug="steer-by-wire">
       <div class="p-info">
         <span class="p-label">Project &bull; Own Project</span>
         <div class="p-year">2026</div>
@@ -607,7 +608,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
       </div>
       <div class="p-media multi" style="aspect-ratio:1338/1058"><img src="img/Steering.png" alt="Steer by Wire " width="1338" height="1058">
-        <img src="img/Steering2.png" alt="Steer by Wire " loading="lazy"></div>
+        <img src="img/Steering2.png" alt="Steer by Wire " loading="lazy" width="1488" height="930"></div>
     </article>
 
 
@@ -1136,7 +1137,19 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
   // fade-ins entirely since the page never actually scrolls past them
   if('scrollRestoration' in history)history.scrollRestoration='manual';
   const KEY='scrollPos:'+location.pathname;
+  const PROJECT_KEY='lastProjectSlug';
   const save=()=>sessionStorage.setItem(KEY,window.scrollY);
+  // remember exactly which project card was opened, so on return we can
+  // scroll straight to that element instead of a saved pixel offset —
+  // pixel offsets drift whenever lazy images/fonts settle at a different
+  // height than they had when the position was saved
+  document.querySelectorAll('.project a').forEach(a=>{
+    a.addEventListener('click',()=>{
+      const article=a.closest('.project');
+      const slug=article&&article.dataset.slug;
+      if(slug)sessionStorage.setItem(PROJECT_KEY,slug);
+    });
+  });
   // iOS Safari doesn't reliably fire beforeunload for normal link taps, so
   // save on every reasonably-robust signal that the page might go away:
   // pagehide (fires on iOS), visibilitychange (app backgrounded/switched),
@@ -1157,27 +1170,61 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
   const navEntry=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
   const isBackForward=navEntry?navEntry.type==='back_forward':(performance.navigation&&performance.navigation.type===2);
   const saved=sessionStorage.getItem(KEY);
-  if(saved&&isBackForward){
-    const y=parseInt(saved,10);
+  const lastSlug=sessionStorage.getItem(PROJECT_KEY);
+  const targetEl=lastSlug&&document.querySelector('.project[data-slug="'+lastSlug+'"]');
+  // the project-slug case doesn't need the back/forward check — it's a
+  // one-shot flag that's only ever set right before leaving to a project and
+  // is cleared below the moment it's read, so it can't misfire on an
+  // unrelated plain reload the way the generic pixel-based restore could.
+  if(saved&&isBackForward||targetEl){
+    const y=saved?parseInt(saved,10):(targetEl?offsetTop(targetEl):0);
     // sections above the restored position won't be scrolled past by the
     // user, so make them visible immediately without the fade transition —
-    // otherwise they can appear stuck invisible or awkwardly mid-fade
+    // otherwise they can appear stuck invisible or awkwardly mid-fade. This
+    // must happen (and the transition briefly be disabled) *before* we
+    // scroll to them — otherwise the still-animating fade-in transform
+    // shifts the target's position out from under the scroll, which is what
+    // caused the jerky double-jump.
+    // mark them visible with no transition (so the fade-in transform can't
+    // shift their position out from under the scroll below) and stop the
+    // reveal-on-scroll observer from independently touching them — it
+    // computes intersection against whatever the scroll position happens to
+    // be when its callback fires, which can race with our own scroll
+    const settled=[];
     document.querySelectorAll('.reveal,.project').forEach(el=>{
-      if(offsetTop(el)<=y+innerHeight)el.classList.add('visible');
+      if(el===targetEl||offsetTop(el)<=y+innerHeight){
+        el.style.transition='none';
+        el.classList.add('visible');
+        io.unobserve(el);
+        settled.push(el);
+      }
     });
-    const restore=()=>window.scrollTo(0,y);
-    restore();
-    // content (images, reveal animations) can still be settling right after
-    // load, so reapply a couple of times shortly after to land in the right spot
-    requestAnimationFrame(restore);
-    setTimeout(restore,150);
-    setTimeout(restore,500);
-    // only reveal the page once the scroll position is actually in place —
-    // otherwise the hero briefly flashes at the top before jumping down
-    requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
+    // prefer scrolling straight to the actual project element the user came
+    // from — that's based on live layout, not a saved pixel number, so it
+    // can't drift even if images/fonts settled at a different height than
+    // when the position was originally saved. Fall back to the saved pixel
+    // offset for any other back-navigation (e.g. from the AI/VLA subpages).
+    const restore=()=>targetEl
+      ?targetEl.scrollIntoView({behavior:'instant',block:'start'})
+      :window.scrollTo(0,y);
+    // web fonts loading in (Archivo/JetBrains Mono) can swap in after first
+    // paint and reflow the text, shifting everything below — visible as a
+    // jump in Chrome, though not in Safari. So wait for fonts to be ready
+    // (with a timeout fallback in case that never resolves), scroll once
+    // things have settled, and only then reveal the page — the whole
+    // correction happens while still hidden, so nothing visibly jumps.
+    const fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+    Promise.race([fontsReady,new Promise(r=>setTimeout(r,600))]).then(()=>{
+      restore();
+      requestAnimationFrame(()=>{
+        settled.forEach(el=>{el.style.transition='';});
+        document.body.classList.add('page-ready');
+      });
+    });
   } else {
     requestAnimationFrame(()=>document.body.classList.add('page-ready'));
   }
+  sessionStorage.removeItem(PROJECT_KEY);
   // safety net: never leave the page invisible if something above throws
   setTimeout(()=>document.body.classList.add('page-ready'),1000);
 })();
