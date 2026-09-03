@@ -953,6 +953,14 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
     return y(b)-y(a);
   });
   arts.forEach(a=>frame.appendChild(a));
+  // this reordering can shift a project card's vertical position after the
+  // browser has already performed its native #anchor scroll (most visible
+  // on mobile) — if we landed here via a project anchor, redo the scroll
+  // now that the final DOM order is in place
+  if(location.hash&&location.hash.startsWith('#project-')){
+    const target=document.querySelector(location.hash);
+    if(target)target.scrollIntoView({behavior:'instant',block:'start'});
+  }
   // update the range badge (min year — max year • count)
   const years=arts.map(a=>parseInt(a.querySelector('.p-year').textContent)||0).filter(Boolean);
   const badge=frame.querySelector('.frame-top .tag-box');
