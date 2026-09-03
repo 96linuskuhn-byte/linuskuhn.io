@@ -3,6 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+// coming back from one of the dark subpages briefly flashes the light page
+// background before it paints — match the flash color to where we came from
+// so it isn't jarring either direction
+(function(){
+  try{
+    if(/ai-workflow\.html|vla-robotics\.html/.test(document.referrer)){
+      document.documentElement.style.background='#17171d';
+    }
+  }catch(e){}
+})();
+</script>
 <title>Linus Kuhn — Engineered to Build</title>
 <meta name="description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +37,7 @@
   --r-img:4px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:auto}
+html{scroll-behavior:auto;background:#faf9f5}
 body{
   background:var(--bg);
   color:var(--ink);
@@ -34,7 +46,10 @@ body{
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
   touch-action:pan-y;
+  opacity:0;
+  transition:opacity .25s ease;
 }
+body.page-ready{opacity:1}
 .p-media.slide{touch-action:pan-y}
 h1,h2,h3,.display{
   font-family:'Archivo',sans-serif;
@@ -491,7 +506,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
     </div>
     <div class="interest">
       <span class="p-label">Physical AI — VLA &amp; Robotics</span>
-      <p>The intersection of vision-language-action models and robotics is where I think the next real shift in engineering happens: machines that don't just execute fixed motion paths, but actually perceive, reason, and adapt to their environment. Coming from mechatronics and autonomous robots, this is the space I follow most closely.</p>
+      <p>The combination of a vision, language, and action model that translates into a physical action through a robotic system marks a fundamental shift in how humans and machines interact. Instead of following fixed paths and depending on rigid, structured environments, VLA models give robots a new way to approach real-world problems. <a class="thesis-link" href="vla-robotics.html">My enthusiasm for Physical AI</a></p>
     </div>
   </div>
 </section>
@@ -1157,7 +1172,14 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
     requestAnimationFrame(restore);
     setTimeout(restore,150);
     setTimeout(restore,500);
+    // only reveal the page once the scroll position is actually in place —
+    // otherwise the hero briefly flashes at the top before jumping down
+    requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
+  } else {
+    requestAnimationFrame(()=>document.body.classList.add('page-ready'));
   }
+  // safety net: never leave the page invisible if something above throws
+  setTimeout(()=>document.body.classList.add('page-ready'),1000);
 })();
 </script>
 </body>

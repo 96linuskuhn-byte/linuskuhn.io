@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical AI &amp; VLA Robotics — Linus Kuhn</title>
+<meta name="description" content="Why Linus Kuhn is excited about vision-language-action models, simulation, and the sim-to-real gap in robotics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf9f5;
+  --panel:#f1efe8;
+  --blue:#3a3af0;
+  --blue-soft:#eceafe;
+  --ink:#17171d;
+  --grey:#6d6d78;
+  --line:rgba(23,23,29,.14);
+  --r:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--ink);
+  color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,.display{
+  font-family:'Archivo',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  line-height:1.02;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--blue);color:#fff}
+
+.boxlink{
+  display:inline-block;
+  font-family:'Archivo',sans-serif;
+  font-weight:500;
+  font-size:.85rem;
+  letter-spacing:-.02em;
+  text-transform:uppercase;
+  color:#fff;
+  transition:color .15s;
+}
+.boxlink:hover{color:var(--blue)}
+.arrow-l::before{content:"\2190";margin-right:6px}
+
+.crumb-bar{
+  position:sticky;top:0;z-index:100;
+  padding:16px clamp(20px,5vw,40px);
+  background:rgba(23,23,29,.6);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+
+main{max-width:760px;margin:0;padding:32px clamp(20px,5vw,40px) 100px;position:relative;z-index:2}
+
+#video-panel{
+  position:fixed;top:50%;right:clamp(20px,4vw,60px);
+  transform:translateY(-50%);
+  width:34vw;min-width:340px;max-width:460px;
+  z-index:1;
+}
+#video-panel video{width:100%;display:block;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+#video-panel .caption{font-size:.7rem;color:rgba(255,255,255,.45);margin-top:10px;letter-spacing:.02em}
+@media(max-width:1100px){
+  #video-panel{display:none}
+}
+
+.p-label{
+  display:inline-block;align-self:flex-start;
+  background:rgba(255,255,255,.12);color:#fff;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  padding:4px 12px;margin-bottom:22px;border-radius:var(--r);
+}
+h1{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:34px;color:#fff}
+
+.txt{font-size:.9rem;color:rgba(255,255,255,.72);line-height:1.95;margin-bottom:22px}
+.inline-link{color:#8ea3ff;font-weight:700;text-decoration:none;transition:color .15s}
+.inline-link:hover{color:#fff;text-decoration:underline}
+
+footer{
+  position:sticky;bottom:0;z-index:3;
+  padding:20px clamp(16px,3vw,40px);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  border-top:1px solid rgba(255,255,255,.14);font-size:.72rem;color:rgba(255,255,255,.5);
+  background:rgba(23,23,29,.6);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+</style>
+</head>
+<body>
+
+<div class="crumb-bar"><a href="index.html#interests" class="boxlink arrow-l">Back to Portfolio</a></div>
+
+<div id="video-panel">
+  <video src="vla-demo.mp4" autoplay muted loop playsinline></video>
+  <div class="caption">My own Genesis simulation — a Franka Emika Panda arm picking up and relocating a cube.</div>
+</div>
+
+<main>
+  <span class="p-label">Physical AI — VLA &amp; Robotics</span>
+  <h1>Vision, Language, Action</h1>
+
+  <p class="txt">The combination of a vision, language, and action model that translates into a physical action through a robotic system marks a fundamental shift in how humans and machines interact. Instead of following fixed paths and depending on rigid, structured environments, VLA models give robots a new way to approach real-world problems. Coming from mechatronics and autonomous robots, this is the space I follow most closely — and the more I look into it, the more it comes down to one bottleneck: data.</p>
+
+  <p class="txt">Training a capable VLA policy takes an enormous amount of interaction data, and there are really only two ways to get it. Simulation can produce it at scale, but every simulated environment differs from the real world in physics, materials, and sensor noise — the sim-to-real gap — so a policy trained purely in simulation often falls apart the moment it meets reality. The alternative, teleoperation on real hardware, avoids that gap but is bound by real time: you can't parallelize a human operating a robot arm the way you can parallelize a simulation running on a GPU cluster. Every trajectory costs real human time on a real, usually expensive robotic system, which caps the amount of data you can realistically collect.</p>
+
+  <p class="txt">That's why I think the most promising lever right now is on the simulation side: building environments realistic and varied enough — better physics, better rendering, deliberate domain randomization — that a policy trained or finetuned on them generalizes to the real world with only a fraction of the real interaction data it would otherwise need.</p>
+
+  <p class="txt">This is also why I'm genuinely excited about what NVIDIA is doing with <a href="https://www.nvidia.com/en-us/omniverse/" target="_blank" rel="noopener" class="inline-link">Omniverse</a> and <a href="https://www.nvidia.com/en-us/ai/cosmos/" target="_blank" rel="noopener" class="inline-link">Cosmos</a>: Omniverse provides the physically accurate simulated environment, and Cosmos turns that into photorealistic, physically plausible synthetic video data that can post-train robot policies directly — effectively attacking the sim-to-real gap from the data-generation side. I'm following <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> just as closely: an open-source, generative physics engine that runs 10–80x faster than tools like Isaac Gym or MuJoCo and lets you generate entire scenes, tasks, and trajectories from language prompts, which makes environment variation something you can scale almost for free.</p>
+
+  <p class="txt">To get hands-on with this myself, I built a small simulation in <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> of a Franka Emika Panda arm picking up a cube and placing it elsewhere — inverse kinematics for the approach and lift, position control for the gripper. Small in scope, but a good way to feel how quickly you can iterate on a manipulation task in simulation.</p>
+
+  <p class="txt">None of these fully close the gap yet, but they're moving in exactly the direction I find most interesting — and it's a big part of why I want to keep working at the intersection of simulation, AI, and physical systems.</p>
+</main>
+
+<footer>
+  <span>&copy; 2026 Linus Kuhn</span>
+  <span>Pforzheim, Germany</span>
+</footer>
+
+</body>
+</html>
