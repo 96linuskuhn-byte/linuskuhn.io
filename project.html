@@ -226,6 +226,15 @@ const idx=PROJECTS.findIndex(p=>p.slug===slug);
 const proj=idx>=0?PROJECTS[idx]:null;
 const main=document.getElementById('main');
 
+// point "Back to Portfolio" straight at this project's card on the
+// homepage — a plain anchor link, so the browser handles the scroll
+// natively and smoothly instead of needing custom JS to land in the
+// right spot (same approach as the Interests subpages' back link)
+if(slug){
+  const backLink=document.getElementById('backLink');
+  if(backLink)backLink.href='index.html#project-'+slug;
+}
+
 if(!proj){
   main.innerHTML=`
     <h1 class="p-title">Project not found</h1>

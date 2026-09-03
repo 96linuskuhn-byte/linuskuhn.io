@@ -519,7 +519,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 
   <div class="frame">
 
-    <article class="project" data-slug="axial-flux-machine">
+    <article class="project" id="project-axial-flux-machine" data-slug="axial-flux-machine">
       <div class="p-info">
         <span class="p-label">Master Thesis &bull; Pforzheim University</span>
         <div class="p-year">2025</div>
@@ -530,7 +530,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy"></div>
     </article>
 
-    <article class="project" data-slug="coffee-grinder">
+    <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Pforzheim University</span>
         <div class="p-year">2024</div>
@@ -544,7 +544,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
         <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy" width="1400" height="744"></div>
     </article>
 
-    <article class="project" data-slug="autonomous-robot">
+    <article class="project" id="project-autonomous-robot" data-slug="autonomous-robot">
       <div class="p-info">
         <span class="p-label">Bachelor Thesis &bull; Evomotiv GmbH</span>
         <div class="p-year">2022</div>
@@ -555,7 +555,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy"></div>
     </article>
 
-    <article class="project" data-slug="velomobil">
+    <article class="project" id="project-velomobil" data-slug="velomobil">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2021</div>
@@ -566,7 +566,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy" width="1400" height="990"></div>
     </article>
 
-    <article class="project" data-slug="automated-window">
+    <article class="project" id="project-automated-window" data-slug="automated-window">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Karlsruhe University</span>
         <div class="p-year">2021</div>
@@ -577,7 +577,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy"></div>
     </article>
 
-    <article class="project" data-slug="raceboat">
+    <article class="project" id="project-raceboat" data-slug="raceboat">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Own Project</span>
         <div class="p-year">2019</div>
@@ -588,7 +588,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy"></div>
     </article>
 
-    <article class="project" data-slug="rotary-engine">
+    <article class="project" id="project-rotary-engine" data-slug="rotary-engine">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2017</div>
@@ -599,7 +599,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
       <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy" width="965" height="542"></div>
     </article>
 
-    <article class="project" data-slug="steer-by-wire">
+    <article class="project" id="project-steer-by-wire" data-slug="steer-by-wire">
       <div class="p-info">
         <span class="p-label">Project &bull; Own Project</span>
         <div class="p-year">2026</div>
@@ -1129,7 +1129,8 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   :{threshold:.12,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
 
-/* ===== remember scroll position when leaving to a subpage (e.g. a project) ===== */
+/* ===== remember scroll position when leaving the page (fallback for any
+   back-navigation that isn't a plain anchor link) ===== */
 (()=>{
   // stop the browser's own native scroll-restoration-on-reload — it fights
   // with the logic below and, on a plain reload, snaps the page straight
@@ -1137,19 +1138,7 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
   // fade-ins entirely since the page never actually scrolls past them
   if('scrollRestoration' in history)history.scrollRestoration='manual';
   const KEY='scrollPos:'+location.pathname;
-  const PROJECT_KEY='lastProjectSlug';
   const save=()=>sessionStorage.setItem(KEY,window.scrollY);
-  // remember exactly which project card was opened, so on return we can
-  // scroll straight to that element instead of a saved pixel offset —
-  // pixel offsets drift whenever lazy images/fonts settle at a different
-  // height than they had when the position was saved
-  document.querySelectorAll('.project a').forEach(a=>{
-    a.addEventListener('click',()=>{
-      const article=a.closest('.project');
-      const slug=article&&article.dataset.slug;
-      if(slug)sessionStorage.setItem(PROJECT_KEY,slug);
-    });
-  });
   // iOS Safari doesn't reliably fire beforeunload for normal link taps, so
   // save on every reasonably-robust signal that the page might go away:
   // pagehide (fires on iOS), visibilitychange (app backgrounded/switched),
@@ -1163,68 +1152,31 @@ document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
     scrollSaveT=setTimeout(save,200);
   },{passive:true});
   // only restore on an actual back/forward navigation (e.g. tapping the
-  // browser's back button after opening a project) — not on a plain reload
-  // or a fresh visit, otherwise every reload during testing/browsing snaps
-  // straight to the old scroll position and the reveal-on-scroll fade-ins
-  // never get a chance to play since the page never scrolls past them.
+  // browser's back button) — not on a plain reload or a fresh visit,
+  // otherwise every reload during testing/browsing snaps straight to the
+  // old scroll position and the reveal-on-scroll fade-ins never get a
+  // chance to play since the page never scrolls past them. Note: returning
+  // from a project or an Interests subpage doesn't go through here at all —
+  // those use plain anchor links (e.g. index.html#project-velomobil), which
+  // the browser scrolls to natively and reliably on its own.
   const navEntry=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
   const isBackForward=navEntry?navEntry.type==='back_forward':(performance.navigation&&performance.navigation.type===2);
   const saved=sessionStorage.getItem(KEY);
-  const lastSlug=sessionStorage.getItem(PROJECT_KEY);
-  const targetEl=lastSlug&&document.querySelector('.project[data-slug="'+lastSlug+'"]');
-  // the project-slug case doesn't need the back/forward check — it's a
-  // one-shot flag that's only ever set right before leaving to a project and
-  // is cleared below the moment it's read, so it can't misfire on an
-  // unrelated plain reload the way the generic pixel-based restore could.
-  if(saved&&isBackForward||targetEl){
-    const y=saved?parseInt(saved,10):(targetEl?offsetTop(targetEl):0);
+  if(saved&&isBackForward){
+    const y=parseInt(saved,10);
     // sections above the restored position won't be scrolled past by the
     // user, so make them visible immediately without the fade transition —
-    // otherwise they can appear stuck invisible or awkwardly mid-fade. This
-    // must happen (and the transition briefly be disabled) *before* we
-    // scroll to them — otherwise the still-animating fade-in transform
-    // shifts the target's position out from under the scroll, which is what
-    // caused the jerky double-jump.
-    // mark them visible with no transition (so the fade-in transform can't
-    // shift their position out from under the scroll below) and stop the
-    // reveal-on-scroll observer from independently touching them — it
-    // computes intersection against whatever the scroll position happens to
-    // be when its callback fires, which can race with our own scroll
-    const settled=[];
+    // otherwise they can appear stuck invisible or awkwardly mid-fade
     document.querySelectorAll('.reveal,.project').forEach(el=>{
-      if(el===targetEl||offsetTop(el)<=y+innerHeight){
-        el.style.transition='none';
-        el.classList.add('visible');
-        io.unobserve(el);
-        settled.push(el);
-      }
+      if(offsetTop(el)<=y+innerHeight)el.classList.add('visible');
     });
-    // prefer scrolling straight to the actual project element the user came
-    // from — that's based on live layout, not a saved pixel number, so it
-    // can't drift even if images/fonts settled at a different height than
-    // when the position was originally saved. Fall back to the saved pixel
-    // offset for any other back-navigation (e.g. from the AI/VLA subpages).
-    const restore=()=>targetEl
-      ?targetEl.scrollIntoView({behavior:'instant',block:'start'})
-      :window.scrollTo(0,y);
-    // web fonts loading in (Archivo/JetBrains Mono) can swap in after first
-    // paint and reflow the text, shifting everything below — visible as a
-    // jump in Chrome, though not in Safari. So wait for fonts to be ready
-    // (with a timeout fallback in case that never resolves), scroll once
-    // things have settled, and only then reveal the page — the whole
-    // correction happens while still hidden, so nothing visibly jumps.
-    const fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
-    Promise.race([fontsReady,new Promise(r=>setTimeout(r,600))]).then(()=>{
-      restore();
-      requestAnimationFrame(()=>{
-        settled.forEach(el=>{el.style.transition='';});
-        document.body.classList.add('page-ready');
-      });
-    });
+    const restore=()=>window.scrollTo(0,y);
+    restore();
+    requestAnimationFrame(restore);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
   } else {
     requestAnimationFrame(()=>document.body.classList.add('page-ready'));
   }
-  sessionStorage.removeItem(PROJECT_KEY);
   // safety net: never leave the page invisible if something above throws
   setTimeout(()=>document.body.classList.add('page-ready'),1000);
 })();
