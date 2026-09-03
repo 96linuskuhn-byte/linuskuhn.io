@@ -197,6 +197,13 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .interest+.interest{border-top:1px solid rgba(255,255,255,.14)}
 .interest .p-label{background:rgba(255,255,255,.12);color:#fff}
 .interest p{font-size:.85rem;color:rgba(255,255,255,.72);line-height:1.9;margin-top:18px}
+.interest .thesis-link{color:#8ea3ff;font-weight:700;white-space:nowrap}
+.interest .thesis-link::after{content:"\2192";margin-left:6px;transition:margin-left .15s}
+.interest .thesis-link:hover::after{margin-left:10px}
+.interest p+p{margin-top:14px}
+.interest ol{margin-top:14px;padding-left:1.3em;font-size:.85rem;color:rgba(255,255,255,.72);line-height:1.9}
+.interest ol li{margin-bottom:6px}
+.interest ol li::marker{color:var(--blue)}
 
 /* ---------- PROJECTS ---------- */
 .frame{padding:clamp(16px,2.5vw,32px) clamp(4px,1vw,10px)}
@@ -480,7 +487,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
   <div class="interests-grid reveal">
     <div class="interest">
       <span class="p-label">AI in the Way I Work</span>
-      <p>I use AI daily as a thinking partner rather than just a tool for output — structuring ideas, connecting notes, and speeding up the parts of engineering work that used to be pure friction. I keep my second brain in Obsidian, using it to link research, project notes, and ideas across domains so nothing gets lost between projects.</p>
+      <p>AI is fundamentally changing how we work. It boosts development output and makes it possible to solve problems of a complexity we haven't seen before. That's why I've thought deeply about my own workflows and knowledge architecture. The result is a development workflow in Obsidian that lets me handle most of my work template-based, agentically, or manually. <a class="thesis-link" href="ai-workflow.html">How do I work with AI?</a></p>
     </div>
     <div class="interest">
       <span class="p-label">Physical AI — VLA &amp; Robotics</span>
