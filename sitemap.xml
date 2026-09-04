@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/</loc>
+    <loc>https://linuskuhn.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/ai-workflow.html</loc>
+    <loc>https://linuskuhn.com/ai-workflow.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/vla-robotics.html</loc>
+    <loc>https://linuskuhn.com/vla-robotics.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=axial-flux-machine</loc>
+    <loc>https://linuskuhn.com/project.html?slug=axial-flux-machine</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=coffee-grinder</loc>
+    <loc>https://linuskuhn.com/project.html?slug=coffee-grinder</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=autonomous-robot</loc>
+    <loc>https://linuskuhn.com/project.html?slug=autonomous-robot</loc>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=velomobil</loc>
+    <loc>https://linuskuhn.com/project.html?slug=velomobil</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=automated-window</loc>
+    <loc>https://linuskuhn.com/project.html?slug=automated-window</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=raceboat</loc>
+    <loc>https://linuskuhn.com/project.html?slug=raceboat</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=rotary-engine</loc>
+    <loc>https://linuskuhn.com/project.html?slug=rotary-engine</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://96linuskuhn-byte.github.io/linuskuhn.io/project.html?slug=steer-by-wire</loc>
+    <loc>https://linuskuhn.com/project.html?slug=steer-by-wire</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
