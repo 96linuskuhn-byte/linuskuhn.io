@@ -17,6 +17,59 @@
 </script>
 <title>Linus Kuhn — Engineered to Build</title>
 <meta name="description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
+<link rel="canonical" href="https://96linuskuhn-byte.github.io/linuskuhn.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Linus Kuhn">
+<meta property="og:title" content="Linus Kuhn — Engineered to Build">
+<meta property="og:description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
+<meta property="og:url" content="https://96linuskuhn-byte.github.io/linuskuhn.io/">
+<meta property="og:image" content="https://96linuskuhn-byte.github.io/linuskuhn.io/img/portrait.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Linus Kuhn — Engineered to Build">
+<meta name="twitter:description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
+<meta name="twitter:image" content="https://96linuskuhn-byte.github.io/linuskuhn.io/img/portrait.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Linus Kuhn",
+  "url": "https://96linuskuhn-byte.github.io/linuskuhn.io/",
+  "image": "https://96linuskuhn-byte.github.io/linuskuhn.io/img/portrait.jpg",
+  "jobTitle": "Development Engineer",
+  "description": "Linus Kuhn is a mechanical engineer and development engineer based in Pforzheim, Germany, specializing in product development, mechatronics, simulation and rapid prototyping.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Pforzheim",
+    "addressCountry": "DE"
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "MPC DesignWorks"
+  },
+  "alumniOf": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Pforzheim University of Applied Sciences"
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Karlsruhe University of Applied Sciences"
+    }
+  ],
+  "knowsAbout": ["Mechanical Engineering", "Product Development", "Mechatronics", "CAD", "FEM Simulation", "Rapid Prototyping", "Physical AI", "Robotics"],
+  "sameAs": ["https://www.linkedin.com/in/linus-kuhn-7713a2288/"],
+  "email": "mailto:linus-kuhn@t-online.de"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Linus Kuhn — Portfolio",
+  "url": "https://96linuskuhn-byte.github.io/linuskuhn.io/"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -440,15 +493,17 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 
 /* ---------- FOOTER ---------- */
 footer{
-  padding:36px clamp(16px,4vw,48px);
-  display:flex;flex-direction:column;align-items:center;gap:18px;
+  padding:28px clamp(16px,4vw,48px);
+  display:flex;align-items:center;
 }
 footer .logo-box{
   border:1px solid var(--line);
   font-family:'Archivo';font-weight:800;font-size:1rem;
   padding:8px 18px;border-radius:var(--r);
 }
-footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:10px 24px;flex-wrap:wrap;justify-content:space-between;align-items:center;width:100%}
+footer .meta-left{display:flex;gap:10px 24px;flex-wrap:wrap}
+footer .meta-center{flex:1;text-align:center}
 
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
 .reveal.visible{opacity:1;transform:none}
@@ -682,9 +737,12 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:24px;flex-wrap:w
 
 <footer>
   <div class="meta">
-    <span>&copy; 2026 Linus Kuhn</span>
-    <span>Pforzheim, Germany</span>
-    <span>Designed &amp; engineered with care.</span>
+    <div class="meta-left">
+      <span>&copy; 2026 Linus Kuhn</span>
+      <span>Pforzheim, Germany</span>
+    </div>
+    <span class="meta-center">Designed &amp; engineered with care.</span>
+    <span><a href="legal.html">Impressum &amp; Datenschutz</a></span>
   </div>
 </footer>
 

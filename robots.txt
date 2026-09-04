@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://96linuskuhn-byte.github.io/linuskuhn.io/sitemap.xml

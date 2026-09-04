@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project — Linus Kuhn</title>
 <meta name="description" content="Project detail — Linus Kuhn, mechanical engineering &amp; product development.">
+<link id="canonicalLink" rel="canonical" href="https://96linuskuhn-byte.github.io/linuskuhn.io/project.html">
+<meta id="ogType" property="og:type" content="article">
+<meta property="og:site_name" content="Linus Kuhn">
+<meta id="ogTitle" property="og:title" content="Project — Linus Kuhn">
+<meta id="ogDescription" property="og:description" content="Project detail — Linus Kuhn, mechanical engineering &amp; product development.">
+<meta id="ogUrl" property="og:url" content="https://96linuskuhn-byte.github.io/linuskuhn.io/project.html">
+<meta id="ogImage" property="og:image" content="https://96linuskuhn-byte.github.io/linuskuhn.io/img/portrait.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="twitterTitle" name="twitter:title" content="Project — Linus Kuhn">
+<meta id="twitterDescription" name="twitter:description" content="Project detail — Linus Kuhn, mechanical engineering &amp; product development.">
+<meta id="twitterImage" name="twitter:image" content="https://96linuskuhn-byte.github.io/linuskuhn.io/img/portrait.jpg">
+<script id="ldJson" type="application/ld+json">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -121,7 +133,7 @@ footer{
 
 <footer>
   <span>&copy; 2026 Linus Kuhn</span>
-  <span>Pforzheim, Germany</span>
+  <span><a href="legal.html">Impressum &amp; Datenschutz</a></span>
 </footer>
 
 <script>
@@ -242,6 +254,39 @@ if(!proj){
   const prev=PROJECTS[(idx-1+PROJECTS.length)%PROJECTS.length];
   const next=PROJECTS[(idx+1)%PROJECTS.length];
   document.title=proj.title+' — Linus Kuhn';
+
+  // SEO/GEO: fill in per-project meta tags, canonical URL and structured
+  // data now that we know which project this page instance represents
+  (()=>{
+    const base='https://96linuskuhn-byte.github.io/linuskuhn.io/';
+    const pageUrl=base+'project.html?slug='+proj.slug;
+    const desc=(proj.txt||'').replace(/<[^>]*>/g,'').slice(0,300);
+    const img=base+(proj.media.type==='multi'?proj.media.imgs[0].src:proj.media.img);
+    const set=(id,attr,val)=>{const el=document.getElementById(id);if(el)el.setAttribute(attr,val)};
+    document.querySelector('meta[name="description"]').setAttribute('content',desc);
+    set('canonicalLink','href',pageUrl);
+    set('ogTitle','content',proj.title+' — Linus Kuhn');
+    set('ogDescription','content',desc);
+    set('ogUrl','content',pageUrl);
+    set('ogImage','content',img);
+    set('twitterTitle','content',proj.title+' — Linus Kuhn');
+    set('twitterDescription','content',desc);
+    set('twitterImage','content',img);
+    const ld={
+      "@context":"https://schema.org",
+      "@type":"CreativeWork",
+      "name":proj.title,
+      "description":desc,
+      "url":pageUrl,
+      "image":img,
+      "dateCreated":String(proj.year),
+      "creator":{"@type":"Person","name":"Linus Kuhn","url":base},
+      "keywords":proj.tags.join(', ')
+    };
+    const ldEl=document.getElementById('ldJson');
+    if(ldEl)ldEl.textContent=JSON.stringify(ld);
+  })();
+
   main.innerHTML=`
     <div class="p-head">
       <span class="p-label">${proj.label}</span>
