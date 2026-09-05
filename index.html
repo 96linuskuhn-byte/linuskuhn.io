@@ -722,14 +722,16 @@ footer .meta-center{flex:1;text-align:center}
 
     <article class="project" id="project-steer-by-wire" data-slug="steer-by-wire">
       <div class="p-info">
-        <span class="p-label">Project &bull; Own Project</span>
+        <span class="p-label">Project &bull; MPC DesignWorks</span>
         <div class="p-year">2026</div>
         <h3>Steer by Wire</h3>
-        <p class="txt">To implement a lightweight functional Design of a Steer by Wire Application. <a class="thesis-link" href="project.html?slug=steer-by-wire">Read More</a></p>
+        <p class="txt">The steering system was developed as a subsystem of a chassis that lets the Iron Brothers compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It's meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction. <a class="thesis-link" href="project.html?slug=steer-by-wire">Read More</a></p>
         <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
       </div>
-      <div class="p-media multi" style="aspect-ratio:1338/1058"><img src="img/Steering.png" alt="Steer by Wire " width="1338" height="1058">
-        <img src="img/Steering2.png" alt="Steer by Wire " loading="lazy" width="1488" height="930"></div>
+      <div class="p-media multi" style="aspect-ratio:1177/697"><img src="img/Steering3b.png" alt="Steer by Wire" width="1177" height="697">
+        <img src="img/Steering4b.png" alt="Steer by Wire" loading="lazy" width="542" height="384">
+        <img src="img/Steering5b.png" alt="Steer by Wire" loading="lazy" width="887" height="581">
+        <img src="img/Steering2b.png" alt="Steer by Wire" loading="lazy" width="1488" height="914"></div>
     </article>
 
 
@@ -868,7 +870,7 @@ footer .meta-center{flex:1;text-align:center}
     // rows: drawn as many small segments to trace the sine curve smoothly,
     // with no rounded joints between segments (avoids dot artifacts)
     for(let i=0;i<NV;i++){
-      const t=i/(NV-1), op=.14+.5*t, lw=.7+1.2*t;
+      const t=i/(NV-1), op=.14+.5*t, lw=1.1+1.5*t;
       const col=t>.4?'244,232,255':'214,202,246';
       ctx.lineWidth=lw;
       for(let j=0;j<NUF-1;j++){
@@ -883,7 +885,7 @@ footer .meta-center{flex:1;text-align:center}
     for(let j=0;j<NU;j++){
       const fj=j*ROWSUB;
       const major=j%4===0;
-      ctx.lineWidth=major?1.0:.7;
+      ctx.lineWidth=major?1.4:1.0;
       const base=major?.30:.16;
       for(let i=0;i<NV-1;i++){
         const t=i/(NV-1);

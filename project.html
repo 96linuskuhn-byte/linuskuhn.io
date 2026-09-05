@@ -222,13 +222,13 @@ const PROJECTS=[
   },
   {
     slug:'steer-by-wire',
-    label:'Project &bull; Own Project',
+    label:'Project &bull; MPC DesignWorks',
     year:'2026',
     title:'Steer by Wire',
     tags:['CAD','Prototyping'],
-    txt:'To implement a lightweight functional design of a Steer by Wire application.',
-    more:'An ongoing project developing a lightweight, functional steer-by-wire setup — removing the mechanical link between steering wheel and wheels in favor of a sensor-and-actuator-driven system. Work so far has focused on the mechanical layout and packaging of the actuator unit in CAD, with functional prototyping planned as the next step to validate steering feel and response.',
-    media:{type:'multi',imgs:[{src:'img/Steering.png',alt:'Steer by Wire',caption:'Explosion view steering system top'},{src:'img/Steering2.png',alt:'Steer by Wire',caption:'Explosion view steering system down'}]}
+    txt:'The steering system was developed as a subsystem of a chassis that lets the Iron Brothers compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It\'s meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction.',
+    more:'To this end, a feasibility study was first carried out on integrating a steering system into the existing chassis. Several steering actuation concepts were developed and studied for how the steering kinematics affect handling and steering forces. Since the priority was steering comfort, an electric steering concept was chosen. To size the steering actuator, the kinematics were implemented in the MuJoCo simulation environment, a custom tire model was developed, and the vehicle dynamics were simulated. This yielded the load cases needed to select a suitable actuator and generate the ideal geometry via generative design. Additional functional surfaces were then added and the part was smoothed, resulting in the final shape.',
+    media:{type:'multi',imgs:[{src:'img/Steering3b.png',alt:'Steer by Wire',caption:'Rendered chassis component',w:1177,h:697},{src:'img/Steering4b.png',alt:'Steer by Wire',caption:'Full vehicle render',w:542,h:384},{src:'img/Steering5b.png',alt:'Steer by Wire',caption:'Steering hub detail',w:887,h:581},{src:'img/Steering2b.png',alt:'Steer by Wire',caption:'Explosion view steering system down',w:1488,h:914}]}
   }
 ];
 
