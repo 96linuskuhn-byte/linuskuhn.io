@@ -170,34 +170,50 @@ nav.scrolled{border-bottom-color:var(--line)}
 }
 
 /* ---------- HERO ---------- */
-.hero-pin{height:145vh}
+/* the hero used to pin/scroll-jack (145vh) with its wave graphic and text
+   drift tied to scroll progress — that's been removed. It's now a normal,
+   unpinned section; the wave mesh still animates on its own (idle motion
+   only, driven purely by time, not by scroll position). */
+.hero-pin{height:auto}
+.hero-pin .hero{position:relative;height:auto;min-height:100svh}
 .hero-pin.no-pin{height:auto}
 .hero-pin.no-pin .hero{position:relative;height:auto;min-height:100svh}
-/* on phones/touch devices the scroll-jacking hero animation is disabled via
-   JS (see the lowPower check further down) and .no-pin is added to collapse
-   the extra 145vh of scroll-jack space back down to a normal hero height —
-   but that JS class gets added after the browser has already performed any
-   #anchor scroll on load, so anything below the hero visibly jumps once the
-   height collapses. Apply the same collapsed height here via a plain media
-   query (matching the JS's lowPower condition) so it's already correct at
-   first paint, before any anchor scroll happens — no JS timing race. */
-@media(max-width:760px),(pointer:coarse){
-  .hero-pin{height:auto}
-  .hero-pin .hero{position:relative;height:auto;min-height:100svh}
-}
 .hero{
   height:100svh;
   position:sticky;top:0;
   display:flex;flex-direction:column;justify-content:center;
   padding:120px clamp(20px,6vw,96px) 90px;
   overflow:hidden;
-  background:linear-gradient(115deg,#d9e6fa 0%,#b6cbf3 28%,#7b92e0 60%,#4050d6 85%,#2b2bee 100%);
+  background:linear-gradient(to top,#2e4fd6 0%,#5c8ad9 100%);
 }
-.hero .net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.4))}
 .hero .inner{
   position:relative;z-index:2;margin-left:auto;text-align:right;max-width:800px;
   padding:clamp(32px,4vw,56px) clamp(32px,4.5vw,64px);
   border-radius:28px;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  backdrop-filter:blur(var(--hero-blur,6px));
+  -webkit-backdrop-filter:blur(var(--hero-blur,6px));
+  -webkit-mask-image:linear-gradient(to top,transparent 0%,#000 65%);
+  mask-image:linear-gradient(to top,transparent 0%,#000 65%);
+  pointer-events:none;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero .loc,.hero h1,.hero .tagline,.hero .sub{
+  opacity:0;animation:heroIn .7s cubic-bezier(.2,.6,.2,1) forwards;
+}
+.hero .loc{animation-delay:.1s}
+.hero h1{animation-delay:.18s}
+.hero .tagline{animation-delay:.5s}
+.hero .sub{animation-delay:.5s}
+.hero .sub+.sub{animation-delay:.65s}
+@media(prefers-reduced-motion:reduce){
+  .hero .loc,.hero h1,.hero .tagline,.hero .sub{animation:none;opacity:1}
 }
 .hero .loc{
   font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
@@ -213,7 +229,7 @@ nav.scrolled{border-bottom-color:var(--line)}
   margin-top:18px;letter-spacing:.04em;
   text-shadow:0 1px 12px rgba(0,0,0,.25);
 }
-.hero .tagline span{opacity:.65;padding:0 .4em}
+.hero .tagline .tsep{opacity:.65;padding:0 .4em;display:inline-block}
 .hero .sub{
   margin:28px 0 0 auto;max-width:76ch;
   font-size:.9rem;font-weight:500;color:#fff;letter-spacing:.02em;line-height:1.9;
@@ -244,7 +260,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .split{display:grid;grid-template-columns:1.05fr .95fr;min-height:88vh}
 @media(max-width:900px){.split{grid-template-columns:1fr}}
 .split .blue{
-  background:var(--blue);color:#fff;
+  background:linear-gradient(to bottom,#2e4fd6 0%,var(--blue) 100%);color:#fff;
   padding:clamp(40px,6vw,72px) clamp(24px,4vw,56px);
   display:flex;flex-direction:column;justify-content:space-between;gap:56px;
 }
@@ -263,6 +279,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 
 /* ---------- SECTION SHELL ---------- */
 section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,120px)}
+#projects{padding-bottom:clamp(28px,3.5vw,48px)}
 .shell-head h2{font-size:clamp(2.4rem,5.5vw,4rem)}
 .shell-head p{font-size:.82rem;color:var(--grey);max-width:52ch;margin-top:16px;line-height:1.9}
 .shell-head{margin-bottom:clamp(36px,5vw,64px)}
@@ -286,7 +303,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .interest ol li::marker{color:var(--blue)}
 
 /* ---------- PROJECTS ---------- */
-.frame{padding:clamp(16px,2.5vw,32px) clamp(4px,1vw,10px)}
+.frame{padding:clamp(16px,2.5vw,32px) clamp(4px,1vw,10px) 0}
 .frame-top{
   display:flex;justify-content:space-between;align-items:center;gap:16px;
   padding-bottom:clamp(16px,2.5vw,28px);flex-wrap:wrap;
@@ -298,10 +315,12 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   padding:clamp(32px,4.5vw,64px) 0;
   opacity:0;transform:translateY(28px);
   scroll-margin-top:100px;
-  transition:opacity .7s cubic-bezier(.2,.6,.2,1),transform .7s cubic-bezier(.2,.6,.2,1);
 }
+/* the fade/slide-in itself is driven by el.animate() in JS (more reliable
+   across browsers than a class-triggered CSS transition) — this just
+   defines the resting end state so the card stays visible afterwards,
+   and is also the fallback if JS is unavailable */
 .project.visible{opacity:1;transform:none}
-.project.visible:has(.p-info h3 a:hover){transform:scale(1.015);transition:transform .35s cubic-bezier(.2,.6,.2,1)}
 .project:nth-child(even) .p-media{order:-1}
 @media(max-width:860px){
   .project{grid-template-columns:1fr}
@@ -322,6 +341,9 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .p-info h3 a{display:inline;transition:color .2s}
 .p-info h3 a:hover,.p-info h3 a:focus-visible{color:var(--blue)}
 .p-info .txt{font-size:.8rem;color:var(--grey);line-height:1.95}
+.p-info .txt .thesis-link{color:var(--blue);font-weight:700;white-space:nowrap}
+.p-info .txt .thesis-link::after{content:"\2192";margin-left:6px;transition:margin-left .15s}
+.p-info .txt .thesis-link:hover::after{margin-left:10px}
 .p-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
 .p-tags span{
   font-size:.7rem;font-weight:500;letter-spacing:.03em;
@@ -505,7 +527,7 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:10px 24px;flex-w
 footer .meta-left{display:flex;gap:10px 24px;flex-wrap:wrap}
 footer .meta-center{flex:1;text-align:center}
 
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.reveal{opacity:0;transform:translateY(26px)}
 .reveal.visible{opacity:1;transform:none}
 </style>
 </head>
@@ -520,8 +542,8 @@ footer .meta-center{flex:1;text-align:center}
   <div class="nav-links">
     <a class="me" href="#about">About Me</a>
     <a href="#projects">Projects</a>
-    <a href="#cv">CV</a>
     <a href="#skills">Skills</a>
+    <a href="#cv">CV</a>
     <a href="#contact">Contact</a>
   </div>
 </nav>
@@ -532,15 +554,11 @@ footer .meta-center{flex:1;text-align:center}
   <div class="inner">
     <div class="loc">Product Development &bull; Mechanical Engineering</div>
     <h1>Linus Kuhn</h1>
-    <div class="tagline">create<span>|</span>prototype<span>|</span>refine</div>
+    <div class="tagline"><span class="tw">create</span><span class="tsep">|</span><span class="tw">prototype</span><span class="tsep">|</span><span class="tw">refine</span></div>
     <p class="sub">I develop ideas into prototypes and strive to accelerate this process.</p>
-    <p class="sub">To do so, I use, learn and create tools that make this possible.<br>
-    I believe that team-based, focused decisions, rapid iterations and the right
-    returns are key to develop great products.</p>
-    <div class="cta">
-      <a class="boxlink arrow" href="#projects">View Projects</a>
-      <a class="boxlink inv arrow" href="#contact">Say Hello</a>
-    </div>
+    <p class="sub">To do so, I use, learn and create tools. Additionally, I believe that
+    team-based, focused decisions, rapid iterations and the right returns are key to
+    develop great products.</p>
   </div>
   <div class="x">scroll &darr;</div>
 </header>
@@ -552,11 +570,11 @@ footer .meta-center{flex:1;text-align:center}
       <h2>About Me</h2>
       <div>
         <p class="desc">Hi, my name is Linus Kuhn, I'm 29 years old and I was born
-        and raised in Stuttgart, Germany. Ever since childhood I've been
-        fascinated by mechanical things that work and that could be taken
-        apart. Since studying mechanical engineering, I've learned how to put
-        them together professionally, and I've been striving ever since to
-        develop exciting products more efficiently and better.</p>
+        and raised in Stuttgart, Germany. Even as a child, I was fascinated
+        by mechanical things that work and that could be taken apart. Since
+        studying mechanical engineering, I've learned how to put them together
+        professionally, and I keep striving to develop exciting products more
+        efficiently and better.</p>
       </div>
     </div>
   </div>
@@ -590,19 +608,19 @@ footer .meta-center{flex:1;text-align:center}
       <div class="p-info">
         <span class="p-label">Master Thesis &bull; Pforzheim University</span>
         <div class="p-year">2025</div>
-        <h3><a href="project.html?slug=axial-flux-machine">Axial Flux Machine — Surrogate-Based Topology Optimization</a></h3>
-        <p class="txt">YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.</p>
+        <h3>Axial Flux Machine — Surrogate-Based Topology Optimization</h3>
+        <p class="txt">YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required. <a class="thesis-link" href="project.html?slug=axial-flux-machine">Read More</a></p>
         <div class="p-tags"><span>Ansys</span><span>FEM</span><span>Surrogate Modeling</span><span>Electric Machines</span><span>Optimization</span></div>
       </div>
-      <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy"></div>
+      <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="675"></div>
     </article>
 
     <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Pforzheim University</span>
         <div class="p-year">2024</div>
-        <h3><a href="project.html?slug=coffee-grinder">Manual Coffee Grinder Inspired by Charles Eames</a></h3>
-        <p class="txt">Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.</p>
+        <h3>Manual Coffee Grinder Inspired by Charles Eames</h3>
+        <p class="txt">Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process. <a class="thesis-link" href="project.html?slug=coffee-grinder">Read More</a></p>
         <div class="p-tags"><span>Industrial Design</span><span>Sketching</span><span>Prototyping</span><span>CMF</span></div>
       </div>
       <div class="p-media multi" style="aspect-ratio:1400/748"><img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" width="1400" height="748">
@@ -613,19 +631,19 @@ footer .meta-center{flex:1;text-align:center}
       <div class="p-info">
         <span class="p-label">Bachelor Thesis &bull; Evomotiv GmbH</span>
         <div class="p-year">2022</div>
-        <h3><a href="project.html?slug=autonomous-robot">Autonomous Robot for Vehicle Test Automation</a></h3>
-        <p class="txt">Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.</p>
+        <h3>Autonomous Robot for Vehicle Test Automation</h3>
+        <p class="txt">Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use. <a class="thesis-link" href="project.html?slug=autonomous-robot">Read More</a></p>
         <div class="p-tags"><span>Mechatronics</span><span>Sensors</span><span>Stakeholder Management</span><span>Functional Prototypes</span></div>
       </div>
-      <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy"></div>
+      <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy" width="1400" height="1049"></div>
     </article>
 
     <article class="project" id="project-velomobil" data-slug="velomobil">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2021</div>
-        <h3><a href="project.html?slug=velomobil">Velomobil — Aerodynamic Pedal Vehicle</a></h3>
-        <p class="txt">An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles.</p>
+        <h3>Velomobil — Aerodynamic Pedal Vehicle</h3>
+        <p class="txt">An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles. <a class="thesis-link" href="project.html?slug=velomobil">Read More</a></p>
         <div class="p-tags"><span>Surface Modeling</span><span>Rendering</span><span>Aerodynamics</span><span>Carbon Fiber</span></div>
       </div>
       <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy" width="1400" height="990"></div>
@@ -635,30 +653,30 @@ footer .meta-center{flex:1;text-align:center}
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Karlsruhe University</span>
         <div class="p-year">2021</div>
-        <h3><a href="project.html?slug=automated-window">Automated Window</a></h3>
-        <p class="txt">A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.</p>
+        <h3>Automated Window</h3>
+        <p class="txt">A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system. <a class="thesis-link" href="project.html?slug=automated-window">Read More</a></p>
         <div class="p-tags"><span>Kinematics</span><span>Arduino</span><span>3D Printing</span><span>Electronics</span><span>Project Management</span></div>
       </div>
-      <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy"></div>
+      <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy" width="1320" height="1020"></div>
     </article>
 
     <article class="project" id="project-raceboat" data-slug="raceboat">
       <div class="p-info">
         <span class="p-label">Physical Prototype &bull; Own Project</span>
         <div class="p-year">2019</div>
-        <h3><a href="project.html?slug=raceboat">Remote Controlled Carbon Fiber Raceboat</a></h3>
-        <p class="txt">A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer.</p>
+        <h3>Remote Controlled Carbon Fiber Raceboat</h3>
+        <p class="txt">A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer. <a class="thesis-link" href="project.html?slug=raceboat">Read More</a></p>
         <div class="p-tags"><span>Mold Making</span><span>Composite Lamination</span><span>3D Printing</span></div>
       </div>
-      <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy"></div>
+      <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy" width="1229" height="820"></div>
     </article>
 
     <article class="project" id="project-rotary-engine" data-slug="rotary-engine">
       <div class="p-info">
         <span class="p-label">Concept &bull; Own Project</span>
         <div class="p-year">2017</div>
-        <h3><a href="project.html?slug=rotary-engine">Rotary Combustion Engine</a></h3>
-        <p class="txt">An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all.</p>
+        <h3>Rotary Combustion Engine</h3>
+        <p class="txt">An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all. <a class="thesis-link" href="project.html?slug=rotary-engine">Read More</a></p>
         <div class="p-tags"><span>Fusion 360</span><span>Thermodynamics</span><span>Engine Engineering</span></div>
       </div>
       <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy" width="965" height="542"></div>
@@ -668,8 +686,8 @@ footer .meta-center{flex:1;text-align:center}
       <div class="p-info">
         <span class="p-label">Project &bull; Own Project</span>
         <div class="p-year">2026</div>
-        <h3><a href="project.html?slug=steer-by-wire">Steer by Wire </a></h3>
-        <p class="txt">To implement a lightweight functional Design of a Steer by Wire Application</p>
+        <h3>Steer by Wire</h3>
+        <p class="txt">To implement a lightweight functional Design of a Steer by Wire Application. <a class="thesis-link" href="project.html?slug=steer-by-wire">Read More</a></p>
         <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
       </div>
       <div class="p-media multi" style="aspect-ratio:1338/1058"><img src="img/Steering.png" alt="Steer by Wire " width="1338" height="1058">
@@ -682,6 +700,20 @@ footer .meta-center{flex:1;text-align:center}
 
 
 
+  </div>
+</section>
+
+<section id="skills" class="shell">
+  <div class="shell-head reveal">
+    <h2>Skills &amp; Tools</h2>
+  </div>
+  <div class="skill-grid reveal">
+    <div class="skill"><h4>CAD</h4><p>Autodesk Fusion 360 &middot; Inventor &middot; SolidWorks &middot; Catia</p></div>
+    <div class="skill"><h4>CAE &amp; Simulation</h4><p>Ansys Maxwell &middot; Ansys optiSLang &middot; FEM &middot; Surrogate Modeling</p></div>
+    <div class="skill"><h4>Prototyping</h4><p>3D Printing (Orca Slicer, Bambu Studio, Simplify3D) &middot; Mold Making &middot; Carbon Fiber Lamination</p></div>
+    <div class="skill"><h4>Creative</h4><p>Blender &middot; Adobe Creative Suite &middot; Affinity &middot; Rendering &amp; Surface Modeling</p></div>
+    <div class="skill"><h4>Code</h4><p>Python &middot; Arduino IDE</p></div>
+    <div class="skill"><h4>Beyond Work</h4><p>Making music &middot; Hiking &middot; Tennis &amp; Hockey</p></div>
   </div>
 </section>
 
@@ -707,20 +739,6 @@ footer .meta-center{flex:1;text-align:center}
         <li><span class="when">2014 – 2017</span><span class="what"><span class="logo"><img src="img/logos/wmg.png" alt="Wilhelm-Maybach-Gymnasium logo" loading="lazy"></span>Technical Grammar School<span class="where">Wilhelm-Maybach Gymnasium, Stuttgart</span></span></li>
       </ul>
     </div>
-  </div>
-</section>
-
-<section id="skills" class="shell">
-  <div class="shell-head reveal">
-    <h2>Skills &amp; Tools</h2>
-  </div>
-  <div class="skill-grid reveal">
-    <div class="skill"><h4>CAD</h4><p>Autodesk Fusion 360 &middot; Inventor &middot; SolidWorks &middot; Catia</p></div>
-    <div class="skill"><h4>CAE &amp; Simulation</h4><p>Ansys Maxwell &middot; Ansys optiSLang &middot; FEM &middot; Surrogate Modeling</p></div>
-    <div class="skill"><h4>Prototyping</h4><p>3D Printing (Orca Slicer, Bambu Studio, Simplify3D) &middot; Mold Making &middot; Carbon Fiber Lamination</p></div>
-    <div class="skill"><h4>Creative</h4><p>Blender &middot; Adobe Creative Suite &middot; Affinity &middot; Rendering &amp; Surface Modeling</p></div>
-    <div class="skill"><h4>Code</h4><p>Python &middot; Arduino IDE</p></div>
-    <div class="skill"><h4>Beyond Work</h4><p>Making music &middot; Hiking &middot; Tennis &amp; Hockey</p></div>
   </div>
 </section>
 
@@ -766,7 +784,6 @@ footer .meta-center{flex:1;text-align:center}
   // it's simply switched off there (static single frame, no scroll-jack)
   // rather than trying to render a lower-quality version of it — full
   // detail/quality stays exactly as before on devices that do run it.
-  const lowPower=matchMedia('(max-width:760px)').matches||matchMedia('(pointer:coarse)').matches;
   const NU=80, NV=34, ROWSUB=4, NUF=(NU-1)*ROWSUB+1;
   let W,H;
   function resize(){
@@ -779,13 +796,14 @@ footer .meta-center{flex:1;text-align:center}
   function zval(u,t,ph){
     let s=0;
     for(const c of comps)s+=c.a*Math.sin(6.2832*c.fx*u+c.p1+ph)*Math.sin(6.2832*c.ft*t+c.p2+ph*.6);
-    return .5+.5*Math.tanh(s*1.4);
+    const sideMod=1-.6*u; // amplitude tapers off toward the right, left stays as-is
+    return .5+.5*Math.tanh(s*sideMod*1.4);
   }
   function project(u,t,zn){
     const persp=.45+.55*Math.pow(t,1.3);
     const x=W/2+(u-.5)*W*1.5*persp;
-    const ybase=H*.33+Math.pow(t,1.35)*H*.72;
-    const amp=H*.10+H*.33*Math.pow(t,1.2);
+    const ybase=H*.28+Math.pow(t,1.35)*H*.65;
+    const amp=H*.08+H*.22*Math.pow(t,1.2);
     return [x,ybase-zn*amp];
   }
   // fade so lines stay pale behind the text
@@ -813,7 +831,7 @@ footer .meta-center{flex:1;text-align:center}
     // with no rounded joints between segments (avoids dot artifacts)
     for(let i=0;i<NV;i++){
       const t=i/(NV-1), op=.14+.5*t, lw=.7+1.2*t;
-      const col=t>.4?'255,255,255':'205,216,244';
+      const col=t>.4?'244,232,255':'214,202,246';
       ctx.lineWidth=lw;
       for(let j=0;j<NUF-1;j++){
         const a=P[i][j],b=P[i][j+1];
@@ -833,41 +851,54 @@ footer .meta-center{flex:1;text-align:center}
         const t=i/(NV-1);
         const op=base*(.5+.5*t);
         const a=P[i][fj],b=P[i+1][fj];
-        ctx.strokeStyle=`rgba(232,238,253,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
+        ctx.strokeStyle=`rgba(224,214,250,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
         ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
       }
     }
   }
 
-  let prog=0;
-  const inner=document.querySelector('.hero .inner');
-  function onScroll(){
-    const range=pin.offsetHeight-innerHeight;
-    prog=Math.max(0,Math.min(1,(scrollY-pin.offsetTop)/range));
+  // idle animation, mainly time-based — plus a small scroll-linked nudge:
+  // its effect eases out and caps within the first bit of scrolling, so it
+  // never turns back into full scroll-jacking, just a subtle initial touch
+  let scrollTarget=0,scrollPhase=0;
+  function updateScrollPhase(){
+    scrollTarget=Math.max(0,scrollY)*.0012; // unbounded — keeps growing with scroll
   }
   function loop(now){
     const idle=reduced?0:now*.00012;
-    const ph=idle+prog*3.5;
-    draw(ph);
-    // soft hand-over: content starts drifting up before the pin releases,
-    // so real scrolling continues the motion seamlessly
-    const out=Math.max(0,(prog-.55)/.45);
-    const eased=out*out;
-    inner.style.transform=`translateY(${(-60-70*eased).toFixed(1)}px)`;
-    inner.style.opacity=(1-.2*eased).toFixed(3);
+    // smoothly chase the target instead of snapping straight to it, so
+    // slowing back down to the normal speed feels gradual, not abrupt
+    scrollPhase+=(scrollTarget-scrollPhase)*.06;
+    draw(idle+scrollPhase);
     requestAnimationFrame(loop);
   }
   resize();
-  if(lowPower){
-    // no scroll-jack / animation on phones — just draw one static frame
-    document.getElementById('top').classList.add('no-pin');
+  document.getElementById('top').classList.add('no-pin');
+  addEventListener('resize',()=>{resize();},{passive:true});
+  addEventListener('scroll',updateScrollPhase,{passive:true});
+  updateScrollPhase();
+  if(reduced){
     draw(0);
   }else{
-    addEventListener('resize',()=>{resize();},{passive:true});
-    addEventListener('scroll',onScroll,{passive:true});
-    onScroll();
     requestAnimationFrame(loop);
   }
+})();
+
+/* ===== hero text: a small lift on the very first bit of scrolling, so the
+   text block drifts up slightly before the page itself starts moving —
+   not a full pin/scroll-jack, just a short, capped parallax touch ===== */
+(function(){
+  const inner=document.querySelector('.hero .inner');
+  if(!inner)return;
+  const range=180; // px of scroll over which the whole effect happens
+  const lift=32; // max px the text moves up
+  function update(){
+    const t=Math.min(1,Math.max(0,scrollY/range));
+    const eased=t*(2-t); // ease-out
+    inner.style.transform=`translateY(${(-lift*eased).toFixed(1)}px)`;
+  }
+  addEventListener('scroll',update,{passive:true});
+  update();
 })();
 
 const nav=document.getElementById('nav');
@@ -1195,7 +1226,20 @@ document.querySelectorAll('.p-media').forEach(m=>{
 });
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+  if(e.isIntersecting){
+    const el=e.target;
+    io.unobserve(el);
+    el.classList.add('visible');
+    // driven directly via the Web Animations API instead of a CSS
+    // class-triggered transition — Chrome can silently skip a CSS
+    // transition when the "before" state was never rendered in its own
+    // frame first, which kept happening for a couple of cards; an
+    // explicit .animate() call always plays its keyframes regardless
+    el.animate(
+      [{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'none'}],
+      {duration:700,easing:'cubic-bezier(.2,.6,.2,1)',fill:'forwards'}
+    );
+  }
 }),isTouchDevice
   // on phones the viewport is short, so waiting until an element is 50px
   // inside it (like on desktop) means scrolling almost all the way to it
@@ -1203,7 +1247,12 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   // fading in while still approaching from below
   ?{threshold:0,rootMargin:'0px 0px 3% 0px'}
   :{threshold:.12,rootMargin:'0px 0px -50px 0px'});
-document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));
+// wait for the 'load' event (fonts/images settled, layout stable) before
+// starting to observe — otherwise the very first intersection check can
+// fire while the page is still reflowing, and elements that happen to
+// already be in view at that point skip their fade/slide-in entirely
+function startReveal(){document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));}
+if(document.readyState==='complete')startReveal();else addEventListener('load',startReveal);
 
 /* ===== remember scroll position when leaving the page (fallback for any
    back-navigation that isn't a plain anchor link) ===== */

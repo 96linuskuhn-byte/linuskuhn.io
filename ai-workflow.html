@@ -48,7 +48,11 @@ body{
   font-family:'JetBrains Mono',monospace;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .5s cubic-bezier(.2,.6,.2,1),transform .5s cubic-bezier(.2,.6,.2,1);
 }
+body.page-ready{opacity:1;transform:none}
 h1,h2,.display{
   font-family:'Archivo',sans-serif;
   font-weight:800;
@@ -352,6 +356,10 @@ function animate(now) {
   renderer.render(scene, camera);
 }
 requestAnimationFrame(animate);
+</script>
+<script>
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
+setTimeout(()=>document.body.classList.add('page-ready'),1000);
 </script>
 
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "828442d6b2304905827f44a7451877bb"}'></script><!-- End Cloudflare Web Analytics -->

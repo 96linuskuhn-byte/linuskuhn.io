@@ -39,7 +39,11 @@ body{
   font-family:'JetBrains Mono',monospace;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .5s cubic-bezier(.2,.6,.2,1),transform .5s cubic-bezier(.2,.6,.2,1);
 }
+body.page-ready{opacity:1;transform:none}
 h1,h2,.display{
   font-family:'Archivo',sans-serif;
   font-weight:800;
@@ -146,7 +150,7 @@ const PROJECTS=[
     tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
     txt:'YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.',
     more:'The thesis combined design-of-experiments sampling with an actively updated surrogate model, so every additional 3D-FEM simulation was spent where it improved prediction accuracy the most rather than covering the design space uniformly. This cut the number of expensive transient simulations substantially while keeping the surrogate reliable across the full parameter range. The constraint cascade was built to automatically reject infeasible or irrelevant designs early, letting the optimizer focus purely on machine geometries that were both manufacturable and electromagnetically meaningful.',
-    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring'}
+    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring',w:1400,h:675}
   },
   {
     slug:'coffee-grinder',
@@ -169,7 +173,7 @@ const PROJECTS=[
     tags:['Mechatronics','Sensors','Stakeholder Management','Functional Prototypes'],
     txt:'Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.',
     more:'The robot needed to reproduce pedestrian and obstacle behavior around a test vehicle with centimeter-level positioning repeatability, driven by RTK-GPS and closed-loop motor control. Beyond the hardware, the thesis involved close coordination with test engineers to translate real test scenarios into robot behavior, and the platform was designed to be extendable — later test scenarios reused the same chassis and control architecture with different sensor payloads, turning a single prototype into a small fleet used in day-to-day validation work.',
-    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform'}
+    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform',w:1400,h:1049}
   },
   {
     slug:'velomobil',
@@ -189,7 +193,7 @@ const PROJECTS=[
     tags:['Kinematics','Arduino','3D Printing','Electronics','Project Management'],
     txt:'A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.',
     more:'Built to retrofit onto an existing window frame without modification, the system combines a 3D-printed linkage mechanism, an Arduino-based control unit and a sound-level sensor to automatically ventilate a room when it gets noisy outside and close again once it quiets down. The project covered the full stack from kinematic design of the opening mechanism to firmware and enclosure design, and was run with a small team — giving early hands-on experience in coordinating mechanical, electronic and software work streams on a tight timeline.',
-    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true,caption:'Front view of the retrofittable system for automatically opening and closing the window'}
+    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true,caption:'Front view of the retrofittable system for automatically opening and closing the window',w:1320,h:1020}
   },
   {
     slug:'raceboat',
@@ -199,7 +203,7 @@ const PROJECTS=[
     tags:['Mold Making','Composite Lamination','3D Printing'],
     txt:'A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer.',
     more:'The hull shape was designed in CAD and split into 3D-printed negative mold segments, which were then used to hand-laminate a lightweight carbon fiber shell. Getting a fair, low-drag hull out of a segmented mold — and finishing the seams to a race-ready surface — was the core challenge of the build. Propulsion came from a 500W brushless DC motor paired with a turboprop drive, making this one of the first projects where CAD design, 3D-printed tooling and composite fabrication all came together end to end.',
-    media:{type:'single',img:'img/raceboat.jpg',alt:'Remote Controlled Carbon Fiber Raceboat',caption:'Carbon fiber raceboat on the water'}
+    media:{type:'single',img:'img/raceboat.jpg',alt:'Remote Controlled Carbon Fiber Raceboat',caption:'Carbon fiber raceboat on the water',w:1229,h:820}
   },
   {
     slug:'rotary-engine',
@@ -224,10 +228,11 @@ const PROJECTS=[
 ];
 
 function mediaHTML(m){
+  const dims=i=>i.w&&i.h?` width="${i.w}" height="${i.h}"`:'';
   if(m.type==='multi'){
-    return `<div class="p-media multi">${m.imgs.map(i=>`<figure><img src="${i.src}" alt="${i.alt}" loading="lazy">${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
+    return `<div class="p-media multi">${m.imgs.map(i=>`<figure><img src="${i.src}" alt="${i.alt}" loading="lazy"${dims(i)}>${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
   }
-  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><figure><img src="${m.img}" alt="${m.alt}" loading="lazy">${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
+  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><figure><img src="${m.img}" alt="${m.alt}" loading="lazy"${dims(m)}>${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
 }
 
 const params=new URLSearchParams(location.search);
@@ -326,6 +331,8 @@ if(!proj){
     if(!ticking){requestAnimationFrame(onScroll);ticking=true;}
   },{passive:true});
 })();
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
+setTimeout(()=>document.body.classList.add('page-ready'),1000);
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "828442d6b2304905827f44a7451877bb"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
