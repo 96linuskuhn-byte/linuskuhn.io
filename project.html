@@ -33,6 +33,7 @@
   --r-img:4px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+p{text-align:justify;text-justify:inter-word;hyphens:auto;word-spacing:-.03em}
 body{
   background:var(--bg);
   color:var(--ink);
@@ -72,14 +73,19 @@ img{display:block;max-width:100%}
 .arrow::after{content:"\2192";margin-left:6px}
 
 .crumb-bar{
-  position:sticky;top:0;z-index:100;
-  padding:16px clamp(20px,5vw,40px);
-  background:rgba(250,249,245,.55);
-  backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
-  transition:top .3s ease;
+  position:fixed;top:16px;left:clamp(8px,1.5vw,20px);right:clamp(8px,1.5vw,20px);z-index:100;
+  padding:14px clamp(20px,3vw,36px);
+  border-radius:10px;
 }
-.crumb-bar.hide{top:-90px}
+.crumb-bar .crumb-blur{
+  position:absolute;inset:0;z-index:0;border-radius:inherit;
+  background:rgba(250,249,245,.2);
+  border:1px solid rgba(23,23,29,.18);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 4px 12px rgba(23,23,29,.04);
+  pointer-events:none;
+}
+.crumb-bar .boxlink{position:relative;z-index:1}
 
 main{max-width:1100px;margin:0 auto;padding:30px clamp(20px,5vw,40px) 80px}
 
@@ -131,9 +137,9 @@ footer{
 </head>
 <body>
 
-<div class="crumb-bar"><a href="index.html" id="backLink" class="boxlink inv arrow-l">Back to Portfolio</a></div>
+<div class="crumb-bar"><div class="crumb-blur"></div><a href="index.html" id="backLink" class="boxlink inv arrow-l">Back to Portfolio</a></div>
 
-<main id="main"></main>
+<main id="main" style="padding-top:90px"></main>
 
 <footer>
   <span>&copy; 2026 Linus Kuhn</span>
@@ -314,23 +320,6 @@ if(!proj){
   `;
 }
 
-/* ===== hide crumb-bar on scroll down, show on scroll up ===== */
-(function(){
-  const bar=document.querySelector('.crumb-bar');
-  if(!bar)return;
-  let lastY=scrollY,ticking=false;
-  function onScroll(){
-    const y=Math.max(0,scrollY);
-    const delta=y-lastY;
-    if(y>bar.offsetHeight&&delta>4){bar.classList.add('hide');}
-    else if(delta<-4||y<=bar.offsetHeight){bar.classList.remove('hide');}
-    lastY=y;
-    ticking=false;
-  }
-  addEventListener('scroll',()=>{
-    if(!ticking){requestAnimationFrame(onScroll);ticking=true;}
-  },{passive:true});
-})();
 requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
 setTimeout(()=>document.body.classList.add('page-ready'),1000);
 </script>

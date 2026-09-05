@@ -21,6 +21,7 @@
   --r:4px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+p{text-align:justify;text-justify:inter-word;hyphens:auto;word-spacing:-.03em}
 body{
   background:var(--bg);
   color:var(--ink);
@@ -57,14 +58,21 @@ a:hover{text-decoration:underline}
 .arrow-l::before{content:"\2190";margin-right:6px}
 
 .crumb-bar{
-  position:sticky;top:0;z-index:100;
-  padding:16px clamp(20px,5vw,40px);
-  background:rgba(250,249,245,.7);
-  backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
+  position:fixed;top:16px;left:clamp(8px,1.5vw,20px);right:clamp(8px,1.5vw,20px);z-index:100;
+  padding:14px clamp(20px,3vw,36px);
+  border-radius:10px;
 }
+.crumb-bar .crumb-blur{
+  position:absolute;inset:0;z-index:0;border-radius:inherit;
+  background:rgba(250,249,245,.2);
+  border:1px solid rgba(23,23,29,.18);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 4px 12px rgba(23,23,29,.04);
+  pointer-events:none;
+}
+.crumb-bar .boxlink{position:relative;z-index:1}
 
-main{max-width:720px;margin:0 auto;padding:48px clamp(20px,5vw,40px) 100px}
+main{max-width:720px;margin:0 auto;padding:126px clamp(20px,5vw,40px) 100px}
 
 .p-label{
   display:inline-block;
@@ -98,7 +106,7 @@ footer{
 </head>
 <body>
 
-<div class="crumb-bar"><a href="index.html" class="boxlink arrow-l">Back to Portfolio</a></div>
+<div class="crumb-bar"><div class="crumb-blur"></div><a href="index.html" class="boxlink arrow-l">Back to Portfolio</a></div>
 
 <main>
   <span class="p-label">Legal</span>
