@@ -85,9 +85,8 @@ a{color:inherit;text-decoration:none}
 .crumb-bar .crumb-blur{
   position:absolute;inset:0;z-index:0;border-radius:inherit;
   background:rgba(23,23,29,.35);
-  border:1px solid rgba(255,255,255,.25);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  box-shadow:0 0 24px rgba(0,0,0,.2);
   pointer-events:none;
 }
 .crumb-bar .boxlink{position:relative;z-index:1}
@@ -163,6 +162,16 @@ footer{
 requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
 setTimeout(()=>document.body.classList.add('page-ready'),1000);
 </script>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "828442d6b2304905827f44a7451877bb"}'></script><!-- End Cloudflare Web Analytics -->
+<!-- Cloudflare Web Analytics (skipped outside production to avoid local CORS noise) -->
+<script>
+if(location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com'){
+  const s=document.createElement('script');
+  s.type='module';
+  s.src='https://static.cloudflareinsights.com/beacon.min.js';
+  s.setAttribute('data-cf-beacon','{"token": "828442d6b2304905827f44a7451877bb"}');
+  document.body.appendChild(s);
+}
+</script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>
