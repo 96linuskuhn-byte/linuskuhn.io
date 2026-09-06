@@ -266,11 +266,16 @@ nav{
 .hero .x{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#5b6ac9;font-size:.7rem;z-index:2;animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
 @media(max-width:760px){
-  .hero{justify-content:flex-start;padding-top:110px;padding-bottom:40px;overflow-y:auto}
-  .hero .inner{margin:0 auto;text-align:center;padding:28px 24px}
+  .hero{justify-content:flex-start;padding-top:110px;padding-bottom:12px;overflow-y:auto}
+  .hero .inner{margin:40px auto 0;text-align:center;padding:28px 24px}
   .hero .cta{justify-content:center}
   .hero .sub{margin:28px auto 0}
   .hero .corner{display:none}
+  /* min-height:100svh (set for .hero-pin .hero) otherwise pins the hero to
+     the full viewport height regardless of padding, so About Me couldn't
+     start any earlier — shrink it here so the section can actually get
+     shorter */
+  .hero-pin .hero,.hero-pin.no-pin .hero{min-height:78svh}
 }
 
 /* ---------- SPLIT / ABOUT ---------- */
@@ -424,6 +429,10 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   transition:transform .6s cubic-bezier(.2,.6,.2,1);
 }
+/* masks a ~2px rounding gap between an aspect-ratio container and the real
+   image size for "trans"/contain-fit images; placed before the hover-zoom
+   rules below so those still win (same specificity, later wins) on hover */
+.p-media.trans img{transform:scale(1.015)}
 .p-media img.js-zoom{transform:scale(1.03)}
 .p-media img.tap-zoom{transform:scale(1.04)}
 /* mobile lightbox: tapping an image opens it full-width with the rest of
@@ -470,6 +479,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   .lightbox .lb-arrow.prev{left:max(8px,env(safe-area-inset-left))}
   .lightbox .lb-arrow.next{right:max(8px,env(safe-area-inset-right))}
 }
+.p-media.trans{min-height:0} /* aspect-ratio (set inline per image) governs height now — the 300px floor could otherwise force the box taller than the ratio, letterboxing the sides */
 .p-media.trans img{object-fit:contain}
 .p-media.natural{min-height:0;align-self:start}
 .p-media.natural img{position:static;width:100%;height:auto;min-height:220px}
@@ -702,7 +712,7 @@ footer .meta-center{flex:1;text-align:center}
         <p class="txt">YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required. <a class="thesis-link" href="project.html?slug=axial-flux-machine">Read More</a></p>
         <div class="p-tags"><span>Ansys</span><span>FEM</span><span>Surrogate Modeling</span><span>Electric Machines</span><span>Optimization</span></div>
       </div>
-      <div class="p-media trans framed"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="675"></div>
+      <div class="p-media trans framed" style="aspect-ratio:1631/1164"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="999"></div>
     </article>
 
     <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
@@ -725,7 +735,7 @@ footer .meta-center{flex:1;text-align:center}
         <p class="txt">My Bachelor thesis was about the development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew later on into more platforms enabling further test scenarios for autonomous vehicles — now in productive use. <a class="thesis-link" href="project.html?slug=autonomous-robot">Read More</a></p>
         <div class="p-tags"><span>Mechatronics</span><span>Sensors</span><span>Stakeholder Management</span><span>Functional Prototypes</span></div>
       </div>
-      <div class="p-media "><img src="img/robot.jpg" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy" width="1400" height="1049"></div>
+      <div class="p-media "><img src="img/robot-no-logo.png" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy" width="1400" height="1050"></div>
     </article>
 
     <article class="project" id="project-velomobil" data-slug="velomobil">

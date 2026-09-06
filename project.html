@@ -112,6 +112,7 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
 .p-media{overflow:hidden}
 .p-media figure{margin:0}
 .p-media img{width:100%;height:auto;box-sizing:border-box;background:var(--panel);border-radius:var(--r-img);border:1px solid var(--line)}
+.p-media.trans img{transform:scale(1.015)} /* masks a ~2px rounding gap between the container's aspect-ratio and the image's real size */
 .p-media figcaption{
   margin-top:8px;font-size:.7rem;color:var(--grey);letter-spacing:.04em;
   text-align:center;text-transform:uppercase;
@@ -206,7 +207,7 @@ const PROJECTS=[
     tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
     txt:'YASA axial-flux machines offer outstanding torque density, but their 3D flux paths demand expensive transient 3D-FEM simulations. An adaptive sampling strategy (AMOP) builds a surrogate model linking design parameters to performance, while a self-developed constraint cascade narrows the global design space to the technically relevant region — derived purely from data, no heuristics required.',
     more:'The thesis combined design-of-experiments sampling with an actively updated surrogate model, so every additional 3D-FEM simulation was spent where it improved prediction accuracy the most rather than covering the design space uniformly. This cut the number of expensive transient simulations substantially while keeping the surrogate reliable across the full parameter range. The constraint cascade was built to automatically reject infeasible or irrelevant designs early, letting the optimizer focus purely on machine geometries that were both manufacturable and electromagnetically meaningful.',
-    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring',w:1400,h:675}
+    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring',w:1400,h:999}
   },
   {
     slug:'coffee-grinder',
@@ -229,7 +230,7 @@ const PROJECTS=[
     tags:['Mechatronics','Sensors','Stakeholder Management','Functional Prototypes'],
     txt:'My Bachelor thesis was about the development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew later on into <a href="https://evomotiv.de/evorobotics-intelligente-validierung/" target="_blank" rel="noopener" class="inline-link">more platforms</a> enabling further test scenarios for autonomous vehicles — now in productive use.',
     more:'The task was to design a robot small enough to fit underneath a wide variety of test objects. This was necessary because the robot needed to alter the geometry of the test objects as little as possible. A mechatronic concept therefore had to be developed that met the requirements for payload capacity, acceleration, speed and positioning accuracy. The tight installation space made this a particularly challenging project.',
-    media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform',w:1400,h:1049}
+    media:{type:'single',img:'img/robot-no-logo.png',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform',w:1400,h:1050}
   },
   {
     slug:'velomobil',
@@ -288,7 +289,11 @@ function mediaHTML(m){
   if(m.type==='multi'){
     return `<div class="p-media multi">${m.imgs.map(i=>`<figure><img src="${i.src}" alt="${i.alt}" loading="lazy"${dims(i)}>${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
   }
-  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"><figure><img src="${m.img}" alt="${m.alt}" loading="lazy"${dims(m)}>${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
+  // only for object-fit:contain ("trans") images — cover-fit images crop to
+  // any box height fine, but contain needs the box to match the image's own
+  // ratio, or it letterboxes with empty side margins
+  const ratio=m.trans&&m.w&&m.h?` style="aspect-ratio:${m.w}/${m.h}"`:'';
+  return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"${ratio}><figure><img src="${m.img}" alt="${m.alt}" loading="lazy"${dims(m)}>${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
 }
 
 const params=new URLSearchParams(location.search);
