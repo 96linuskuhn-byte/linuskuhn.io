@@ -280,13 +280,13 @@ nav{
   overflow:hidden;
 }
 @media(max-width:900px){
-  .split{grid-template-columns:1fr}
+  .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm} /* the overflow:hidden clip is only needed for the desktop flush/white-rectangle trick, not the mobile stacked layout, and was cutting off content here; padding-top extends the blue area upward so its content sits a bit lower */
 }
 .split .blue{
   color:#fff;
   /* top padding matches section.shell's, so the "About Me" heading sits the
      same distance below the nav bar as the other sections' headings */
-  padding:clamp(48px,6vw,80px) clamp(56px,8vw,96px) clamp(40px,6vw,72px) clamp(24px,4vw,56px);
+  padding:clamp(48px,6vw,80px) clamp(56px,8vw,96px) clamp(64px,9vw,96px) clamp(24px,4vw,56px);
   display:flex;flex-direction:column;justify-content:space-between;gap:56px;
 }
 @media(max-width:900px){
@@ -1010,6 +1010,17 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
   // the section's top edge, so its real top is just the section's top.
   function aboutMediaRect(){
     const r=about.getBoundingClientRect();
+    // on mobile the section stacks blue text (needs a light nav) above the
+    // photo (needs a dark nav), instead of sitting side by side like on
+    // desktop — so the "dark" zone should only start once the nav reaches
+    // the photo, not as soon as it reaches the section's (blue) top
+    if(innerWidth<=900&&media){
+      const m=media.getBoundingClientRect();
+      // the white rectangle (.media::before) extends 40px above .media's own
+      // top, so the real blue/white seam — where the transition should
+      // happen once it's centered in the nav — sits 40px higher than that
+      return {top:m.top-40,bottom:r.bottom};
+    }
     return {top:r.top,bottom:r.bottom};
   }
 
@@ -1106,7 +1117,10 @@ function animateScrollTo(y,duration=1100){
 // .reveal class's transform is neutralized first since it affects the rect.
 function aboutRectTargetY(){
   const media=document.querySelector('.split .media');
-  if(!media)return offsetTop(document.getElementById('about'));
+  // this whole white-rectangle/nav-gap calculation is a desktop-only visual
+  // trick (the section stacks into one column on mobile, with no left/right
+  // split) — mobile falls back to a plain flush scroll like Projects/CV
+  if(!media||innerWidth<=900)return offsetTop(document.getElementById('about'));
   // unobserve first — otherwise the IntersectionObserver's own callback can
   // still fire afterwards and replay the fade-in .animate() on an element
   // that's already visible, causing a brief flicker
