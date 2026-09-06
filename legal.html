@@ -58,13 +58,13 @@ a:hover{text-decoration:underline}
 .arrow-l::before{content:"\2190";margin-right:6px}
 
 .crumb-bar{
-  position:fixed;top:16px;left:clamp(8px,1.5vw,20px);right:clamp(8px,1.5vw,20px);z-index:100;
+  position:fixed;top:16px;left:0;right:0;z-index:100;
   padding:14px clamp(20px,3vw,36px);
-  border-radius:10px;
 }
 .crumb-bar .crumb-blur{
   position:absolute;inset:0;z-index:0;border-radius:inherit;
-  background:rgba(250,249,245,.2);
+  background:rgba(250,249,245,.1);
+  border:1.5px solid rgba(23,23,29,.09);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   box-shadow:0 0 24px rgba(23,23,29,.1);
   pointer-events:none;

@@ -73,13 +73,13 @@ img{display:block;max-width:100%}
 .arrow::after{content:"\2192";margin-left:6px}
 
 .crumb-bar{
-  position:fixed;top:16px;left:clamp(8px,1.5vw,20px);right:clamp(8px,1.5vw,20px);z-index:100;
+  position:fixed;top:16px;left:0;right:0;z-index:100;
   padding:14px clamp(20px,3vw,36px);
-  border-radius:10px;
 }
 .crumb-bar .crumb-blur{
   position:absolute;inset:0;z-index:0;border-radius:inherit;
-  background:rgba(250,249,245,.2);
+  background:rgba(250,249,245,.1);
+  border:1.5px solid rgba(23,23,29,.09);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   box-shadow:0 0 24px rgba(23,23,29,.1);
   pointer-events:none;
@@ -117,9 +117,46 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
   text-align:center;text-transform:uppercase;
 }
 .p-media.multi{display:flex;flex-direction:column;gap:20px}
+.p-media img{cursor:zoom-in}
+
+/* ===== click-to-enlarge lightbox for project images ===== */
+.lightbox{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,10,16,.88);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease;
+  padding:40px;
+}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{
+  max-width:70vw;max-height:70vh;
+  border-radius:var(--r-img);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  transform:scale(.96);
+  transition:transform .25s ease;
+}
+.lightbox.open img{transform:scale(1)}
+.lightbox .lb-close{
+  position:absolute;top:24px;right:28px;z-index:3;
+  background:none;border:none;color:#fff;font-size:1.4rem;
+  cursor:pointer;line-height:1;padding:8px;
+}
+.lightbox .lb-arrow{
+  position:absolute;top:0;bottom:0;z-index:2;width:12%;max-width:72px;
+  border:none;background:none;padding:0;cursor:pointer;
+  display:flex;align-items:center;color:#fff;
+  font-family:'JetBrains Mono',monospace;font-size:1.6rem;line-height:1;
+  opacity:.6;transition:opacity .2s ease,color .2s ease;
+}
+.lightbox .lb-arrow:hover{opacity:1;color:var(--blue)}
+.lightbox .lb-arrow.prev{left:80px;justify-content:flex-start;padding-left:14px}
+.lightbox .lb-arrow.next{right:80px;justify-content:flex-end;padding-right:14px}
 
 .p-text .txt{font-size:.85rem;color:var(--ink);line-height:1.95;margin-bottom:20px}
 .p-text .more{font-size:.85rem;color:var(--grey);line-height:1.95}
+.p-text .txt .inline-link,.p-text .more .inline-link{color:var(--blue);font-weight:700;text-decoration:none}
+.p-text .txt .inline-link:hover,.p-text .more .inline-link:hover{text-decoration:underline}
 .p-text h2{font-size:1rem;margin:0 0 14px;letter-spacing:0}
 
 .p-nav{
@@ -149,7 +186,7 @@ footer{
 const PROJECTS=[
   {
     slug:'axial-flux-machine',
-    label:'Master Thesis &bull; Pforzheim University',
+    label:'Master Thesis &bull; <a href="https://www.hs-pforzheim.de" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Pforzheim University</a>',
     year:'2025',
     title:'Axial Flux Machine — Surrogate-Based Topology Optimization',
     tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
@@ -159,12 +196,12 @@ const PROJECTS=[
   },
   {
     slug:'coffee-grinder',
-    label:'Physical Prototype &bull; Pforzheim University',
+    label:'Physical Prototype &bull; <a href="https://www.hs-pforzheim.de" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Pforzheim University</a>',
     year:'2024',
     title:'Manual Coffee Grinder Inspired by Charles Eames',
     tags:['Industrial Design','Sketching','Prototyping','CMF'],
-    txt:'Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer — realized in walnut wood and an aluminium frame through a creative, iterative, sketch-based design process.',
-    more:'Starting from dozens of hand sketches exploring proportion and grip, the concept was refined into a CAD model balancing the warmth of solid walnut against a satin-finished aluminium frame. Material and manufacturing choices were made with hand-tool workshop fabrication in mind — the wood body was turned and hand-finished, while the frame was CNC-machined to keep tight tolerances around the burr mechanism. The result is a fully functional grinder that channels Eames-era material honesty into a small, everyday object.',
+    txt:'Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer. For this project I chose the renowned designer <a href="https://www.eamesoffice.com/the-work/lounge-chair-and-ottoman/" target="_blank" rel="noopener" class="inline-link">Charles Eames</a> and prototyped a reimagined coffee grinder.',
+    more:'Starting with hand sketches exploring proportions and form factors, the concept was refined in CAD, balancing the wood material with the matte aluminium frame. The outcome is an object that lives from the connection between the two materials and their details. The design was manufactured via 3D printing and finished with a coating to achieve a realistic-looking prototype.',
     media:{type:'multi',imgs:[
       {src:'img/grinder-render-1.jpg',alt:'Manual Coffee Grinder — CAD rendering',caption:'Front view of the final coffee grinder concept'},
       {src:'img/grinder-render-2.jpg',alt:'Manual Coffee Grinder — CAD rendering side view',caption:'Back view of the final coffee grinder concept'}
@@ -172,12 +209,12 @@ const PROJECTS=[
   },
   {
     slug:'autonomous-robot',
-    label:'Bachelor Thesis &bull; Evomotiv GmbH',
+    label:'Bachelor Thesis &bull; <a href="https://evomotiv.de" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Evomotiv GmbH</a>',
     year:'2022',
     title:'Autonomous Robot for Vehicle Test Automation',
     tags:['Mechatronics','Sensors','Stakeholder Management','Functional Prototypes'],
-    txt:'Development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew into an ecosystem of robots enabling further test scenarios for autonomous vehicles — now in productive use.',
-    more:'The robot needed to reproduce pedestrian and obstacle behavior around a test vehicle with centimeter-level positioning repeatability, driven by RTK-GPS and closed-loop motor control. Beyond the hardware, the thesis involved close coordination with test engineers to translate real test scenarios into robot behavior, and the platform was designed to be extendable — later test scenarios reused the same chassis and control architecture with different sensor payloads, turning a single prototype into a small fleet used in day-to-day validation work.',
+    txt:'My Bachelor thesis was about the development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew later on into <a href="https://evomotiv.de/evorobotics-intelligente-validierung/" target="_blank" rel="noopener" class="inline-link">more platforms</a> enabling further test scenarios for autonomous vehicles — now in productive use.',
+    more:'The task was to design a robot small enough to fit underneath a wide variety of test objects. This was necessary because the robot needed to alter the geometry of the test objects as little as possible. A mechatronic concept therefore had to be developed that met the requirements for payload capacity, acceleration, speed and positioning accuracy. The tight installation space made this a particularly challenging project.',
     media:{type:'single',img:'img/robot.jpg',alt:'Autonomous Robot for Vehicle Test Automation',caption:'Bachelor thesis: final design of the mobile robot platform',w:1400,h:1049}
   },
   {
@@ -192,7 +229,7 @@ const PROJECTS=[
   },
   {
     slug:'automated-window',
-    label:'Physical Prototype &bull; Karlsruhe University',
+    label:'Physical Prototype &bull; <a href="https://www.h-ka.de" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Karlsruhe University</a>',
     year:'2021',
     title:'Automated Window',
     tags:['Kinematics','Arduino','3D Printing','Electronics','Project Management'],
@@ -222,11 +259,11 @@ const PROJECTS=[
   },
   {
     slug:'steer-by-wire',
-    label:'Project &bull; MPC DesignWorks',
+    label:'Project &bull; <a href="https://mpcdesignworks.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">MPC DesignWorks</a>',
     year:'2026',
     title:'Steer by Wire',
     tags:['CAD','Prototyping'],
-    txt:'The steering system was developed as a subsystem of a chassis that lets the Iron Brothers compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It\'s meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction.',
+    txt:'The steering system was developed as a subsystem of a chassis that lets the <a href="https://herois.pt/atletas-herois/iron-brothers/" target="_blank" rel="noopener" class="inline-link">Iron Brothers</a> compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It\'s meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction.',
     more:'To this end, a feasibility study was first carried out on integrating a steering system into the existing chassis. Several steering actuation concepts were developed and studied for how the steering kinematics affect handling and steering forces. Since the priority was steering comfort, an electric steering concept was chosen. To size the steering actuator, the kinematics were implemented in the MuJoCo simulation environment, a custom tire model was developed, and the vehicle dynamics were simulated. This yielded the load cases needed to select a suitable actuator and generate the ideal geometry via generative design. Additional functional surfaces were then added and the part was smoothed, resulting in the final shape.',
     media:{type:'multi',imgs:[{src:'img/Steering3b.png',alt:'Steer by Wire',caption:'Rendered chassis component',w:1177,h:697},{src:'img/Steering4b.png',alt:'Steer by Wire',caption:'Full vehicle render',w:542,h:384},{src:'img/Steering5b.png',alt:'Steer by Wire',caption:'Steering hub detail',w:887,h:581},{src:'img/Steering2b.png',alt:'Steer by Wire',caption:'Explosion view steering system down',w:1488,h:914}]}
   }
@@ -321,6 +358,57 @@ if(!proj){
 
 requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
 setTimeout(()=>document.body.classList.add('page-ready'),1000);
+
+/* ===== click-to-enlarge lightbox: clicking any project image opens it
+   centered and enlarged over a dark backdrop ===== */
+let lightboxEl=null, lbImgs=[], lbIdx=0;
+function updateLightboxImage(){
+  const img=lbImgs[lbIdx];
+  if(!img)return;
+  const lbImg=lightboxEl.querySelector('img');
+  lbImg.src=img.currentSrc||img.src;
+  lbImg.alt=img.alt||'';
+}
+function openLightbox(img,gallery){
+  lbImgs=gallery||[img];
+  lbIdx=Math.max(0,lbImgs.indexOf(img));
+  if(!lightboxEl){
+    lightboxEl=document.createElement('div');
+    lightboxEl.className='lightbox';
+    lightboxEl.innerHTML='<button class="lb-close" type="button" aria-label="Close">✕</button><button class="lb-arrow prev" type="button" aria-label="Previous image">←</button><img alt=""><button class="lb-arrow next" type="button" aria-label="Next image">→</button>';
+    document.body.appendChild(lightboxEl);
+    const closeLb=()=>{
+      lightboxEl.classList.remove('open');
+      document.body.style.overflow='';
+    };
+    lightboxEl.addEventListener('click',e=>{if(e.target===lightboxEl)closeLb();});
+    lightboxEl.querySelector('.lb-close').addEventListener('click',closeLb);
+    lightboxEl.querySelector('.lb-arrow.prev').addEventListener('click',()=>{
+      lbIdx=(lbIdx-1+lbImgs.length)%lbImgs.length;
+      updateLightboxImage();
+    });
+    lightboxEl.querySelector('.lb-arrow.next').addEventListener('click',()=>{
+      lbIdx=(lbIdx+1)%lbImgs.length;
+      updateLightboxImage();
+    });
+    addEventListener('keydown',e=>{
+      if(!lightboxEl.classList.contains('open'))return;
+      if(e.key==='Escape')closeLb();
+      if(e.key==='ArrowLeft')lightboxEl.querySelector('.lb-arrow.prev').click();
+      if(e.key==='ArrowRight')lightboxEl.querySelector('.lb-arrow.next').click();
+    });
+  }
+  updateLightboxImage();
+  lightboxEl.querySelectorAll('.lb-arrow').forEach(b=>b.style.display=lbImgs.length>1?'flex':'none');
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>lightboxEl.classList.add('open'));
+}
+main.addEventListener('click',e=>{
+  const img=e.target.closest('.p-media img');
+  if(!img)return;
+  const gallery=[...img.closest('.p-media').querySelectorAll('img')];
+  openLightbox(img,gallery);
+});
 </script>
 <!-- Cloudflare Web Analytics (skipped outside production to avoid local CORS noise) -->
 <script>
