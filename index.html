@@ -463,6 +463,13 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 .lightbox .lb-arrow:hover{opacity:1;color:var(--blue)}
 .lightbox .lb-arrow.prev{left:max(80px,env(safe-area-inset-left));justify-content:flex-start;padding-left:14px}
 .lightbox .lb-arrow.next{right:max(80px,env(safe-area-inset-right));justify-content:flex-end;padding-right:14px}
+@media(max-width:900px){
+  /* the image is full-width on mobile, so the 80px desktop inset would sit
+     on top of the image instead of at the screen edge — pull both arrows
+     back to a small, symmetric edge distance */
+  .lightbox .lb-arrow.prev{left:max(8px,env(safe-area-inset-left))}
+  .lightbox .lb-arrow.next{right:max(8px,env(safe-area-inset-right))}
+}
 .p-media.trans img{object-fit:contain}
 .p-media.natural{min-height:0;align-self:start}
 .p-media.natural img{position:static;width:100%;height:auto;min-height:220px}

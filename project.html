@@ -155,6 +155,13 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
 .lightbox .lb-arrow:hover{opacity:1;color:var(--blue)}
 .lightbox .lb-arrow.prev{left:80px;justify-content:flex-start;padding-left:14px}
 .lightbox .lb-arrow.next{right:80px;justify-content:flex-end;padding-right:14px}
+@media(max-width:900px){
+  /* the image is full-width on mobile, so the 80px desktop inset would sit
+     on top of the image instead of at the screen edge — pull both arrows
+     back to a small, symmetric edge distance */
+  .lightbox .lb-arrow.prev{left:8px}
+  .lightbox .lb-arrow.next{right:8px}
+}
 
 .p-text .txt{font-size:.85rem;color:var(--ink);line-height:1.95;margin-bottom:20px}
 .p-text .more{font-size:.85rem;color:var(--grey);line-height:1.95}
