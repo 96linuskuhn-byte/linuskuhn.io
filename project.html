@@ -136,6 +136,9 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
   transform:scale(.96);
   transition:transform .25s ease;
 }
+@media(max-width:900px){
+  .lightbox img{max-width:100vw;max-height:100svh;width:100%}
+}
 .lightbox.open img{transform:scale(1)}
 .lightbox .lb-close{
   position:absolute;top:24px;right:28px;z-index:3;
