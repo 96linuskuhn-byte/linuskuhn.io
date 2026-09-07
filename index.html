@@ -1566,5 +1566,12 @@ if(location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com')
 }
 </script>
 <!-- End Cloudflare Web Analytics -->
+<!-- Steer by Wire: hidden on production pending employer approval, stays visible locally -->
+<script>
+if(location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com'){
+  const sbw=document.getElementById('project-steer-by-wire');
+  if(sbw)sbw.remove();
+}
+</script>
 </body>
 </html>

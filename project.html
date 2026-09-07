@@ -296,10 +296,15 @@ function mediaHTML(m){
   return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"${ratio}><figure><img src="${m.img}" alt="${m.alt}" loading="lazy"${dims(m)}>${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
 }
 
+// Steer by Wire: hidden on production pending employer approval, stays
+// visible locally — filtered out here so it's also skipped by prev/next nav
+const isProd=location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com';
+const VISIBLE_PROJECTS=isProd?PROJECTS.filter(p=>p.slug!=='steer-by-wire'):PROJECTS;
+
 const params=new URLSearchParams(location.search);
 const slug=params.get('slug');
-const idx=PROJECTS.findIndex(p=>p.slug===slug);
-const proj=idx>=0?PROJECTS[idx]:null;
+const idx=VISIBLE_PROJECTS.findIndex(p=>p.slug===slug);
+const proj=idx>=0?VISIBLE_PROJECTS[idx]:null;
 const main=document.getElementById('main');
 
 // point "Back to Portfolio" straight at this project's card on the
@@ -317,8 +322,8 @@ if(!proj){
     <p class="txt" style="margin-top:16px">This project doesn't exist (anymore). Head back to see all projects.</p>
   `;
 }else{
-  const prev=PROJECTS[(idx-1+PROJECTS.length)%PROJECTS.length];
-  const next=PROJECTS[(idx+1)%PROJECTS.length];
+  const prev=VISIBLE_PROJECTS[(idx-1+VISIBLE_PROJECTS.length)%VISIBLE_PROJECTS.length];
+  const next=VISIBLE_PROJECTS[(idx+1)%VISIBLE_PROJECTS.length];
   document.title=proj.title+' — Linus Kuhn';
 
   // SEO/GEO: fill in per-project meta tags, canonical URL and structured
