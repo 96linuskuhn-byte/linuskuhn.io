@@ -179,8 +179,10 @@ nav{
 .nav-links a:hover{color:var(--blue)}
 .nav-meta.dark,.nav-links.dark{color:#000}
 @media(max-width:900px){
-  nav{justify-content:center}
-  .nav-meta{display:none}
+  nav{justify-content:space-between;gap:0;padding-left:16px}
+  .nav-meta .tag-text{display:none}
+  .nav-meta .tag-box{gap:0}
+  .nav-meta{padding-right:12px}
   .nav-links{gap:14px;justify-content:space-between;flex:1}
 }
 
@@ -640,7 +642,7 @@ footer .meta-center{flex:1;text-align:center}
 <nav id="nav">
   <div class="nav-blur"></div>
   <div class="nav-meta">
-    <a class="tag-box" href="#top"><svg class="nav-logo" viewBox="0 0 347 415" xmlns="http://www.w3.org/2000/svg"><path d="M103.574,34.106L160.902,34.55L110.325,331.564L312.79,331.564L308.65,379.602L32.261,380.566L103.574,34.106Z"/><path d="M229.337,60.707L291.633,60.707L221.888,175.281L296.737,289.722L229.929,290.378L159.691,175.411L229.337,60.707Z"/></svg>PORTFOLIO&nbsp;&bull;&nbsp;2026</a>
+    <a class="tag-box" href="#top"><svg class="nav-logo" viewBox="0 0 347 415" xmlns="http://www.w3.org/2000/svg"><path d="M103.574,34.106L160.902,34.55L110.325,331.564L312.79,331.564L308.65,379.602L32.261,380.566L103.574,34.106Z"/><path d="M229.337,60.707L291.633,60.707L221.888,175.281L296.737,289.722L229.929,290.378L159.691,175.411L229.337,60.707Z"/></svg><span class="tag-text">PORTFOLIO&nbsp;&bull;&nbsp;2026</span></a>
   </div>
   <div class="nav-links">
     <a class="me" href="#about">About Me</a>
@@ -1082,8 +1084,8 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
     pending=false;
     const navRect=nav.getBoundingClientRect();
     const y=navRect.top+navRect.height/2;
-    if(navMeta)navMeta.classList.toggle('dark',darkAt(y,leftZones,false));
     const rightDark=darkAt(y,rightZones,false);
+    if(navMeta)navMeta.classList.toggle('dark',innerWidth<=900?rightDark:darkAt(y,leftZones,false));
     if(navLinks)navLinks.classList.toggle('dark',rightDark);
     // on desktop, while the nav sits over the About Me section (blue on the
     // left, white photo on the right), give its border a matching
