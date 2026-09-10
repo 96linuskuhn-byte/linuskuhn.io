@@ -171,7 +171,6 @@ nav{
   letter-spacing:-.02em;text-transform:uppercase;
   color:inherit;display:inline-flex;align-items:center;gap:6px;transition:color .15s;
 }
-.nav-meta a.tag-box:hover{color:var(--blue)}
 .nav-meta .tag-box .nav-logo{width:14px;height:auto;display:block;fill:currentColor;flex:none}
 .brand{font-family:'Archivo';font-weight:800;font-size:1.15rem;letter-spacing:.01em}
 .nav-links{display:flex;gap:22px;justify-content:flex-end;align-items:center;color:#fff;transition:color .35s ease}
@@ -180,7 +179,9 @@ nav{
   letter-spacing:-.02em;text-transform:uppercase;
   color:inherit;transition:color .15s;
 }
-.nav-links a:hover{color:var(--blue)}
+@media(hover:hover) and (pointer:fine){
+  .nav-meta a.tag-box:hover,.nav-links a:hover{color:var(--blue)}
+}
 .nav-meta.dark,.nav-links.dark{color:#000}
 @media(max-width:900px){
   nav{justify-content:space-between;gap:0;padding-left:16px}
