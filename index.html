@@ -16,10 +16,12 @@
 })();
 </script>
 <title>Linus Kuhn — Projects Portfolio</title><meta name="description" content="Portfolio of Linus Kuhn — mechanical engineering, product development, simulation and prototyping.">
-<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="shortcut icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
 <link rel="canonical" href="https://linuskuhn.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Linus Kuhn">
@@ -622,8 +624,9 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 /* ---------- FOOTER ---------- */
 footer{
   padding:28px clamp(16px,4vw,48px);
-  display:flex;align-items:center;
+  display:flex;align-items:center;gap:14px;
 }
+footer .personal-logo{width:32px;height:32px;object-fit:contain;flex:none}
 footer .logo-box{
   border:1px solid var(--line);
   font-family:'Archivo';font-weight:800;font-size:1rem;
@@ -862,6 +865,7 @@ footer .meta-center{flex:1;text-align:center}
 </section>
 
 <footer>
+  <img class="personal-logo" src="/img/linus-kuhn-logo.png" alt="Linus Kuhn logo" width="32" height="32">
   <div class="meta">
     <div class="meta-left">
       <span>&copy; 2026 Linus Kuhn</span>
