@@ -117,6 +117,8 @@ main{max-width:760px;margin:0;padding:110px clamp(20px,5vw,40px) 100px;position:
 h1{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:34px;color:#fff}
 
 .txt{font-size:.9rem;color:rgba(255,255,255,.72);line-height:1.95;margin-bottom:22px}
+.txt.lead{font-size:1.02rem;color:#fff;line-height:1.8}
+h2{font-size:1.05rem;color:#fff;margin:38px 0 14px}
 .inline-link{color:#8ea3ff;font-weight:700;text-decoration:none;transition:color .15s}
 .inline-link:hover{color:#fff;text-decoration:underline}
 
@@ -143,17 +145,27 @@ footer{
 <main>
   <h1>Vision, Language, Action</h1>
 
-  <p class="txt">The combination of a vision, language, and action model that translates into a physical action through a robotic system marks a fundamental shift in how humans and machines interact. Instead of following fixed paths and depending on rigid, structured environments, VLA models give robots a new way to approach real-world problems. Coming from mechatronics and autonomous robots, this is the space I follow most closely — and the more I look into it, the more it comes down to one bottleneck: data.</p>
+  <p class="txt lead">VLA models let robots act on what they see and what they are told, instead of following fixed paths. What holds them back today is less the model than the data: enough varied, realistic robot experience is hard to get. That is the problem I find most interesting, and I think simulation, real deployments and solid hardware all have to contribute to solving it.</p>
 
-  <p class="txt">Training a capable VLA policy takes an enormous amount of interaction data, and there are really only two ways to get it. Simulation can produce it at scale, but every simulated environment differs from the real world in physics, materials, and sensor noise — the sim-to-real gap — so a policy trained purely in simulation often falls apart the moment it meets reality. The alternative, teleoperation on real hardware, avoids that gap but is bound by real time: you can't parallelize a human operating a robot arm the way you can parallelize a simulation running on a GPU cluster. Every trajectory costs real human time on a real, usually expensive robotic system, which caps the amount of data you can realistically collect.</p>
+  <p class="txt">Coming from mechatronics and autonomous robots, this is the field I follow most closely. A model that sees, understands an instruction and turns it into a physical action means robots no longer depend on rigid, structured environments. The more I look into it, the more it comes down to one bottleneck.</p>
 
-  <p class="txt">That's why I think the most promising lever right now is on the simulation side: building environments realistic and varied enough — better physics, better rendering, deliberate domain randomization — that a policy trained or finetuned on them generalizes to the real world with only a fraction of the real interaction data it would otherwise need.</p>
+  <h2>The data bottleneck</h2>
 
-  <p class="txt">This is also why I'm genuinely excited about what NVIDIA is doing with <a href="https://www.nvidia.com/en-us/omniverse/" target="_blank" rel="noopener" class="inline-link">Omniverse</a> and <a href="https://www.nvidia.com/en-us/ai/cosmos/" target="_blank" rel="noopener" class="inline-link">Cosmos</a>: Omniverse provides the physically accurate simulated environment, and Cosmos turns that into photorealistic, physically plausible synthetic video data that can post-train robot policies directly — effectively attacking the sim-to-real gap from the data-generation side. I'm following <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> just as closely: an open-source, generative physics engine that runs 10–80x faster than tools like Isaac Gym or MuJoCo and lets you generate entire scenes, tasks, and trajectories from language prompts, which makes environment variation something you can scale almost for free.</p>
+  <p class="txt">Training a capable VLA policy takes an enormous amount of interaction data, and each way of getting it has a catch. Simulation produces data at scale, but every simulated environment differs from the real world in physics, materials and sensor noise. This sim-to-real gap means a policy trained only in simulation often falls apart when it meets reality. Teleoperation on real hardware avoids that gap, but it is bound to real time: you can't parallelize a human operating a robot arm the way you can parallelize simulations on a GPU cluster, and every trajectory costs human time on an expensive system.</p>
 
-  <p class="txt">To get hands-on with this myself, I built a small simulation in <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> of a Franka Emika Panda arm picking up a cube and placing it elsewhere — inverse kinematics for the approach and lift, position control for the gripper. Small in scope, but a good way to feel how quickly you can iterate on a manipulation task in simulation.</p>
+  <p class="txt">A third source is data from robots that are already working in the field, together with human video. It grows with every real application and comes from real conditions, but it is messy, unevenly distributed, and mostly available to those who operate robots at scale. I expect the mix of all three to matter more than any single source.</p>
 
-  <p class="txt">None of these fully close the gap yet, but they're moving in exactly the direction I find most interesting — and it's a big part of why I want to keep working at the intersection of simulation, AI, and physical systems.</p>
+  <h2>Where I look</h2>
+
+  <p class="txt">On the simulation side, the lever is to build environments realistic and varied enough (better physics, better rendering, deliberate domain randomization) that a policy trained or finetuned there needs only a fraction of the real interaction data. Real data then goes where it counts most: closing the remaining gap.</p>
+
+  <p class="txt">This is why I follow what NVIDIA is doing with <a href="https://www.nvidia.com/en-us/omniverse/" target="_blank" rel="noopener" class="inline-link">Omniverse</a> and <a href="https://www.nvidia.com/en-us/ai/cosmos/" target="_blank" rel="noopener" class="inline-link">Cosmos</a>. Omniverse provides physically accurate simulated environments, and Cosmos generates photorealistic, physically plausible synthetic video that can be used to post-train robot policies, which attacks the gap from the data-generation side. <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> is an open-source physics engine that, according to its developers, runs 10&ndash;80x faster than GPU simulators like Isaac Gym, and it aims to generate scenes, tasks and trajectories from language prompts. If that works well in practice, environment variation becomes almost free. I'm watching how these tools hold up outside of demos.</p>
+
+  <p class="txt">To get hands-on, I built a small simulation in <a href="https://www.genesis.ai" target="_blank" rel="noopener" class="inline-link">Genesis</a> of a Franka Emika Panda arm picking up a cube and placing it elsewhere, using inverse kinematics for the approach and lift and position control for the gripper. Small in scope, but a good way to feel how quickly you can iterate on a manipulation task in simulation.</p>
+
+  <h2>What I bring</h2>
+
+  <p class="txt">None of these approaches closes the gap completely yet. My own background points at the same questions from the hardware side. At Evomotiv I developed autonomous robot platforms from the requirements list to testing, which showed me how much real-world detail a robot has to cope with. In my master's thesis I used surrogate models to reduce the number of expensive 3D simulations, which is about spending costly samples wisely. That is why I want to work where simulation, AI and physical robots meet.</p>
 </main>
 
 <footer>

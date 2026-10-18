@@ -114,7 +114,7 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
 @media(max-width:860px){.p-body{grid-template-columns:1fr}}
 .p-media{overflow:hidden}
 .p-media figure{margin:0}
-.p-media img{width:100%;height:auto;box-sizing:border-box;background:var(--panel);border-radius:var(--r-img);border:1px solid var(--line)}
+.p-media img,.p-media video{width:100%;height:auto;box-sizing:border-box;background:var(--panel);border-radius:var(--r-img);border:1px solid var(--line)}
 .p-media.trans img{transform:scale(1.015)} /* masks a ~2px rounding gap between the container's aspect-ratio and the image's real size */
 .p-media figcaption{
   margin-top:8px;font-size:.7rem;color:var(--grey);letter-spacing:.04em;
@@ -176,6 +176,16 @@ h1.p-title{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:22px}
 .p-text .txt .inline-link,.p-text .more .inline-link{color:var(--blue);font-weight:700;text-decoration:none}
 .p-text .txt .inline-link:hover,.p-text .more .inline-link:hover{text-decoration:underline}
 .p-text h2{font-size:1rem;margin:0 0 14px;letter-spacing:0}
+.p-text h2.sub{margin:28px 0 12px}
+.p-text .more+h2.sub{margin-top:32px}
+.p-text .tasks{list-style:none;margin:0 0 4px}
+.p-text .tasks li{
+  position:relative;font-size:.85rem;color:var(--grey);line-height:1.6;
+  padding:9px 0 9px 22px;border-bottom:1px solid var(--line);
+}
+.p-text .tasks li:first-child{border-top:1px solid var(--line)}
+.p-text .tasks li::before{content:"";position:absolute;left:3px;top:1.05em;width:7px;height:7px;background:var(--blue)}
+.p-text .challenge{font-size:.85rem;color:var(--grey);line-height:1.95;margin-bottom:20px}
 
 .p-nav{
   margin-top:70px;padding-top:28px;border-top:1px solid var(--line);
@@ -186,6 +196,41 @@ footer{
   padding:28px clamp(16px,3vw,40px);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
   border-top:1px solid var(--line);font-size:.72rem;color:var(--grey);
+}
+
+/* ===== print / PDF export (application attachments, A4) =====
+   The page is laid out as one A4 sheet: header, a picture area that takes
+   all remaining height, the text block, and a footer pinned to the bottom. */
+@page{size:A4;margin:14mm 16mm 12mm}
+.print-sign{display:none}
+@media print{
+  html,body{background:#fff!important;opacity:1!important;transform:none!important}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .crumb-bar,.p-nav,footer,.lightbox,.no-print{display:none!important}
+  main{display:flex;flex-direction:column;height:268mm;padding:0!important;margin:0!important;max-width:none!important}
+  .p-head{flex:none;margin:0 0 7mm!important;padding:0 0 5mm!important;border-bottom:1px solid var(--line)}
+  .p-head .p-label{margin-bottom:10px!important}
+  .p-year{margin-bottom:6px!important;font-size:.85rem!important}
+  h1.p-title{font-size:1.9rem!important;line-height:1.05!important;margin:0!important}
+  .p-body{display:flex!important;flex-direction:column;flex:1 1 0;min-height:0;gap:6mm}
+  /* picture area: grows to fill the free height, images contained and centred */
+  .p-media{flex:1 1 0;min-height:48mm;aspect-ratio:auto!important;height:auto!important;margin:0!important;overflow:visible;display:flex;flex-direction:column;align-items:stretch;border:none!important}
+  .p-media.multi{flex-direction:row;gap:5mm}
+  .p-media figure{flex:1 1 0;min-width:0;min-height:0;margin:0!important;display:flex;flex-direction:column;break-inside:avoid}
+  .p-media img{flex:1 1 0;min-height:0;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain;background:none!important;border:none!important;border-radius:2px;transform:none!important}
+  .p-media.multi img{object-fit:cover}
+  .p-media figcaption{flex:none;margin-top:6px!important;font-size:.62rem!important}
+  /* text block: left-aligned, readable size, no justified rivers */
+  .p-text{flex:none}
+  .p-text h2{font-size:.9rem!important;margin:0 0 6px!important;break-after:avoid}
+  .p-text h2.sub{margin:5mm 0 5px!important}
+  .p-text .txt,.p-text .more,.p-text .challenge{font-size:.8rem!important;line-height:1.7!important;margin:0 0 7px!important;text-align:left!important;hyphens:none!important;color:#33333c!important}
+  .p-text .more{color:#55555f!important}
+  .p-text .tasks{column-count:2;column-gap:8mm;break-inside:avoid;margin:0}
+  .p-text .tasks li{font-size:.78rem!important;color:#33333c!important;line-height:1.5!important;padding:5px 0 5px 20px!important;break-inside:avoid}
+  .p-text .tasks li::before{top:.95em!important}
+  .p-text .p-tags{margin-top:5mm!important}
+  .print-sign{display:flex;flex:none;justify-content:space-between;margin-top:6mm;padding-top:3mm;border-top:1px solid var(--line);font-size:.66rem;color:var(--grey)}
 }
 </style>
 </head>
@@ -210,7 +255,11 @@ const PROJECTS=[
     tags:['Ansys','FEM','Surrogate Modeling','Electric Machines','Optimization'],
     txt:'Humanoid robots require many electric actuators, increasing the demand for permanent magnets that provide high torque density. YASA axial-flux machines can use this material efficiently, but their three-dimensional flux paths make electromagnetic simulations computationally expensive.<br><br>In my master’s thesis, I developed a surrogate-model-based optimization process to reduce the number of required 3D finite-element simulations. A data-driven constraint cascade progressively narrows the design space to the relevant region without relying on predefined heuristics.',
     more:'The process combines design-of-experiments sampling with a surrogate model that is updated as new simulation results become available. Each additional 3D finite-element simulation is selected to improve the model where further information is most useful, rather than distributing simulations uniformly across the entire design space.<br><br>The investigated machine was a three-phase YASA design with eight stator poles and twelve rotor poles, constrained to an outer diameter of 100 mm and an axial length of 28 mm. The optimization varied the coil width, inner diameter, magnet width, back-iron width, and pole-arc ratio.',
-    media:{type:'single',img:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',trans:true,framed:true,caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring',w:1400,h:999}
+    media:{type:'multi',imgs:[
+      {src:'img/axialflux.png',alt:'Axial Flux Machine — Surrogate-Based Topology Optimization',caption:'Yokeless and Segmented Armature Axialfluxmachine with cooling ring',w:1400,h:999},
+      {src:'img/axialflux-cad-front.png',alt:'Axial Flux Machine — CAD front view',caption:'CAD front view',w:1066,h:1088},
+      {src:'img/axialflux-cad-rear.png',alt:'Axial Flux Machine — CAD rear view',caption:'CAD rear view',w:1074,h:1014}
+    ]}
   },
   {
     slug:'coffee-grinder',
@@ -223,6 +272,22 @@ const PROJECTS=[
     media:{type:'multi',imgs:[
       {src:'img/grinder-render-1.jpg',alt:'Manual Coffee Grinder — CAD rendering',caption:'Front view of the final coffee grinder concept'},
       {src:'img/grinder-render-2.jpg',alt:'Manual Coffee Grinder — CAD rendering side view',caption:'Back view of the final coffee grinder concept'}
+    ]}
+  },
+  {
+    slug:'pedestrian-platform',
+    label:'Professional Project &bull; <a href="https://evomotiv.de" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Evomotiv GmbH</a>',
+    year:'2022 – 2026',
+    title:'Autonomous Platform for Carrying Human Pedestrian Dummies',
+    tags:['Requirements Engineering','Drivetrain Sizing','PCB Design','Prototyping'],
+    txt:'A low-profile autonomous platform designed to carry human pedestrian dummies. Because the platform must remain as undetectable as possible, the design was laid out for a minimum height, which severely limited the selection of suitable components.',
+    more:'From May 2022 to October 2024 I worked at Evomotiv as a full-time Development Engineer. During this time we built on the experience from my Bachelor thesis to develop new variants of autonomous robot platforms. I was able to support the entire product development process. Afterwards, I continued to support the team part-time alongside my Master\'s degree until 2026.',
+    listTitle:'Where I contributed',
+    list:['Creation of the requirements list','Sizing of the drivetrain','Research of components for drive, navigation and communication','Design of a prototype test platform and of a milled variant','Development and integration of PCBs','Assembly of PCBs and wiring harnesses','Manufacturing and assembly of the platforms','Verification and testing of the test vehicle'],
+    challenge:'Since the platform must remain as undetectable as possible, the design was laid out for a minimum height. This severely limited the selection of suitable components.',
+    media:{type:'multi',imgs:[
+      {src:'img/pedestrian-platform.jpg',alt:'Autonomous Platform for Carrying Human Pedestrian Dummies',caption:'Render of the low-profile platform',w:1600,h:900},
+      {src:'img/pedestrian-platform-test.jpg',alt:'Pedestrian dummy next to a test vehicle',caption:'Pedestrian dummy next to a test vehicle',w:768,h:512}
     ]}
   },
   {
@@ -253,7 +318,10 @@ const PROJECTS=[
     tags:['Kinematics','Arduino','3D Printing','Electronics','Project Management'],
     txt:'A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system.',
     more:'Built to retrofit onto an existing window frame without modification, the system combines a 3D-printed linkage mechanism, an Arduino-based control unit and a sound-level sensor to automatically ventilate a room when it gets noisy outside and close again once it quiets down. The project covered the full stack from kinematic design of the opening mechanism to firmware and enclosure design, and was run with a small team — giving early hands-on experience in coordinating mechanical, electronic and software work streams on a tight timeline.',
-    media:{type:'single',img:'img/window.png',alt:'Automated Window',trans:true,framed:true,caption:'Front view of the retrofittable system for automatically opening and closing the window',w:1320,h:1020}
+    media:{type:'multi',imgs:[
+      {src:'img/window.png',alt:'Automated Window',caption:'Front view of the retrofittable system for automatically opening and closing the window',w:1320,h:1020},
+      {src:'img/window-mechanism-cad.png',alt:'Automated Window — CAD detail of the opening mechanism',caption:'CAD detail of the opening mechanism',w:1854,h:1107}
+    ]}
   },
   {
     slug:'raceboat',
@@ -283,14 +351,14 @@ const PROJECTS=[
     tags:['CAD','Prototyping'],
     txt:'The steering system was developed as a subsystem of a chassis that lets the <a href="https://herois.pt/atletas-herois/iron-brothers/" target="_blank" rel="noopener" class="inline-link">Iron Brothers</a> compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It\'s meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction.',
     more:'To this end, a feasibility study was first carried out on integrating a steering system into the existing chassis. Several steering actuation concepts were developed and studied for how the steering kinematics affect handling and steering forces. Since the priority was steering comfort, an electric steering concept was chosen. To size the steering actuator, the kinematics were implemented in the MuJoCo simulation environment, a custom tire model was developed, and the vehicle dynamics were simulated. This yielded the load cases needed to select a suitable actuator and generate the ideal geometry via generative design. Additional functional surfaces were then added and the part was smoothed, resulting in the final shape.',
-    media:{type:'multi',imgs:[{src:'img/Steering3b.png',alt:'Steer by Wire',caption:'Rendered chassis component',w:1177,h:697},{src:'img/Steering4b.png',alt:'Steer by Wire',caption:'Full vehicle render',w:542,h:384},{src:'img/Steering5b.png',alt:'Steer by Wire',caption:'Steering hub detail',w:887,h:581},{src:'img/Steering2b.png',alt:'Steer by Wire',caption:'Explosion view steering system down',w:1488,h:914}]}
+    media:{type:'multi',imgs:[{src:'img/Steering3b.png',alt:'Steer by Wire',caption:'Rendered chassis component',w:1177,h:697},{src:'img/Steering5b.png',alt:'Steer by Wire',caption:'Steering hub detail',w:887,h:581},{type:'video',src:'videos/mpc-chassis-deformation.mp4',alt:'Chassis deformation simulation',caption:'Chassis deformation simulation — 45 mm rear-left wheel lift, deformation shown at 10× scale'},{src:'img/mpc-body-render.png',alt:'MPC DesignWorks — body and cockpit render',caption:'Body and cockpit render',w:1570,h:968},{src:'img/mpc-handlebar-render-wide.png',alt:'MPC DesignWorks — handlebar and steering assembly render',caption:'Handlebar and steering assembly render',w:1408,h:1182}]}
   }
 ];
 
 function mediaHTML(m){
   const dims=i=>i.w&&i.h?` width="${i.w}" height="${i.h}"`:'';
   if(m.type==='multi'){
-    return `<div class="p-media multi">${m.imgs.map(i=>`<figure><img src="${i.src}" alt="${i.alt}" loading="lazy"${dims(i)}>${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
+    return `<div class="p-media multi">${m.imgs.map(i=>`<figure${i.noPrint?' class="no-print"':''}>${i.type==='video'?`<video src="${i.src}" controls playsinline preload="metadata" aria-label="${i.alt}"${dims(i)}></video>`:`<img src="${i.src}" alt="${i.alt}" loading="lazy"${dims(i)}>`}${i.caption?`<figcaption>${i.caption}</figcaption>`:''}</figure>`).join('')}</div>`;
   }
   // only for object-fit:contain ("trans") images — cover-fit images crop to
   // any box height fine, but contain needs the box to match the image's own
@@ -299,10 +367,7 @@ function mediaHTML(m){
   return `<div class="p-media${m.trans?' trans':''}${m.framed?' framed':''}"${ratio}><figure><img src="${m.img}" alt="${m.alt}" loading="lazy"${dims(m)}>${m.caption?`<figcaption>${m.caption}</figcaption>`:''}</figure></div>`;
 }
 
-// Steer by Wire: hidden on production pending employer approval, stays
-// visible locally — filtered out here so it's also skipped by prev/next nav
-const isProd=location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com';
-const VISIBLE_PROJECTS=isProd?PROJECTS.filter(p=>p.slug!=='steer-by-wire'):PROJECTS;
+const VISIBLE_PROJECTS=PROJECTS;
 
 const params=new URLSearchParams(location.search);
 const slug=params.get('slug');
@@ -373,9 +438,12 @@ if(!proj){
         <h2>Overview</h2>
         <p class="txt">${proj.txt}</p>
         <p class="more">${proj.more}</p>
+        ${proj.list?`<h2 class="sub">${proj.listTitle||'Details'}</h2><ul class="tasks">${proj.list.map(i=>`<li>${i}</li>`).join('')}</ul>`:''}
+        ${proj.challenge?`<h2 class="sub">Special challenge</h2><p class="challenge">${proj.challenge}</p>`:''}
         <div class="p-tags">${proj.tags.map(t=>`<span>${t}</span>`).join('')}</div>
       </div>
     </div>
+    <div class="print-sign"><span>Linus Kuhn &middot; Portfolio</span><span>linuskuhn.com</span></div>
     <div class="p-nav">
       <a class="boxlink inv arrow-l" href="project.html?slug=${prev.slug}">${prev.title}</a>
       <a class="boxlink arrow" href="project.html?slug=${next.slug}">${next.title}</a>
@@ -383,6 +451,7 @@ if(!proj){
   `;
 }
 
+document.querySelectorAll('img[loading="lazy"]').forEach(i=>i.loading='eager');
 requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('page-ready')));
 setTimeout(()=>document.body.classList.add('page-ready'),1000);
 

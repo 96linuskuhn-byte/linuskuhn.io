@@ -132,9 +132,9 @@ img{display:block}
   text-transform:uppercase;
   padding:6px 12px;
   border-radius:var(--r);
-  transition:background .15s,color .15s,transform .15s;
+  transition:background .15s,color .15s;
 }
-.boxlink:hover{background:var(--blue);transform:translateY(-1px)}
+.boxlink:hover{background:var(--blue)}
 .boxlink.inv{
   background:transparent;color:var(--ink);
   border:1px solid var(--ink);
@@ -165,29 +165,44 @@ nav{
   border-image:linear-gradient(to right,rgba(255,255,255,.12) 0%,rgba(255,255,255,.12) 42%,rgba(23,23,29,.09) 58%,rgba(23,23,29,.09) 100%) 1;
 }
 .nav-meta,.nav-links{position:relative;z-index:1}
-.nav-meta{font-size:.72rem;color:#fff;letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap;transition:color .35s ease}
+.nav-meta{font-size:.72rem;color:#fff;letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap;transition:color .35s ease;margin-left:-14px}
 .nav-meta .tag-box{
   font-family:'Archivo',sans-serif;font-weight:500;font-size:.85rem;
   letter-spacing:-.02em;text-transform:uppercase;
   color:inherit;display:inline-flex;align-items:center;gap:6px;transition:color .15s;
 }
-.nav-meta .tag-box .nav-logo{width:14px;height:auto;display:block;fill:currentColor;flex:none}
+.nav-meta .tag-box .nav-logo{width:22px;height:auto;display:block;fill:currentColor;flex:none}
 .brand{font-family:'Archivo';font-weight:800;font-size:1.15rem;letter-spacing:.01em}
 .nav-links{display:flex;gap:22px;justify-content:flex-end;align-items:center;color:#fff;transition:color .35s ease}
 .nav-links a{
   font-family:'Archivo',sans-serif;font-weight:500;font-size:.85rem;
   letter-spacing:-.02em;text-transform:uppercase;
+  display:inline-block;
+  position:relative;
   color:inherit;transition:color .15s;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;right:0;bottom:2px;height:1px;
+  background:var(--blue);pointer-events:none;
+  transform:scaleX(0);transform-origin:center;
+  transition:transform .2s ease;
 }
 @media(hover:hover) and (pointer:fine){
   .nav-meta a.tag-box:hover,.nav-links a:hover{color:var(--blue)}
+  .nav-links a:hover::after{transform:scaleX(1)}
+}
+.nav-links a[aria-current="location"]{color:var(--blue)}
+.nav-links a:focus-visible::after,.nav-links a[aria-current="location"]::after{transform:scaleX(1)}
+@media(prefers-reduced-motion:reduce){
+  .nav-links a{transition:none}
+  .nav-links a::after{transition:none}
 }
 .nav-meta.dark,.nav-links.dark{color:#000}
 @media(max-width:900px){
   nav{justify-content:space-between;gap:0;padding-left:16px}
   .nav-meta .tag-text{display:none}
   .nav-meta .tag-box{gap:0}
-  .nav-meta{padding-right:12px}
+  .nav-meta{padding-right:12px;margin-left:-6px}
   .nav-links{gap:14px;justify-content:space-between;flex:1}
 }
 
@@ -501,20 +516,21 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 /* slideshow (auto-enabled for projects with multiple images) */
 .p-media.slide{min-height:300px;border:1px solid var(--line)}
 .p-media.slide.animate-h{transition:aspect-ratio .38s cubic-bezier(.2,.6,.2,1)}
-.p-media.slide img{
+.p-media.slide img,.p-media.slide video{
   display:block;position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:fill;margin:0;
   opacity:0;pointer-events:none;transform:scale(1.04);
   transition:opacity .45s ease,transform .5s cubic-bezier(.2,.6,.2,1);
   border:none;border-radius:0;background:none;
 }
-.p-media.slide img.active{opacity:1;pointer-events:auto;transform:scale(1)}
+.p-media.slide img.active,.p-media.slide video.active{opacity:1;pointer-events:auto;transform:scale(1)}
 .p-media.slide img.active.js-zoom{transform:scale(1.03)}
 .p-media.slide img.active.tap-zoom{transform:scale(1.04)}
 .p-media.slide img+img{margin-top:0}
-/* full-height edge zones: hover the left/right third of the image to page
-   through the slideshow, tinted with a blue gradient instead of a boxed button */
+.p-media.slide video{object-fit:contain;background:#000}
+.p-media.slide:has(video.active) .sdots{bottom:48px}
+/* Keep arrow hit areas close to the arrows, clear of video controls. */
 .p-media.slide .sedge{
-  position:absolute;top:0;bottom:0;width:10%;max-width:56px;z-index:3;
+  position:absolute;top:50%;height:56px;transform:translateY(-50%);width:10%;max-width:56px;z-index:3;
   cursor:pointer;border:none;background:none;padding:0;
   display:flex;align-items:center;color:var(--grey);
   font-family:'JetBrains Mono',monospace;font-size:1.45rem;line-height:1;
@@ -648,7 +664,7 @@ footer .meta-center{flex:1;text-align:center}
 <nav id="nav">
   <div class="nav-blur"></div>
   <div class="nav-meta">
-    <a class="tag-box" href="#top"><svg class="nav-logo" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(0.0587235,0,0,0.0587235,9.41277,9.41277)"><g transform="matrix(0.943003,0,0,0.943003,-161.948,-178.033)"><path d="M231.083,70.318C237.681,60.731 248.447,54.855 260.08,54.495C269.53,54.201 280.138,53.872 285.481,53.707C286.154,53.686 286.783,54.041 287.112,54.629C287.442,55.217 287.416,55.94 287.046,56.503C275.113,74.671 211.237,171.924 211.237,171.924C211.237,171.924 276.836,265.568 289.093,283.064C289.477,283.613 289.526,284.328 289.221,284.924C288.916,285.519 288.307,285.897 287.637,285.906C281.979,285.98 270.254,286.132 259.91,286.266C247.753,286.423 236.311,280.529 229.382,270.538C210.341,243.087 172.56,188.617 163.205,175.129C161.921,173.278 161.917,170.826 163.193,168.97C172.732,155.11 212.007,98.039 231.083,70.318Z"/></g><g transform="matrix(0.943003,0,0,0.943003,-165.72,-191.731)"><path d="M111.848,330.252C111.584,331.824 112.026,333.432 113.055,334.648C114.084,335.865 115.597,336.566 117.191,336.566C147.59,336.566 277.15,336.566 307.55,336.566C309.143,336.566 310.656,337.267 311.685,338.484C312.715,339.7 313.156,341.308 312.893,342.88C311.372,351.948 308.659,368.12 307.822,373.109C307.676,373.979 306.923,374.616 306.041,374.616C286.496,374.616 85.7,374.616 62.723,374.616C62.191,374.616 61.686,374.381 61.343,373.975C61,373.569 60.853,373.032 60.942,372.508C65.447,345.965 111.043,77.304 114.865,54.784C115.012,53.916 115.763,53.281 116.643,53.28C122.21,53.273 141.666,53.246 151.904,53.232C153.499,53.23 155.013,53.931 156.045,55.147C157.076,56.364 157.518,57.973 157.254,59.546C150.923,97.293 118.175,292.529 111.848,330.252Z"/></g></g></svg><span class="tag-text">PORTFOLIO&nbsp;&bull;&nbsp;2026</span></a>
+    <a class="tag-box" href="#top" aria-label="Zur Startseite"><svg class="nav-logo" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(0.0587235,0,0,0.0587235,9.41277,9.41277)"><g transform="matrix(0.943003,0,0,0.943003,-161.948,-178.033)"><path d="M231.083,70.318C237.681,60.731 248.447,54.855 260.08,54.495C269.53,54.201 280.138,53.872 285.481,53.707C286.154,53.686 286.783,54.041 287.112,54.629C287.442,55.217 287.416,55.94 287.046,56.503C275.113,74.671 211.237,171.924 211.237,171.924C211.237,171.924 276.836,265.568 289.093,283.064C289.477,283.613 289.526,284.328 289.221,284.924C288.916,285.519 288.307,285.897 287.637,285.906C281.979,285.98 270.254,286.132 259.91,286.266C247.753,286.423 236.311,280.529 229.382,270.538C210.341,243.087 172.56,188.617 163.205,175.129C161.921,173.278 161.917,170.826 163.193,168.97C172.732,155.11 212.007,98.039 231.083,70.318Z"/></g><g transform="matrix(0.943003,0,0,0.943003,-165.72,-191.731)"><path d="M111.848,330.252C111.584,331.824 112.026,333.432 113.055,334.648C114.084,335.865 115.597,336.566 117.191,336.566C147.59,336.566 277.15,336.566 307.55,336.566C309.143,336.566 310.656,337.267 311.685,338.484C312.715,339.7 313.156,341.308 312.893,342.88C311.372,351.948 308.659,368.12 307.822,373.109C307.676,373.979 306.923,374.616 306.041,374.616C286.496,374.616 85.7,374.616 62.723,374.616C62.191,374.616 61.686,374.381 61.343,373.975C61,373.569 60.853,373.032 60.942,372.508C65.447,345.965 111.043,77.304 114.865,54.784C115.012,53.916 115.763,53.281 116.643,53.28C122.21,53.273 141.666,53.246 151.904,53.232C153.499,53.23 155.013,53.931 156.045,55.147C157.076,56.364 157.518,57.973 157.254,59.546C150.923,97.293 118.175,292.529 111.848,330.252Z"/></g></g></svg></a>
   </div>
   <div class="nav-links">
     <a class="me" href="#about">About Me</a>
@@ -722,7 +738,9 @@ footer .meta-center{flex:1;text-align:center}
         <p class="txt">Humanoid robots require many electric actuators, increasing the demand for permanent magnets that provide high torque density. YASA axial-flux machines can use this material efficiently, but their three-dimensional flux paths make electromagnetic simulations computationally expensive. In my master's thesis, I developed a surrogate-model-based optimization process to reduce the number of required 3D finite-element simulations. A data-driven constraint cascade progressively narrows the design space to the relevant region without relying on predefined heuristics. <a class="thesis-link" href="project.html?slug=axial-flux-machine">Read More</a></p>
         <div class="p-tags"><span>Ansys</span><span>FEM</span><span>Surrogate Modeling</span><span>Electric Machines</span><span>Optimization</span></div>
       </div>
-      <div class="p-media trans framed" style="aspect-ratio:1631/1164"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="999"></div>
+      <div class="p-media multi trans framed" style="aspect-ratio:1400/999"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="999">
+        <img src="img/axialflux-cad-front.png" alt="Axial Flux Machine — CAD front view" loading="lazy" width="1066" height="1088">
+        <img src="img/axialflux-cad-rear.png" alt="Axial Flux Machine — CAD rear view" loading="lazy" width="1074" height="1014"></div>
     </article>
 
     <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
@@ -735,6 +753,18 @@ footer .meta-center{flex:1;text-align:center}
       </div>
       <div class="p-media multi" style="aspect-ratio:1400/748"><img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" width="1400" height="748">
         <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy" width="1400" height="744"></div>
+    </article>
+
+    <article class="project" id="project-pedestrian-platform" data-slug="pedestrian-platform">
+      <div class="p-info">
+        <span class="p-label">Professional Project &bull; Evomotiv GmbH</span>
+        <div class="p-year">2022 – 2026</div>
+        <h3>Autonomous Platform for Carrying Human Pedestrian Dummies</h3>
+        <p class="txt">A low-profile autonomous platform designed to carry human pedestrian dummies. Because the platform must remain as undetectable as possible, the design was laid out for a minimum height, which severely limited the selection of suitable components. <a class="thesis-link" href="project.html?slug=pedestrian-platform">Read More</a></p>
+        <div class="p-tags"><span>Requirements Engineering</span><span>Drivetrain Sizing</span><span>PCB Design</span><span>Prototyping</span></div>
+      </div>
+      <div class="p-media multi" style="aspect-ratio:1600/900"><img src="img/pedestrian-platform.jpg" alt="Autonomous Platform for Carrying Human Pedestrian Dummies" width="1600" height="900">
+        <img src="img/pedestrian-platform-test.jpg" alt="Pedestrian dummy next to a test vehicle" loading="lazy" width="768" height="512"></div>
     </article>
 
     <article class="project" id="project-autonomous-robot" data-slug="autonomous-robot">
@@ -767,7 +797,8 @@ footer .meta-center{flex:1;text-align:center}
         <p class="txt">A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system. <a class="thesis-link" href="project.html?slug=automated-window">Read More</a></p>
         <div class="p-tags"><span>Kinematics</span><span>Arduino</span><span>3D Printing</span><span>Electronics</span><span>Project Management</span></div>
       </div>
-      <div class="p-media trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy" width="1320" height="1020"></div>
+      <div class="p-media multi trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy" width="1320" height="1020">
+        <img src="img/window-mechanism-cad.png" alt="Automated Window — CAD detail of the opening mechanism" loading="lazy" width="1854" height="1107"></div>
     </article>
 
     <article class="project" id="project-raceboat" data-slug="raceboat">
@@ -801,9 +832,11 @@ footer .meta-center{flex:1;text-align:center}
         <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
       </div>
       <div class="p-media multi" style="aspect-ratio:1177/697"><img src="img/Steering3b.png" alt="Steer by Wire" width="1177" height="697">
-        <img src="img/Steering4b.png" alt="Steer by Wire" loading="lazy" width="542" height="384">
         <img src="img/Steering5b.png" alt="Steer by Wire" loading="lazy" width="887" height="581">
-        <img src="img/Steering2b.png" alt="Steer by Wire" loading="lazy" width="1488" height="914"></div>
+        <video src="videos/mpc-chassis-deformation.mp4" controls playsinline preload="metadata" aria-label="Chassis deformation simulation"></video>
+        <img src="img/mpc-body-render.png" alt="MPC DesignWorks — body and cockpit render" loading="lazy" width="1570" height="968">
+        <img src="img/mpc-handlebar-render-wide.png" alt="MPC DesignWorks — handlebar and steering assembly render" loading="lazy" width="1408" height="1182">
+      </div>
     </article>
 
 
@@ -1077,6 +1110,32 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
   const navMeta=document.querySelector('.nav-meta'),
         navLinks=document.querySelector('.nav-links'),
         navBlur=document.querySelector('.nav-blur');
+  const sectionLinks=Array.from(document.querySelectorAll('.nav-links a[href^="#"]'))
+    .map(link=>({link,section:document.querySelector(link.getAttribute('href'))}))
+    .filter(entry=>entry.section);
+  let navigationTarget=null;
+  let navigationReleaseTimer;
+  function releaseNavigation(){
+    clearTimeout(navigationReleaseTimer);
+    navigationTarget=null;
+    schedule();
+  }
+  document.querySelectorAll('#nav a[href^="#"]').forEach(link=>{
+    link.addEventListener('click',()=>{
+      const target=document.querySelector(link.getAttribute('href'));
+      if(!target)return;
+      clearTimeout(navigationReleaseTimer);
+      navigationTarget=target;
+      schedule();
+      // Include the layout corrections after the 1100 ms navigation scroll.
+      navigationReleaseTimer=setTimeout(releaseNavigation,1950);
+    });
+  });
+  addEventListener('wheel',releaseNavigation,{passive:true});
+  addEventListener('touchstart',releaseNavigation,{passive:true});
+  addEventListener('keydown',event=>{
+    if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))releaseNavigation();
+  });
 
   function darkAt(y,zones,fallback){
     for(const z of zones){
@@ -1090,6 +1149,23 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
   function update(){
     pending=false;
     const navRect=nav.getBoundingClientRect();
+    // Keep About Me selected through Interests, which has no separate nav link.
+    const sectionLine=navRect.bottom+Math.min(120,innerHeight*.2);
+    let currentSection=null;
+    for(const entry of sectionLinks){
+      if(entry.section.getBoundingClientRect().top<=sectionLine)currentSection=entry;
+    }
+    // The short contact section may not reach the selection line at page end.
+    if(scrollY>0&&scrollY+innerHeight>=document.documentElement.scrollHeight-2){
+      currentSection=sectionLinks[sectionLinks.length-1]||null;
+    }
+    if(navigationTarget){
+      currentSection=sectionLinks.find(entry=>entry.section===navigationTarget)||null;
+    }
+    for(const entry of sectionLinks){
+      if(entry===currentSection)entry.link.setAttribute('aria-current','location');
+      else entry.link.removeAttribute('aria-current');
+    }
     const y=navRect.top+navRect.height/2;
     const rightDark=darkAt(y,rightZones,false);
     if(navMeta)navMeta.classList.toggle('dark',innerWidth<=900?rightDark:darkAt(y,leftZones,false));
@@ -1112,22 +1188,60 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
   }
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule);
+  addEventListener('load',schedule);
   schedule();
 })();
 
-/* first logo surface blinks independently like a text cursor */
+/* Rotate and uniformly scale the right logo surface on hover. */
 (()=>{
-  const localPreview=location.hostname==='localhost'||location.hostname==='127.0.0.1';
-  if(!localPreview||!new URLSearchParams(location.search).has('logo-animation'))return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const cursorSurface=document.querySelector('.nav-logo > g > g:first-child path');
   if(!cursorSurface)return;
-  let white=false;
-  cursorSurface.style.fill='var(--blue)';
-  cursorSurface.style.transition='fill .3s ease-in-out';
-  setInterval(()=>{
-    white=!white;
-    cursorSurface.style.fill=white?'#fff':'var(--blue)';
-  },900);
+  const logoLink=cursorSurface.closest('.tag-box');
+  if(!logoLink)return;
+  cursorSurface.style.transformBox='fill-box';
+  cursorSurface.style.transformOrigin='center';
+  cursorSurface.style.transform='translate(0,0) rotate(0deg) scale(1)';
+  let pointerInside=false;
+  let returningHome=false;
+  const logoResetDistance=300;
+
+  const showRotated=()=>{
+    cursorSurface.style.transition='transform .28s cubic-bezier(.65,0,.35,1)';
+    cursorSurface.style.transform='translate(14%,13%) rotate(90deg) scale(.734)';
+  };
+  const showOriginal=()=>{
+    cursorSurface.style.transition='transform .42s cubic-bezier(.65,0,.35,1)';
+    cursorSurface.style.transform='translate(0,0) rotate(0deg) scale(1)';
+  };
+
+  logoLink.addEventListener('pointerenter',()=>{
+    pointerInside=true;
+    if(scrollY>40&&!returningHome)showRotated();
+  });
+  logoLink.addEventListener('pointerleave',()=>{
+    pointerInside=false;
+    if(!returningHome)showOriginal();
+  });
+  logoLink.addEventListener('click',()=>{
+    if(scrollY<=40){
+      returningHome=false;
+      showOriginal();
+      return;
+    }
+    returningHome=true;
+    showRotated();
+  });
+  addEventListener('scroll',()=>{
+    // Start returning the logo while the page is still approaching the top.
+    // Keep the click state until arrival so hovering cannot restart the rotation.
+    if(scrollY<=logoResetDistance){
+      if(scrollY<=2)returningHome=false;
+      showOriginal();
+    }else if(pointerInside&&!returningHome&&scrollY>40){
+      showRotated();
+    }
+  });
 })();
 
 
@@ -1405,7 +1519,7 @@ function wireZoom(m,getImg,gallery){
   let wasSwipe=false;
   m.addEventListener('click',e=>{
     if(wasSwipe){wasSwipe=false;return;}
-    if(e.target.closest('.sedge,.sdot'))return;
+    if(e.target.closest('.sedge,.sdot,video'))return;
     const img=getImg();
     if(!img)return;
     openLightbox(img,gallery);
@@ -1419,7 +1533,7 @@ function wireZoom(m,getImg,gallery){
 
 /* ===== slideshow for projects with multiple images ===== */
 document.querySelectorAll('.p-media').forEach(m=>{
-  const imgs=[...m.querySelectorAll('img')];
+  const imgs=[...m.querySelectorAll('img,video')];
   if(imgs.length<2){
     // single-image project: no gallery controls needed, just the zoom effects
     if(imgs[0]){imgs[0].classList.add('active');wireZoom(m,()=>imgs[0]);}
@@ -1436,13 +1550,16 @@ document.querySelectorAll('.p-media').forEach(m=>{
   // mismatched size (visible as a thin gap) the way a one-off JS
   // calculation could.
   const applyRatio=(im,animate)=>{
-    if(!im.naturalWidth)return;
+    const width=im.videoWidth||im.naturalWidth;
+    const height=im.videoHeight||im.naturalHeight;
+    if(!width||!height)return;
     m.classList.toggle('animate-h',!!animate);
-    m.style.aspectRatio=im.naturalWidth+' / '+im.naturalHeight;
+    m.style.aspectRatio=width+' / '+height;
   };
   const setRatio=(i,animate=true)=>{
     const im=imgs[i];
-    im.complete?applyRatio(im,animate):im.addEventListener('load',()=>applyRatio(im,animate),{once:true});
+    const isVideo=im.tagName==='VIDEO';
+    (isVideo?im.readyState>=1:im.complete)?applyRatio(im,animate):im.addEventListener(isVideo?'loadedmetadata':'load',()=>{if(imgs[idx]===im)applyRatio(im,animate)},{once:true});
   };
   let idx=0;
   imgs[idx].classList.add('active');
@@ -1452,7 +1569,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
   const dotEls=imgs.map((_,i)=>{
     const d=document.createElement('button');
     d.className='sdot';d.type='button';
-    d.setAttribute('aria-label','Go to image '+(i+1));
+    d.setAttribute('aria-label','Go to media '+(i+1));
     d.addEventListener('click',()=>goTo(i));
     dots.appendChild(d);
     return d;
@@ -1462,6 +1579,7 @@ document.querySelectorAll('.p-media').forEach(m=>{
   };
   upd();
   const goTo=i=>{
+    if(imgs[idx].tagName==='VIDEO')imgs[idx].pause();
     imgs[idx].classList.remove('active');
     idx=(i+imgs.length)%imgs.length;
     imgs[idx].classList.add('active');upd();setRatio(idx);
@@ -1477,11 +1595,12 @@ document.querySelectorAll('.p-media').forEach(m=>{
   mk('prev','←',-1);mk('next','→',1);
   m.appendChild(dots);
 
-  const zoom=wireZoom(m,()=>m.querySelector('img.active'),{getImgs:()=>imgs,getIdx:()=>idx,goTo});
+  const zoom=wireZoom(m,()=>m.querySelector('img.active'),{getImgs:()=>imgs.filter(im=>im.tagName==='IMG'),getIdx:()=>imgs.filter(im=>im.tagName==='IMG').indexOf(imgs[idx])});
 
   // swipe left/right to change image on touch devices
   let tsx=0,tsy=0,tracking=false;
   m.addEventListener('touchstart',e=>{
+    if(e.target.closest('video')){tracking=false;return;}
     tsx=e.touches[0].clientX;tsy=e.touches[0].clientY;tracking=true;
   },{passive:true});
   m.addEventListener('touchmove',e=>{
@@ -1592,12 +1711,5 @@ if(location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com')
 }
 </script>
 <!-- End Cloudflare Web Analytics -->
-<!-- Steer by Wire: hidden on production pending employer approval, stays visible locally -->
-<script>
-if(location.hostname==='linuskuhn.com'||location.hostname==='www.linuskuhn.com'){
-  const sbw=document.getElementById('project-steer-by-wire');
-  if(sbw)sbw.remove();
-}
-</script>
 </body>
 </html>
