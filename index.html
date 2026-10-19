@@ -179,11 +179,11 @@ nav{
   letter-spacing:-.02em;text-transform:uppercase;
   display:inline-block;
   position:relative;
-  color:inherit;transition:color .15s;
+  color:inherit;
 }
 .nav-links a::after{
-  content:'';position:absolute;left:0;right:0;bottom:2px;height:1px;
-  background:var(--blue);pointer-events:none;
+  content:'';position:absolute;left:-1px;right:-1px;bottom:2px;height:1.5px;
+  background:var(--blue);border-radius:999px;pointer-events:none;
   transform:scaleX(0);transform-origin:center;
   transition:transform .2s ease;
 }
