@@ -229,9 +229,7 @@ nav{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 1.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .split{
-  /* 30px shorter than the screen, so a thin strip of the dark Interests
-     section is already visible at the bottom on load */
-  display:grid;grid-template-columns:1.05fr .95fr;min-height:calc(100svh - 30px);
+  display:grid;grid-template-columns:1.05fr .95fr;min-height:100svh;
   background:transparent;
   overflow:hidden;
   position:relative;z-index:1;
@@ -308,9 +306,17 @@ nav{
   display:block;width:90%;max-width:558px;height:auto;
 }
 @media(min-width:901px){
-  /* the photo is cropped 20px at the bottom (pulled below the section edge,
-     which clips it) so the head stays about 130px below the top */
-  .split .media img{width:auto;max-width:100%;height:calc(100svh - 140px);margin-bottom:-20px}
+  /* the photo fills the full-screen section from the bottom up, leaving the
+     head 130px below the section top */
+  .split .media img{width:auto;max-width:100%;height:calc(100svh - 130px)}
+}
+@media(max-width:900px){
+  /* phones: the handwritten lettering sits a bit lower (clear of the nav
+     bar) instead of being lifted, and the photo is smaller and starts right
+     below the text, so more of it is visible on the first screen */
+  .split .tagline-hand{transform:none;margin-top:10px}
+  .split .blue{padding-bottom:16px}
+  .split .media img{width:62%}
 }
 
 /* ---------- SECTION SHELL ---------- */
