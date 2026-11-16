@@ -165,7 +165,7 @@ nav{
   border-image:linear-gradient(to right,rgba(255,255,255,.12) 0%,rgba(255,255,255,.12) 42%,rgba(23,23,29,.09) 58%,rgba(23,23,29,.09) 100%) 1;
 }
 .nav-meta,.nav-links{position:relative;z-index:1}
-.nav-meta{font-size:.72rem;color:#fff;letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap;transition:color .35s ease;margin-left:-14px}
+.nav-meta{font-size:.72rem;color:#000;letter-spacing:.05em;display:flex;gap:14px;align-items:center;white-space:nowrap;transition:color .35s ease;margin-left:-14px}
 .nav-meta .tag-box{
   font-family:'Archivo',sans-serif;font-weight:500;font-size:.85rem;
   letter-spacing:-.02em;text-transform:uppercase;
@@ -173,7 +173,7 @@ nav{
 }
 .nav-meta .tag-box .nav-logo{width:22px;height:auto;display:block;fill:currentColor;flex:none}
 .brand{font-family:'Archivo';font-weight:800;font-size:1.15rem;letter-spacing:.01em}
-.nav-links{display:flex;gap:22px;justify-content:flex-end;align-items:center;color:#fff;transition:color .35s ease}
+.nav-links{display:flex;gap:22px;justify-content:flex-end;align-items:center;color:#000;transition:color .35s ease}
 .nav-links a{
   font-family:'Archivo',sans-serif;font-weight:500;font-size:.85rem;
   letter-spacing:-.02em;text-transform:uppercase;
@@ -191,13 +191,13 @@ nav{
   .nav-meta a.tag-box:hover,.nav-links a:hover{color:var(--blue)}
   .nav-links a:hover::after{transform:scaleX(1)}
 }
+.nav-meta.light,.nav-links.light{color:#fff}
 .nav-links a[aria-current="location"]{color:var(--blue)}
 .nav-links a:focus-visible::after,.nav-links a[aria-current="location"]::after{transform:scaleX(1)}
 @media(prefers-reduced-motion:reduce){
   .nav-links a{transition:none}
   .nav-links a::after{transition:none}
 }
-.nav-meta.dark,.nav-links.dark{color:#000}
 @media(max-width:900px){
   nav{justify-content:space-between;gap:0;padding-left:16px}
   .nav-meta .tag-text{display:none}
@@ -206,113 +206,62 @@ nav{
   .nav-links{gap:14px;justify-content:space-between;flex:1}
 }
 
-/* ---------- HERO ---------- */
-/* the hero used to pin/scroll-jack (145vh) with its wave graphic and text
-   drift tied to scroll progress — that's been removed. It's now a normal,
-   unpinned section; the wave mesh still animates on its own (idle motion
-   only, driven purely by time, not by scroll position). */
-.hero-pin{height:auto}
-.hero-pin .hero{position:relative;height:auto;min-height:100svh}
-.hero-pin.no-pin{height:auto}
-.hero-pin.no-pin .hero{position:relative;height:auto;min-height:100svh}
-.hero{
-  height:100svh;
-  position:sticky;top:0;
-  display:flex;flex-direction:column;justify-content:center;
-  /* bottom edge extended 10mm via padding-bottom — since .hero-pin .hero
-     overrides this to height:auto with min-height:100svh, the extra
-     padding grows the box itself rather than shifting the centered
-     content, whose position stays the same */
-  padding:120px clamp(20px,6vw,96px) calc(90px + 10mm);
-  overflow:hidden;
-  background:linear-gradient(to top,#2e4fd6 0%,#5c8ad9 100%);
-}
-.hero .net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.4))}
-.hero .inner{
-  position:relative;z-index:2;margin-left:auto;margin-bottom:60px;text-align:right;max-width:800px;
-  padding:clamp(32px,4vw,56px) clamp(32px,4.5vw,64px);
-  border-radius:28px;
-}
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  backdrop-filter:blur(var(--hero-blur,6px));
-  -webkit-backdrop-filter:blur(var(--hero-blur,6px));
-  -webkit-mask-image:linear-gradient(to top,transparent 0%,#000 65%);
-  mask-image:linear-gradient(to top,transparent 0%,#000 65%);
-  pointer-events:none;
-}
-@keyframes heroIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.hero .loc,.hero h1,.hero .tagline,.hero .sub{
-  opacity:0;animation:heroIn .7s cubic-bezier(.2,.6,.2,1) forwards;
-}
-.hero .loc{animation-delay:.1s}
-.hero h1{animation-delay:.18s}
-.hero .tagline{animation-delay:.5s}
-.hero .sub{animation-delay:.5s}
-.hero .sub+.sub{animation-delay:.65s}
-@media(prefers-reduced-motion:reduce){
-  .hero .loc,.hero h1,.hero .tagline,.hero .sub{animation:none;opacity:1}
-}
-.hero .loc{
-  font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
-  color:#fff;margin-bottom:22px;text-shadow:0 1px 12px rgba(0,0,0,.25);
-}
-.hero h1{
-  font-size:clamp(2.6rem,7vw,5.4rem);
-  color:#fff;
-  text-transform:none;letter-spacing:-.02em;
-}
-.hero .tagline{
-  font-size:clamp(.95rem,1.8vw,1.35rem);color:#fff;
-  margin-top:18px;letter-spacing:.04em;
-  text-shadow:0 1px 12px rgba(0,0,0,.25);
-}
-.hero .tagline .tsep{opacity:.65;padding:0 .4em;display:inline-block}
-.hero .sub{
-  margin:28px 0 0 auto;max-width:76ch;
-  font-size:.9rem;font-weight:500;color:#fff;letter-spacing:.02em;line-height:1.9;
-  text-shadow:0 1px 12px rgba(0,0,0,.25);
-}
-.hero .cta{margin-top:40px;display:flex;gap:14px;justify-content:flex-end;flex-wrap:wrap}
-.hero .cta .boxlink{background:#fff;color:var(--blue)}
-.hero .cta .boxlink:hover{background:var(--ink);color:#fff}
-.hero .cta .boxlink.inv{background:transparent;color:#fff;border:1px solid #fff}
-.hero .cta .boxlink.inv:hover{background:#fff;color:var(--blue)}
-.hero .corner{
-  position:absolute;bottom:24px;z-index:2;
-  font-size:.74rem;font-weight:700;letter-spacing:.06em;
-}
-.hero .corner.l{left:clamp(20px,6vw,96px);color:var(--grey)}
-.hero .corner.r{right:clamp(20px,6vw,96px);color:#fff}
-.hero .x{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#5b6ac9;font-size:.7rem;z-index:2;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
-@media(max-width:760px){
-  .hero{justify-content:flex-start;padding-top:110px;padding-bottom:12px;overflow-y:auto}
-  .hero .inner{margin:40px auto 0;text-align:center;padding:28px 24px}
-  .hero .cta{justify-content:center}
-  .hero .sub{margin:28px auto 0}
-  .hero .corner{display:none}
-  /* min-height:100svh (set for .hero-pin .hero) otherwise pins the hero to
-     the full viewport height regardless of padding, so About Me couldn't
-     start any earlier — shrink it here so the section can actually get
-     shorter */
-  .hero-pin .hero,.hero-pin.no-pin .hero{min-height:78svh}
-}
-
 /* ---------- SPLIT / ABOUT ---------- */
+/* the hero (About) and the Interests section share one wrapper. The
+   background (a soft, slightly darker white with the blue glow at the top
+   and a soft grain)
+   scrolls normally; on desktop the hero's text and photo move at 25% speed
+   (see hero-parallax), and the dark Interests section slides over them. */
+.hero-stack{position:relative;background:#eeede9;overflow:clip}
+.hero-stack > .hero-bg{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  /* multiply: the glow image's pure white takes on the off-white below */
+  mix-blend-mode:multiply;
+  /* sized like "cover" on a full-screen section (image is 2000x1077) */
+  background:url("img/hero-glow.webp") center top / max(100%, calc(100svh * 2000 / 1077)) auto no-repeat;
+}
+/* soft, fine grain over the background, so the white doesn't look flat;
+   it fades out toward the bottom of the hero, which stays smooth */
+.hero-stack > .hero-bg::before{
+  content:"";position:absolute;inset:0;opacity:.12;
+  -webkit-mask-image:linear-gradient(#000 0,transparent 100svh);
+  mask-image:linear-gradient(#000 0,transparent 100svh);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 1.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 .split{
-  display:grid;grid-template-columns:1.05fr .95fr;min-height:60vh;
-  background:#2e4fd6;
+  /* 30px shorter than the screen, so a thin strip of the dark Interests
+     section is already visible at the bottom on load */
+  display:grid;grid-template-columns:1.05fr .95fr;min-height:calc(100svh - 30px);
+  background:transparent;
   overflow:hidden;
+  position:relative;z-index:1;
+}
+.hero-stack > .interests{position:relative;z-index:2}
+.split{transition:opacity .6s ease}
+.split.faded{opacity:0}
+/* desktop: the hero's text, photo and lettering move up at 25% of the
+   scroll speed while the Interests section scrolls up normally and slides
+   over them. This is a CSS scroll-driven animation, which the browser runs
+   off the main thread (a scroll script that moved it every frame caused
+   visible jitter). Browsers without support simply scroll it normally. */
+@supports (animation-timeline: scroll()){
+  @media (min-width:901px) and (prefers-reduced-motion:no-preference){
+    .split{
+      animation:hero-parallax linear both;
+      animation-timeline:scroll(root block);
+      animation-range:0 100vh;
+    }
+  }
+}
+@keyframes hero-parallax{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(0,75vh,0)}
 }
 @media(max-width:900px){
-  .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm} /* the overflow:hidden clip is only needed for the desktop flush/white-rectangle trick, not the mobile stacked layout, and was cutting off content here; padding-top extends the blue area upward so its content sits a bit lower */
+  .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm}
 }
 .split .blue{
-  color:#fff;
+  color:#000;
   /* top padding matches section.shell's, so the "About Me" heading sits the
      same distance below the nav bar as the other sections' headings */
   padding:clamp(48px,6vw,80px) clamp(56px,8vw,96px) clamp(64px,9vw,96px) clamp(24px,4vw,56px);
@@ -327,8 +276,18 @@ nav{
   .split{padding-top:16mm}
 }
 .split .blue .top{display:flex;flex-direction:column;gap:20px}
-.split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#fff}
-.split .desc{font-size:.8rem;line-height:2;color:#eef;font-weight:500}
+.split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#000}
+/* handwritten "Create | Prototype | Refine" above the heading */
+.split .tagline-hand{
+  display:block;width:80%;max-width:380px;height:auto;
+  /* the image is already turned level in the file (no CSS rotation, which
+     made the thin strokes shimmer while scrolling). It is lifted 20px
+     without moving the heading and text below it, and kept on its own
+     compositing layer so it isn't re-rasterized on every scroll frame */
+  transform:translateY(-20px);
+  will-change:transform;
+}
+.split .desc{font-size:.8rem;line-height:2;color:#000;font-weight:500}
 .split .passion{margin-top:26px;font-size:.8rem;line-height:2;color:#fff;font-weight:700}
 .split .passion span{display:inline-block;background:rgba(255,255,255,.14);padding:2px 10px;margin:4px 6px 0 0;font-weight:500}
 .stats{display:flex;gap:clamp(28px,5vw,72px);flex-wrap:wrap}
@@ -344,24 +303,14 @@ nav{
 @media(max-width:900px){
   .split .media{padding:0 clamp(16px,3vw,32px)}
 }
-/* frosted "glass" rectangle behind the cutout photo, same blur treatment
-   as the nav bar — sits behind the figure rather than framing it tightly */
-.split .media::before{
-  content:"";
-  position:absolute;
-  /* extended far past the top of .media — .split's own overflow:hidden clips
-     it exactly at the section's top edge, so at the flush-scrolled position
-     the white rectangle reaches all the way to the browser's top edge */
-  inset:-40px 0 0 -5%;
-  border-radius:0;
-  background:rgba(250,249,245,.95);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  pointer-events:none;
-  z-index:0;
-}
 .split .media img{
   position:relative;z-index:1;
-  display:block;width:100%;max-width:620px;height:auto;
+  display:block;width:90%;max-width:558px;height:auto;
+}
+@media(min-width:901px){
+  /* the photo is cropped 20px at the bottom (pulled below the section edge,
+     which clips it) so the head stays about 130px below the top */
+  .split .media img{width:auto;max-width:100%;height:calc(100svh - 140px);margin-bottom:-20px}
 }
 
 /* ---------- SECTION SHELL ---------- */
@@ -667,7 +616,6 @@ footer .meta-center{flex:1;text-align:center}
     <a class="tag-box" href="#top" aria-label="Zur Startseite"><svg class="nav-logo" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(0.0587235,0,0,0.0587235,9.41277,9.41277)"><g transform="matrix(0.943003,0,0,0.943003,-161.948,-178.033)"><path d="M231.083,70.318C237.681,60.731 248.447,54.855 260.08,54.495C269.53,54.201 280.138,53.872 285.481,53.707C286.154,53.686 286.783,54.041 287.112,54.629C287.442,55.217 287.416,55.94 287.046,56.503C275.113,74.671 211.237,171.924 211.237,171.924C211.237,171.924 276.836,265.568 289.093,283.064C289.477,283.613 289.526,284.328 289.221,284.924C288.916,285.519 288.307,285.897 287.637,285.906C281.979,285.98 270.254,286.132 259.91,286.266C247.753,286.423 236.311,280.529 229.382,270.538C210.341,243.087 172.56,188.617 163.205,175.129C161.921,173.278 161.917,170.826 163.193,168.97C172.732,155.11 212.007,98.039 231.083,70.318Z"/></g><g transform="matrix(0.943003,0,0,0.943003,-165.72,-191.731)"><path d="M111.848,330.252C111.584,331.824 112.026,333.432 113.055,334.648C114.084,335.865 115.597,336.566 117.191,336.566C147.59,336.566 277.15,336.566 307.55,336.566C309.143,336.566 310.656,337.267 311.685,338.484C312.715,339.7 313.156,341.308 312.893,342.88C311.372,351.948 308.659,368.12 307.822,373.109C307.676,373.979 306.923,374.616 306.041,374.616C286.496,374.616 85.7,374.616 62.723,374.616C62.191,374.616 61.686,374.381 61.343,373.975C61,373.569 60.853,373.032 60.942,372.508C65.447,345.965 111.043,77.304 114.865,54.784C115.012,53.916 115.763,53.281 116.643,53.28C122.21,53.273 141.666,53.246 151.904,53.232C153.499,53.23 155.013,53.931 156.045,55.147C157.076,56.364 157.518,57.973 157.254,59.546C150.923,97.293 118.175,292.529 111.848,330.252Z"/></g></g></svg></a>
   </div>
   <div class="nav-links">
-    <a class="me" href="#about">About Me</a>
     <a href="#projects">Projects</a>
     <a href="#skills">Skills</a>
     <a href="#cv">CV</a>
@@ -675,27 +623,17 @@ footer .meta-center{flex:1;text-align:center}
   </div>
 </nav>
 
-<div id="top" class="hero-pin">
-<header class="hero">
-  <canvas class="net" id="mesh"></canvas>
-  <div class="inner">
-    <div class="loc">Product Development &bull; Mechanical Engineering</div>
-    <h1>Linus Kuhn</h1>
-    <div class="tagline"><span class="tw">create</span><span class="tsep">|</span><span class="tw">prototype</span><span class="tsep">|</span><span class="tw">refine</span></div>
-    <p class="sub">I develop ideas into prototypes and strive to accelerate this process.</p>
-    <p class="sub">To do so, I use, learn and create tools. Additionally, I believe that
-    team-based, focused decisions, rapid iterations and the right returns are key to
-    develop great products.</p>
-  </div>
-</header>
-</div>
+<div id="top"></div>
 
+<div class="hero-stack">
+<div class="hero-bg" aria-hidden="true"></div>
 <section id="about" class="split">
   <div class="blue">
     <div class="top reveal">
-      <h2>About Me</h2>
+      <img class="tagline-hand" src="img/tagline-handwritten2-level.webp" alt="Create | Prototype | Refine" width="1865" height="249">
+      <h2>Hello!</h2>
       <div>
-        <p class="desc">Hi, my name is Linus Kuhn, I'm 29 years old and I was born
+        <p class="desc">My name is Linus Kuhn, I'm 29 years old and I was born
         and raised in Stuttgart, Germany. Even as a child, I was fascinated
         by mechanical things that work and that could be taken apart. Since
         studying mechanical engineering, I've learned how to put them together
@@ -704,7 +642,7 @@ footer .meta-center{flex:1;text-align:center}
       </div>
     </div>
   </div>
-  <div class="media reveal"><img src="img/portrait-cutout2.png" alt="Portrait of Linus Kuhn"></div>
+  <div class="media reveal"><img src="img/portrait-cutout4.png" alt="Portrait of Linus Kuhn" width="782" height="1200"></div>
 </section>
 
 <section id="interests" class="shell interests">
@@ -722,6 +660,8 @@ footer .meta-center{flex:1;text-align:center}
     </div>
   </div>
 </section>
+
+</div>
 
 <section id="projects" class="shell">
   <div class="shell-head reveal" style="margin-bottom:clamp(12px,1.5vw,20px)">
@@ -1050,6 +990,27 @@ footer .meta-center{flex:1;text-align:center}
   update();
 })();
 
+/* ===== About content is faded out (a timed cross-fade, see .split.faded)
+   as soon as the Interests section's top edge has been scrolled up to just
+   below the "Hello!" text block (20px under its last line), and faded back
+   in when scrolling back above that point ===== */
+(function(){
+  const sec=document.getElementById('interests');
+  const about=document.getElementById('about');
+  const block=about&&about.querySelector('.blue .top');
+  if(!sec||!block)return;
+  let pending=false;
+  function update(){
+    pending=false;
+    const reached=sec.getBoundingClientRect().top<=block.getBoundingClientRect().bottom+20;
+    about.classList.toggle('faded',reached);
+  }
+  function schedule(){if(!pending){pending=true;requestAnimationFrame(update);}}
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('resize',schedule);
+  update();
+})();
+
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
 
@@ -1070,28 +1031,9 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
         skills=document.getElementById('skills'),
         cv=document.getElementById('cv');
 
-  const media=document.querySelector('.split .media');
-
-  // the white "glass" rectangle behind the About Me photo now extends up
-  // past .media and gets clipped by .split's own overflow:hidden right at
-  // the section's top edge, so its real top is just the section's top.
-  function aboutMediaRect(){
-    const r=about.getBoundingClientRect();
-    // on mobile the section stacks blue text (needs a light nav) above the
-    // photo (needs a dark nav), instead of sitting side by side like on
-    // desktop — so the "dark" zone should only start once the nav reaches
-    // the photo, not as soon as it reaches the section's (blue) top
-    if(innerWidth<=900&&media){
-      const m=media.getBoundingClientRect();
-      // the white rectangle (.media::before) extends 40px above .media's own
-      // top, so the real blue/white seam — where the transition should
-      // happen once it's centered in the nav — sits 40px higher than that
-      return {top:m.top-40,bottom:r.bottom};
-    }
-    return {top:r.top,bottom:r.bottom};
-  }
-
   const leftZones=[
+    {el:hero,dark:false},
+    {el:about,dark:true},
     {el:projects,dark:true},
     {el:skills,dark:true},
     {el:cv,dark:true},
@@ -1099,7 +1041,7 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
 
   const rightZones=[
     {el:hero,dark:false},
-    {rect:media?aboutMediaRect:null,el:about,dark:true},
+    {el:about,dark:true},
     {el:interests,dark:false},
     {el:projects,dark:true},
     {el:skills,dark:true},
@@ -1166,19 +1108,12 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
       else entry.link.removeAttribute('aria-current');
     }
     const y=navRect.top+navRect.height/2;
-    const rightDark=darkAt(y,rightZones,false);
-    if(navMeta)navMeta.classList.toggle('dark',innerWidth<=900?rightDark:darkAt(y,leftZones,false));
-    if(navLinks)navLinks.classList.toggle('dark',rightDark);
-    // on desktop, while the nav sits over the About Me section (blue on the
-    // left, white photo on the right), give its border a matching
-    // white-to-black split instead of the usual single-color border. The
-    // section stacks into one column on mobile, so this is desktop-only.
-    const aboutRect=(about&&media&&innerWidth>900)?aboutMediaRect():null;
-    const overAbout=!!(aboutRect&&y>=aboutRect.top&&y<=aboutRect.bottom);
-    if(navBlur){
-      navBlur.classList.toggle('split-border',overAbout);
-      navBlur.classList.toggle('dark',!overAbout&&rightDark);
-    }
+    // nav text is black everywhere except over the dark Interests section
+    const ir=interests&&interests.getBoundingClientRect();
+    const overInterests=!!(ir&&y>=ir.top&&y<=ir.bottom);
+    if(navMeta)navMeta.classList.toggle('light',overInterests);
+    if(navLinks)navLinks.classList.toggle('light',overInterests);
+    if(navBlur)navBlur.classList.toggle('dark',!overInterests);
   }
   function schedule(){
     if(pending)return;
@@ -1272,29 +1207,9 @@ function animateScrollTo(y,duration=1100){
   }
   requestAnimationFrame(step);
 }
-// About Me's target: the gap between the white rectangle's top edge and the
-// nav bar's bottom edge should equal the nav bar's own top offset (16px) —
-// i.e. the same visual "margin" above and below the nav. getBoundingClientRect
-// is used (not offsetTop) since .media is grid-aligned via align-self:end,
-// whose offsetTop doesn't reliably reflect its real rendered position; the
-// .reveal class's transform is neutralized first since it affects the rect.
+// About Me now has one continuous light background.
 function aboutRectTargetY(){
-  const media=document.querySelector('.split .media');
-  // this whole white-rectangle/nav-gap calculation is a desktop-only visual
-  // trick (the section stacks into one column on mobile, with no left/right
-  // split) — mobile falls back to a plain flush scroll like Projects/CV
-  if(!media||innerWidth<=900)return offsetTop(document.getElementById('about'));
-  // unobserve first — otherwise the IntersectionObserver's own callback can
-  // still fire afterwards and replay the fade-in .animate() on an element
-  // that's already visible, causing a brief flicker
-  io.unobserve(media);
-  media.classList.add('visible');
-  const INSET_TOP=40; // must match .split .media::before's -40px top inset
-  const navRect=nav.getBoundingClientRect();
-  const desiredGap=navRect.top*2.5; // 2.5x the nav's own top offset from the browser edge
-  const mediaTopPage=media.getBoundingClientRect().top+scrollY;
-  const rectTopPage=mediaTopPage-INSET_TOP;
-  return rectTopPage-(navRect.bottom+desiredGap);
+  return offsetTop(document.getElementById('about'));
 }
 document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
