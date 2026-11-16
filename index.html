@@ -119,7 +119,7 @@ h1,h2,h3,.display{
 }
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--blue);color:#fff}
-img{display:block}
+img{display:block;border-radius:var(--r-img)}
 
 /* ---------- BOXED UI ELEMENTS ---------- */
 .boxlink{
@@ -258,7 +258,7 @@ nav{
   will-change:transform;
 }
 
-.hero-projects-button{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;align-self:flex-start;min-height:52px;margin-top:12px;padding:14px 24px;background:var(--ink);color:#fff;font-family:'Archivo',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;transition:background .2s}
+.hero-projects-button{border-radius:var(--r);display:inline-flex;align-items:center;justify-content:space-between;gap:14px;align-self:flex-start;min-height:52px;margin-top:12px;padding:14px 24px;background:var(--ink);color:#fff;font-family:'Archivo',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;transition:background .2s}
 .hero-projects-button span{font-size:1.5rem;line-height:1}
 .hero-projects-button:hover{background:var(--blue)}
 .hero-projects-button:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
@@ -604,7 +604,7 @@ footer .meta-center{flex:1;text-align:center}
 #projects .shell-head h2{letter-spacing:-.02em}
 #projects .frame{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 40px;padding:0}
 #projects .project{display:flex;flex-direction:column;gap:14px;border:0;padding:0;min-width:0}
-#projects .project-image{display:block;aspect-ratio:1.29;overflow:hidden;background:#e2e2e0}
+#projects .project-image{border-radius:var(--r-img);display:block;aspect-ratio:1.29;overflow:hidden;background:#e2e2e0}
 #projects .project-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
 #projects .project-image:hover img{transform:scale(1.035)}
 #projects .p-info{flex:1;justify-content:flex-start;align-items:flex-start}
