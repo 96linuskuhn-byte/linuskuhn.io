@@ -237,23 +237,25 @@ nav{
 .hero-stack > .interests{position:relative;z-index:2}
 .split{transition:opacity .6s ease}
 .split.faded{opacity:0}
-/* desktop: the hero's text, photo and lettering move up at 25% of the
+/* the hero's text, photo and lettering move up at 25% of the
    scroll speed while the Interests section scrolls up normally and slides
    over them. This is a CSS scroll-driven animation, which the browser runs
    off the main thread (a scroll script that moved it every frame caused
-   visible jitter). Browsers without support simply scroll it normally. */
+   visible jitter). Browsers without support simply scroll it normally.
+   Same on desktop and phones; svh keeps it steady while a phone's address
+   bar shows or hides. */
 @supports (animation-timeline: scroll()){
-  @media (min-width:901px) and (prefers-reduced-motion:no-preference){
+  @media (prefers-reduced-motion:no-preference){
     .split{
       animation:hero-parallax linear both;
       animation-timeline:scroll(root block);
-      animation-range:0 100vh;
+      animation-range:0 100svh;
     }
   }
 }
 @keyframes hero-parallax{
   from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(0,75vh,0)}
+  to{transform:translate3d(0,75svh,0)}
 }
 @media(max-width:900px){
   .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm}
@@ -998,7 +1000,8 @@ footer .meta-center{flex:1;text-align:center}
 
 /* ===== About content is faded out (a timed cross-fade, see .split.faded)
    as soon as the Interests section's top edge has been scrolled up to just
-   below the "Hello!" text block (20px under its last line), and faded back
+   below the "Hello!" text block (20px under its last line; 120px on
+   phones, so it starts a bit earlier there), and faded back
    in when scrolling back above that point ===== */
 (function(){
   const sec=document.getElementById('interests');
@@ -1008,7 +1011,9 @@ footer .meta-center{flex:1;text-align:center}
   let pending=false;
   function update(){
     pending=false;
-    const reached=sec.getBoundingClientRect().top<=block.getBoundingClientRect().bottom+20;
+    // phones start a bit earlier: 120px below the text instead of 20px
+    const offset=innerWidth<=900?120:20;
+    const reached=sec.getBoundingClientRect().top<=block.getBoundingClientRect().bottom+offset;
     about.classList.toggle('faded',reached);
   }
   function schedule(){if(!pending){pending=true;requestAnimationFrame(update);}}
