@@ -207,11 +207,7 @@ nav{
 }
 
 /* ---------- SPLIT / ABOUT ---------- */
-/* the hero (About) and the Interests section share one wrapper. The
-   background (a soft, slightly darker white with the blue glow at the top
-   and a soft grain)
-   scrolls normally; on desktop the hero's text and photo move at 25% speed
-   (see hero-parallax), and the dark Interests section slides over them. */
+/* Shared background for the hero and project overview. */
 .hero-stack{position:relative;background:#eeede9;overflow:clip}
 .hero-stack > .hero-bg{
   position:absolute;inset:0;z-index:0;pointer-events:none;
@@ -235,28 +231,6 @@ nav{
   position:relative;z-index:1;
 }
 .hero-stack > .interests{position:relative;z-index:2}
-.split{transition:opacity .6s ease}
-.split.faded{opacity:0}
-/* the hero's text, photo and lettering move up at 25% of the
-   scroll speed while the Interests section scrolls up normally and slides
-   over them. This is a CSS scroll-driven animation, which the browser runs
-   off the main thread (a scroll script that moved it every frame caused
-   visible jitter). Browsers without support simply scroll it normally.
-   Same on desktop and phones; svh keeps it steady while a phone's address
-   bar shows or hides. */
-@supports (animation-timeline: scroll()){
-  @media (prefers-reduced-motion:no-preference){
-    .split{
-      animation:hero-parallax linear both;
-      animation-timeline:scroll(root block);
-      animation-range:0 100svh;
-    }
-  }
-}
-@keyframes hero-parallax{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(0,75svh,0)}
-}
 @media(max-width:900px){
   .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm}
 }
@@ -276,18 +250,19 @@ nav{
   .split{padding-top:16mm}
 }
 .split .blue .top{display:flex;flex-direction:column;gap:20px}
-.split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#000}
+.split h2{font-size:clamp(2rem,3.6vw,3.1rem);color:#000;line-height:1.08;text-wrap:balance}
 /* handwritten "Create | Prototype | Refine" above the heading */
 .split .tagline-hand{
   display:block;width:80%;max-width:380px;height:auto;
-  /* the image is already turned level in the file (no CSS rotation, which
-     made the thin strokes shimmer while scrolling). It is lifted 20px
-     without moving the heading and text below it, and kept on its own
-     compositing layer so it isn't re-rasterized on every scroll frame */
   transform:translateY(-20px);
   will-change:transform;
 }
-.split .desc{font-size:.8rem;line-height:2;color:#000;font-weight:500}
+
+.hero-projects-button{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;align-self:flex-start;min-height:52px;margin-top:12px;padding:14px 24px;background:var(--ink);color:#fff;font-family:'Archivo',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;transition:background .2s}
+.hero-projects-button span{font-size:1.5rem;line-height:1}
+.hero-projects-button:hover{background:var(--blue)}
+.hero-projects-button:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
+.split .desc{font-size:clamp(.85rem,1.2vw,1rem);line-height:1.8;color:#000;font-weight:500;text-align:left;max-width:48ch}
 .split .passion{margin-top:26px;font-size:.8rem;line-height:2;color:#fff;font-weight:700}
 .split .passion span{display:inline-block;background:rgba(255,255,255,.14);padding:2px 10px;margin:4px 6px 0 0;font-weight:500}
 .stats{display:flex;gap:clamp(28px,5vw,72px);flex-wrap:wrap}
@@ -366,7 +341,7 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
   border-top:1px solid var(--line);
   display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3.5vw,56px);
   padding:clamp(32px,4.5vw,64px) 0;
-  opacity:0;transform:translateY(28px);
+  opacity:1;transform:none;
   scroll-margin-top:100px;
 }
 /* the fade/slide-in itself is driven by el.animate() in JS (more reliable
@@ -473,13 +448,13 @@ section.shell{padding:clamp(48px,6vw,80px) clamp(16px,4vw,48px) clamp(72px,9vw,1
 /* slideshow (auto-enabled for projects with multiple images) */
 .p-media.slide{min-height:300px;border:1px solid var(--line)}
 .p-media.slide.animate-h{transition:aspect-ratio .38s cubic-bezier(.2,.6,.2,1)}
-.p-media.slide img,.p-media.slide video{
+.p-media.slide img,.p-media.slide video,.p-media.slide iframe{
   display:block;position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:fill;margin:0;
   opacity:0;pointer-events:none;transform:scale(1.04);
   transition:opacity .45s ease,transform .5s cubic-bezier(.2,.6,.2,1);
   border:none;border-radius:0;background:none;
 }
-.p-media.slide img.active,.p-media.slide video.active{opacity:1;pointer-events:auto;transform:scale(1)}
+.p-media.slide img.active,.p-media.slide video.active,.p-media.slide iframe.active{opacity:1;pointer-events:auto;transform:scale(1)}
 .p-media.slide img.active.js-zoom{transform:scale(1.03)}
 .p-media.slide img.active.tap-zoom{transform:scale(1.04)}
 .p-media.slide img+img{margin-top:0}
@@ -610,8 +585,39 @@ footer .meta{font-size:.7rem;color:var(--grey);display:flex;gap:10px 24px;flex-w
 footer .meta-left{display:flex;gap:10px 24px;flex-wrap:wrap}
 footer .meta-center{flex:1;text-align:center}
 
-.reveal{opacity:0;transform:translateY(26px)}
+.reveal{opacity:1;transform:none}
 .reveal.visible{opacity:1;transform:none}
+/* Reveal content once as it enters the viewport; native page scrolling. */
+.fade-ready .scroll-reveal{transition:opacity .65s ease,transform .65s cubic-bezier(.2,.65,.3,1)}
+.fade-ready .scroll-reveal:not(.visible){opacity:0;transform:translateY(20px)}
+.fade-ready .scroll-reveal.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .fade-ready .scroll-reveal{opacity:1!important;transform:none!important;transition:none}
+  body{transition:none}
+}
+
+.p-media iframe{display:block;width:100%;border:0;aspect-ratio:1400/999;height:auto;border-radius:var(--r-img)}
+
+/* Project overview: image-led cards matching the selected-projects reference. */
+#projects{position:relative;z-index:2;background:#eeede9;padding-bottom:clamp(64px,8vw,112px);border-top:1px solid var(--line)}
+#projects .shell-head{margin-bottom:36px}
+#projects .shell-head h2{letter-spacing:-.02em}
+#projects .frame{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 40px;padding:0}
+#projects .project{display:flex;flex-direction:column;gap:14px;border:0;padding:0;min-width:0}
+#projects .project-image{display:block;aspect-ratio:1.29;overflow:hidden;background:#e2e2e0}
+#projects .project-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+#projects .project-image:hover img{transform:scale(1.035)}
+#projects .p-info{flex:1;justify-content:flex-start;align-items:flex-start}
+#projects .p-year{display:block;font-size:.78rem;line-height:1.4;margin:0}
+#projects .project-meta{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:5px;min-height:3.8em}
+#projects .p-label{font-size:.74rem;line-height:1.5;margin:0;padding:0;max-width:100%;background:none;color:var(--blue);border-radius:0}
+#projects .p-info h3{font-size:clamp(1rem,1.65vw,1.35rem);line-height:1.25;letter-spacing:.035em;margin:0 0 10px}
+#projects .p-info .txt{font-size:.82rem;line-height:1.65;max-width:100%;margin:0 0 14px}
+#projects a:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
+@media(max-width:900px){#projects .frame{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 32px}}
+@media(max-width:580px){#projects .frame{grid-template-columns:1fr;gap:32px;padding-inline:8px}#projects .project{gap:12px}#projects .p-info h3{font-size:1.2rem}}
+@media(prefers-reduced-motion:reduce){#projects .project-image img{transition:none}}
+
 </style>
 </head>
 
@@ -639,19 +645,95 @@ footer .meta-center{flex:1;text-align:center}
   <div class="blue">
     <div class="top reveal">
       <img class="tagline-hand" src="img/tagline-handwritten2-level.webp" alt="Create | Prototype | Refine" width="1865" height="249">
-      <h2>Hello!</h2>
+      <h2>Product Development &amp; Engineering</h2>
       <div>
-        <p class="desc">My name is Linus Kuhn, I'm 29 years old and I was born
-        and raised in Stuttgart, Germany. Even as a child, I was fascinated
-        by mechanical things that work and that could be taken apart. Since
-        studying mechanical engineering, I've learned how to put them together
-        professionally, and I keep striving to develop exciting products more
-        efficiently and better.</p>
+        <p class="desc">I combine mechanical engineering, simulation, and design to turn ideas into functional prototypes and products.</p>
       </div>
+      <a class="hero-projects-button" href="#projects">View Projects <span aria-hidden="true">→</span></a>
     </div>
   </div>
   <div class="media reveal"><img src="img/portrait-cutout4.png" alt="Portrait of Linus Kuhn" width="782" height="1200"></div>
 </section>
+
+<section id="projects" class="shell">
+  <div class="shell-head reveal"><h2>My Projects</h2></div>
+  <div class="frame">
+    <article class="project" id="project-steer-by-wire" data-slug="steer-by-wire">
+      <div class="project-meta"><div class="p-year">2026</div><span class="p-label">Projects | MPC DesignWorks</span></div>
+      <a class="project-image" href="project.html?slug=steer-by-wire" aria-label="View Iron Brothers"><img src="img/project-tiles/steer-by-wire-expanded.png" alt="Iron Brothers" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=steer-by-wire">Iron Brothers</a></h3>
+        <p class="txt">Concept, design, and prototyping of adaptive sports equipment.</p>
+      </div>
+    </article>
+    <article class="project" id="project-pedestrian-platform" data-slug="pedestrian-platform">
+      <div class="project-meta"><div class="p-year">2022 – 2026</div><span class="p-label">Professional Project | Evomotiv GmbH</span></div>
+      <a class="project-image" href="project.html?slug=pedestrian-platform" aria-label="View Pedestrian Test Platform"><img src="img/project-tiles/pedestrian-platform-expanded.png" alt="Pedestrian Test Platform" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=pedestrian-platform">Pedestrian Test Platform</a></h3>
+        <p class="txt">A low-profile autonomous platform for testing vehicle safety systems.</p>
+      </div>
+    </article>
+    <article class="project" id="project-axial-flux-machine" data-slug="axial-flux-machine">
+      <div class="project-meta"><div class="p-year">2025</div><span class="p-label">Master Thesis | Pforzheim University</span></div>
+      <a class="project-image" href="project.html?slug=axial-flux-machine" aria-label="View YASA Axial-Flux Motor"><img src="img/project-tiles/axial-flux-machine-expanded.png" alt="YASA Axial-Flux Motor" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=axial-flux-machine">YASA Axial-Flux Motor</a></h3>
+        <p class="txt">Design and optimization of a high-torque axial-flux machine.</p>
+      </div>
+    </article>
+    <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
+      <div class="project-meta"><div class="p-year">2024</div><span class="p-label">Physical Prototype | Pforzheim University</span></div>
+      <a class="project-image" href="project.html?slug=coffee-grinder" aria-label="View Manual Coffee Grinder"><img src="img/project-tiles/coffee-grinder-expanded.png" alt="Manual Coffee Grinder" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=coffee-grinder">Manual Coffee Grinder</a></h3>
+        <p class="txt">A working prototype inspired by the design language of Charles Eames.</p>
+      </div>
+    </article>
+    <article class="project" id="project-autonomous-robot" data-slug="autonomous-robot">
+      <div class="project-meta"><div class="p-year">2022</div><span class="p-label">Bachelor Thesis | Evomotiv GmbH</span></div>
+      <a class="project-image" href="project.html?slug=autonomous-robot" aria-label="View Mobile Robot Platform"><img src="img/project-tiles/autonomous-robot-expanded.png" alt="Mobile Robot Platform" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=autonomous-robot">Mobile Robot Platform</a></h3>
+        <p class="txt">Product development of an autonomous parking test platform.</p>
+      </div>
+    </article>
+    <article class="project" id="project-velomobil" data-slug="velomobil">
+      <div class="project-meta"><div class="p-year">2021</div><span class="p-label">Concept | Own Project</span></div>
+      <a class="project-image" href="project.html?slug=velomobil" aria-label="View Velomobil"><img src="img/project-tiles/velomobil-expanded.png" alt="Velomobil" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=velomobil">Velomobil</a></h3>
+        <p class="txt">An aerodynamic pedal vehicle with a carbon fiber monocoque chassis.</p>
+      </div>
+    </article>
+    <article class="project" id="project-automated-window" data-slug="automated-window">
+      <div class="project-meta"><div class="p-year">2021</div><span class="p-label">Physical Prototype | Karlsruhe University</span></div>
+      <a class="project-image" href="project.html?slug=automated-window" aria-label="View Automated Window"><img src="img/project-tiles/automated-window-expanded.png" alt="Automated Window" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=automated-window">Automated Window</a></h3>
+        <p class="txt">A retrofittable mechatronic system that responds to ambient noise.</p>
+      </div>
+    </article>
+    <article class="project" id="project-raceboat" data-slug="raceboat">
+      <div class="project-meta"><div class="p-year">2019</div><span class="p-label">Physical Prototype | Own Project</span></div>
+      <a class="project-image" href="project.html?slug=raceboat" aria-label="View Carbon Fiber Raceboat"><img src="img/project-tiles/raceboat-expanded.png" alt="Carbon Fiber Raceboat" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=raceboat">Carbon Fiber Raceboat</a></h3>
+        <p class="txt">A remote-controlled racing boat built with 3D-printed molds.</p>
+      </div>
+    </article>
+    <article class="project" id="project-rotary-engine" data-slug="rotary-engine">
+      <div class="project-meta"><div class="p-year">2017</div><span class="p-label">Concept | Own Project</span></div>
+      <a class="project-image" href="project.html?slug=rotary-engine" aria-label="View Rotary Combustion Engine"><img src="img/project-tiles/rotary-engine-expanded.png" alt="Rotary Combustion Engine" loading="lazy"></a>
+      <div class="p-info">
+        <h3><a href="project.html?slug=rotary-engine">Rotary Combustion Engine</a></h3>
+        <p class="txt">An engine concept exploring a rotating piston and movable valves.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+</div>
 
 <section id="interests" class="shell interests">
   <div class="shell-head reveal">
@@ -666,132 +748,6 @@ footer .meta-center{flex:1;text-align:center}
       <span class="p-label">Physical AI — VLA &amp; Robotics</span>
       <p>The combination of a vision, language, and action model that translates into a physical action through a robotic system marks a fundamental shift in how humans and machines interact. Instead of following fixed paths and depending on rigid, structured environments, VLA models give robots a new way to approach real-world problems. <a class="thesis-link" href="vla-robotics.html">My enthusiasm for Physical AI</a></p>
     </div>
-  </div>
-</section>
-
-</div>
-
-<section id="projects" class="shell">
-  <div class="shell-head reveal" style="margin-bottom:clamp(12px,1.5vw,20px)">
-    <h2>Projects</h2>
-  </div>
-
-  <div class="frame">
-
-    <article class="project" id="project-axial-flux-machine" data-slug="axial-flux-machine">
-      <div class="p-info">
-        <span class="p-label">Master Thesis &bull; Pforzheim University</span>
-        <div class="p-year">2025</div>
-        <h3>Axial Flux Machine — Surrogate-Based Topology Optimization</h3>
-        <p class="txt">Humanoid robots require many electric actuators, increasing the demand for permanent magnets that provide high torque density. YASA axial-flux machines can use this material efficiently, but their three-dimensional flux paths make electromagnetic simulations computationally expensive. In my master's thesis, I developed a surrogate-model-based optimization process to reduce the number of required 3D finite-element simulations. A data-driven constraint cascade progressively narrows the design space to the relevant region without relying on predefined heuristics. <a class="thesis-link" href="project.html?slug=axial-flux-machine">Read More</a></p>
-        <div class="p-tags"><span>Ansys</span><span>FEM</span><span>Surrogate Modeling</span><span>Electric Machines</span><span>Optimization</span></div>
-      </div>
-      <div class="p-media multi trans framed" style="aspect-ratio:1400/999"><img src="img/axialflux.png" alt="Axial Flux Machine — Surrogate-Based Topology Optimization" loading="lazy" width="1400" height="999">
-        <img src="img/axialflux-cad-front.png" alt="Axial Flux Machine — CAD front view" loading="lazy" width="1066" height="1088">
-        <img src="img/axialflux-cad-rear.png" alt="Axial Flux Machine — CAD rear view" loading="lazy" width="1074" height="1014"></div>
-    </article>
-
-    <article class="project" id="project-coffee-grinder" data-slug="coffee-grinder">
-      <div class="p-info">
-        <span class="p-label">Physical Prototype &bull; Pforzheim University</span>
-        <div class="p-year">2024</div>
-        <h3>Manual Coffee Grinder Inspired by Charles Eames</h3>
-        <p class="txt">Semester project: conceptualize, design, construct and build a manual coffee grinder based on the design language of a well-known designer. For this project I chose the renowned designer Charles Eames and prototyped a reimagined coffee grinder. <a class="thesis-link" href="project.html?slug=coffee-grinder">Read More</a></p>
-        <div class="p-tags"><span>Industrial Design</span><span>Sketching</span><span>Prototyping</span><span>CMF</span></div>
-      </div>
-      <div class="p-media multi" style="aspect-ratio:1400/748"><img src="img/grinder-render-1.jpg" alt="Manual Coffee Grinder — CAD rendering" width="1400" height="748">
-        <img src="img/grinder-render-2.jpg" alt="Manual Coffee Grinder — CAD rendering side view" loading="lazy" width="1400" height="744"></div>
-    </article>
-
-    <article class="project" id="project-pedestrian-platform" data-slug="pedestrian-platform">
-      <div class="p-info">
-        <span class="p-label">Professional Project &bull; Evomotiv GmbH</span>
-        <div class="p-year">2022 – 2026</div>
-        <h3>Autonomous Platform for Carrying Human Pedestrian Dummies</h3>
-        <p class="txt">A low-profile autonomous platform designed to carry human pedestrian dummies. Because the platform must remain as undetectable as possible, the design was laid out for a minimum height, which severely limited the selection of suitable components. <a class="thesis-link" href="project.html?slug=pedestrian-platform">Read More</a></p>
-        <div class="p-tags"><span>Requirements Engineering</span><span>Drivetrain Sizing</span><span>PCB Design</span><span>Prototyping</span></div>
-      </div>
-      <div class="p-media multi" style="aspect-ratio:1600/900"><img src="img/pedestrian-platform.jpg" alt="Autonomous Platform for Carrying Human Pedestrian Dummies" width="1600" height="900">
-        <img src="img/pedestrian-platform-test.jpg" alt="Pedestrian dummy next to a test vehicle" loading="lazy" width="768" height="512"></div>
-    </article>
-
-    <article class="project" id="project-autonomous-robot" data-slug="autonomous-robot">
-      <div class="p-info">
-        <span class="p-label">Bachelor Thesis &bull; Evomotiv GmbH</span>
-        <div class="p-year">2022</div>
-        <h3>Autonomous Robot for Vehicle Test Automation</h3>
-        <p class="txt">My Bachelor thesis was about the development of a GPS-based mobile robot for test automation of autonomously parking vehicles. The project grew later on into more platforms enabling further test scenarios for autonomous vehicles — now in productive use. <a class="thesis-link" href="project.html?slug=autonomous-robot">Read More</a></p>
-        <div class="p-tags"><span>Mechatronics</span><span>Sensors</span><span>Stakeholder Management</span><span>Functional Prototypes</span></div>
-      </div>
-      <div class="p-media "><img src="img/robot-no-logo.png" alt="Autonomous Robot for Vehicle Test Automation" loading="lazy" width="1400" height="1050"></div>
-    </article>
-
-    <article class="project" id="project-velomobil" data-slug="velomobil">
-      <div class="p-info">
-        <span class="p-label">Concept &bull; Own Project</span>
-        <div class="p-year">2021</div>
-        <h3>Velomobil — Aerodynamic Pedal Vehicle</h3>
-        <p class="txt">An aerodynamically shaped vehicle with a low drag coefficient that helps gain speed while pedaling. The concept features a carbon fiber monocoque chassis with technical components sourced mostly from bicycles. <a class="thesis-link" href="project.html?slug=velomobil">Read More</a></p>
-        <div class="p-tags"><span>Surface Modeling</span><span>Rendering</span><span>Aerodynamics</span><span>Carbon Fiber</span></div>
-      </div>
-      <div class="p-media natural"><img src="img/velomobil.jpg" alt="Velomobil — Aerodynamic Pedal Vehicle" loading="lazy" width="1400" height="990"></div>
-    </article>
-
-    <article class="project" id="project-automated-window" data-slug="automated-window">
-      <div class="p-info">
-        <span class="p-label">Physical Prototype &bull; Karlsruhe University</span>
-        <div class="p-year">2021</div>
-        <h3>Automated Window</h3>
-        <p class="txt">A retrofittable system that opens and closes a window depending on the ambient noise level — designed, printed and wired as a complete mechatronic system. <a class="thesis-link" href="project.html?slug=automated-window">Read More</a></p>
-        <div class="p-tags"><span>Kinematics</span><span>Arduino</span><span>3D Printing</span><span>Electronics</span><span>Project Management</span></div>
-      </div>
-      <div class="p-media multi trans framed"><img src="img/window.png" alt="Automated Window" loading="lazy" width="1320" height="1020">
-        <img src="img/window-mechanism-cad.png" alt="Automated Window — CAD detail of the opening mechanism" loading="lazy" width="1854" height="1107"></div>
-    </article>
-
-    <article class="project" id="project-raceboat" data-slug="raceboat">
-      <div class="p-info">
-        <span class="p-label">Physical Prototype &bull; Own Project</span>
-        <div class="p-year">2019</div>
-        <h3>Remote Controlled Carbon Fiber Raceboat</h3>
-        <p class="txt">A racing boat with a carbon fiber hull, laminated using 3D-printed negative molds and driven by a 500W brushless DC motor with turboprop — one of the first projects built with my own 3D printer. <a class="thesis-link" href="project.html?slug=raceboat">Read More</a></p>
-        <div class="p-tags"><span>Mold Making</span><span>Composite Lamination</span><span>3D Printing</span></div>
-      </div>
-      <div class="p-media "><img src="img/raceboat.jpg" alt="Remote Controlled Carbon Fiber Raceboat" loading="lazy" width="1229" height="820"></div>
-    </article>
-
-    <article class="project" id="project-rotary-engine" data-slug="rotary-engine">
-      <div class="p-info">
-        <span class="p-label">Concept &bull; Own Project</span>
-        <div class="p-year">2017</div>
-        <h3>Rotary Combustion Engine</h3>
-        <p class="txt">An engine concept with a rotating piston and movable valves forming the combustion chamber — one of my first projects in Autodesk Fusion 360 and the start of it all. <a class="thesis-link" href="project.html?slug=rotary-engine">Read More</a></p>
-        <div class="p-tags"><span>Fusion 360</span><span>Thermodynamics</span><span>Engine Engineering</span></div>
-      </div>
-      <div class="p-media natural"><img src="img/engine.jpg" alt="Rotary Combustion Engine" loading="lazy" width="965" height="542"></div>
-    </article>
-
-    <article class="project" id="project-steer-by-wire" data-slug="steer-by-wire">
-      <div class="p-info">
-        <span class="p-label">Project &bull; MPC DesignWorks</span>
-        <div class="p-year">2026</div>
-        <h3>Steer by Wire</h3>
-        <p class="txt">The steering system was developed as a subsystem of a chassis that lets the Iron Brothers compete in an Ironman race — used to push a person over the running distance and tow them over the cycling distance. It's meant to make the running distance more comfortable for the athlete, letting the vehicle be steered directly via the handlebar instead of being lifted to change direction. <a class="thesis-link" href="project.html?slug=steer-by-wire">Read More</a></p>
-        <div class="p-tags"><span>CAD</span><span>Prototyping</span></div>
-      </div>
-      <div class="p-media multi" style="aspect-ratio:1177/697"><img src="img/Steering3b.png" alt="Steer by Wire" width="1177" height="697">
-        <img src="img/Steering5b.png" alt="Steer by Wire" loading="lazy" width="887" height="581">
-        <video src="videos/mpc-chassis-deformation.mp4" controls playsinline preload="metadata" aria-label="Chassis deformation simulation"></video>
-        <img src="img/mpc-handlebar-render-wide.png" alt="MPC DesignWorks — handlebar and steering assembly render" loading="lazy" width="1408" height="1182">
-      </div>
-    </article>
-
-
-
-
-
-
-
   </div>
 </section>
 
@@ -863,7 +819,6 @@ footer .meta-center{flex:1;text-align:center}
   const cv=document.getElementById('mesh');
   if(!cv)return;
   const ctx=cv.getContext('2d');
-  const pin=document.querySelector('.hero-pin');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // deterministic random wave components
@@ -873,54 +828,59 @@ footer .meta-center{flex:1;text-align:center}
     const fx=1+rnd()*4, ft=.8+rnd()*2.7;
     comps.push({fx,ft,p1:rnd()*6.2832,p2:rnd()*6.2832,a:(.3+rnd()*.7)/(fx*.6+ft*.4)});
   }
-  // the animated, scroll-linked mesh is heavy to keep smooth on phones, so
-  // it's simply switched off there (static single frame, no scroll-jack)
-  // rather than trying to render a lower-quality version of it — full
-  // detail/quality stays exactly as before on devices that do run it.
   const NU=80, NV=34, ROWSUB=4, NUF=(NU-1)*ROWSUB+1;
-  let W,H;
+  const P=Array.from({length:NV},()=>Array.from({length:NUF},()=>[0,0]));
+  const bases=new Float64Array(NV),amps=new Float64Array(NV);
+  const side=new Float64Array(NUF);
+  const uAngles=comps.map(()=>new Float64Array(NUF));
+  const tAngles=comps.map(()=>new Float64Array(NV));
+  const uSines=comps.map(()=>new Float64Array(NUF));
+  const tSines=comps.map(()=>new Float64Array(NV));
+  // These angles and taper factors do not depend on viewport or animation time.
+  for(let j=0;j<NUF;j++){
+    const u=j/(NUF-1);side[j]=1-.6*u;
+    for(let c=0;c<comps.length;c++)uAngles[c][j]=6.2832*comps[c].fx*u+comps[c].p1;
+  }
+  for(let i=0;i<NV;i++){
+    const t=i/(NV-1);
+    for(let c=0;c<comps.length;c++)tAngles[c][i]=6.2832*comps[c].ft*t+comps[c].p2;
+  }
+  let W,H,fadeX,fadeY,fadeRadius;
+  const mobile=()=>W<760;
   function resize(){
     const dpr=Math.min(devicePixelRatio||1,2);
     W=cv.clientWidth;H=cv.clientHeight;
     cv.width=W*dpr;cv.height=H*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
+    fadeX=mobile()?W*.5:W*.72;fadeY=H*.44;fadeRadius=Math.max(W,H)*.34;
+    for(let i=0;i<NV;i++){
+      const t=i/(NV-1),persp=.45+.55*Math.pow(t,1.3);
+      bases[i]=H*.28+Math.pow(t,1.35)*H*.65;
+      amps[i]=(H*.08+H*.22*Math.pow(t,1.2))*(mobile()?.8:1);
+      for(let j=0;j<NUF;j++)P[i][j][0]=W/2+(j/(NUF-1)-.5)*W*1.5*persp;
+    }
   }
 
-  function zval(u,t,ph){
-    let s=0;
-    for(const c of comps)s+=c.a*Math.sin(6.2832*c.fx*u+c.p1+ph)*Math.sin(6.2832*c.ft*t+c.p2+ph*.6);
-    const sideMod=1-.6*u; // amplitude tapers off toward the right, left stays as-is
-    return .5+.5*Math.tanh(s*sideMod*1.4);
-  }
-  // fade so lines stay pale behind the text
-  const mobile=()=>W<760;
-  function project(u,t,zn){
-    const persp=.45+.55*Math.pow(t,1.3);
-    const x=W/2+(u-.5)*W*1.5*persp;
-    const ybase=H*.28+Math.pow(t,1.35)*H*.65;
-    // the mobile hero is much taller relative to its width than desktop, so
-    // the same H-relative amplitude reads as a much steeper/taller wave —
-    // flatten it there so it looks proportionally the same as on desktop
-    const ampMod=mobile()?.8:1;
-    const amp=(H*.08+H*.22*Math.pow(t,1.2))*ampMod;
-    return [x,ybase-zn*amp];
-  }
   function fade(x,y){
-    const cx=mobile()?W*.5:W*.72, cy=H*.44, R=Math.max(W,H)*.34;
+    const cx=fadeX, cy=fadeY, R=fadeRadius;
     const d=Math.hypot(x-cx,y-cy);
     return d>=R?1:.22+.78*Math.pow(d/R,2);
   }
 
-  const P=new Array(NV);
-  for(let i=0;i<NV;i++)P[i]=new Array(NUF);
-
   function draw(ph){
     ctx.clearRect(0,0,W,H);
+    // Same arithmetic and component order as before; reuse each sine across
+    // an entire row or column, and update existing points without allocations.
+    for(let c=0;c<comps.length;c++){
+      for(let j=0;j<NUF;j++)uSines[c][j]=Math.sin(uAngles[c][j]+ph);
+      for(let i=0;i<NV;i++)tSines[c][i]=Math.sin(tAngles[c][i]+ph*.6);
+    }
     for(let i=0;i<NV;i++){
-      const t=i/(NV-1);
       for(let j=0;j<NUF;j++){
-        const u=j/(NUF-1);
-        P[i][j]=project(u,t,zval(u,t,ph));
+        let sum=0;
+        for(let c=0;c<comps.length;c++)sum+=comps[c].a*uSines[c][j]*tSines[c][i];
+        const zn=.5+.5*Math.tanh(sum*side[j]*1.4);
+        P[i][j][1]=bases[i]-zn*amps[i];
       }
     }
     ctx.lineCap='butt';
@@ -928,7 +888,7 @@ footer .meta-center{flex:1;text-align:center}
     // with no rounded joints between segments (avoids dot artifacts)
     for(let i=0;i<NV;i++){
       const t=i/(NV-1), op=.14+.5*t, lw=1.1+1.5*t;
-      const col=t>.4?'244,232,255':'214,202,246';
+      const col=t>.4?'70,120,190':'100,150,210'; // blue lines, visible on the white-to-blue background
       ctx.lineWidth=lw;
       for(let j=0;j<NUF-1;j++){
         const a=P[i][j],b=P[i][j+1];
@@ -948,7 +908,7 @@ footer .meta-center{flex:1;text-align:center}
         const t=i/(NV-1);
         const op=base*(.5+.5*t);
         const a=P[i][fj],b=P[i+1][fj];
-        ctx.strokeStyle=`rgba(224,214,250,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
+        ctx.strokeStyle=`rgba(85,135,200,${(op*fade((a[0]+b[0])/2,(a[1]+b[1])/2)).toFixed(3)})`;
         ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
       }
     }
@@ -961,64 +921,57 @@ footer .meta-center{flex:1;text-align:center}
   function updateScrollPhase(){
     scrollTarget=Math.max(0,scrollY)*.0012; // unbounded — keeps growing with scroll
   }
+  let frame=0,inView=false;
   function loop(now){
+    frame=0;
+    if(!inView||document.hidden||reduced)return;
     const idle=reduced?0:now*.00012;
     // smoothly chase the target instead of snapping straight to it, so
     // slowing back down to the normal speed feels gradual, not abrupt
     scrollPhase+=(scrollTarget-scrollPhase)*.06;
     draw(idle+scrollPhase);
-    requestAnimationFrame(loop);
+    frame=requestAnimationFrame(loop);
+  }
+  function syncAnimation(){
+    cancelAnimationFrame(frame);frame=0;
+    if(inView&&!document.hidden&&!reduced)frame=requestAnimationFrame(loop);
   }
   resize();
   document.getElementById('top').classList.add('no-pin');
-  addEventListener('resize',()=>{resize();},{passive:true});
+  addEventListener('resize',()=>{
+    resize();
+    if(reduced||!inView||document.hidden)draw(reduced?0:performance.now()*.00012+scrollPhase);
+  },{passive:true});
   addEventListener('scroll',updateScrollPhase,{passive:true});
+  document.addEventListener('visibilitychange',syncAnimation);
+  new IntersectionObserver(entries=>{
+    inView=entries[0].isIntersecting;syncAnimation();
+  }).observe(cv);
   updateScrollPhase();
-  if(reduced){
-    draw(0);
-  }else{
-    requestAnimationFrame(loop);
-  }
+  if(reduced)draw(0);
 })();
 
-/* ===== hero text: a small lift on the very first bit of scrolling, so the
-   text block drifts up slightly before the page itself starts moving —
-   not a full pin/scroll-jack, just a short, capped parallax touch ===== */
-(function(){
-  const inner=document.querySelector('.hero .inner');
-  if(!inner)return;
-  const range=180; // px of scroll over which the whole effect happens
-  const lift=32; // max px the text moves up
+/* Subtle parallax: copy travels at 70% of page speed; portrait stays in normal flow. */
+(()=>{
+  const hero=document.getElementById('about');
+  const copy=hero&&hero.querySelector('.blue');
+  if(!copy)return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let scheduled=false;
   function update(){
-    const t=Math.min(1,Math.max(0,scrollY/range));
-    const eased=t*(2-t); // ease-out
-    inner.style.transform=`translateY(${(-lift*eased).toFixed(1)}px)`;
+    scheduled=false;
+    const rect=hero.getBoundingClientRect();
+    const distance=Math.max(0,Math.min(-rect.top,rect.height));
+    copy.style.translate=reduced.matches?'none':`0 ${distance*.3}px`;
   }
-  addEventListener('scroll',update,{passive:true});
-  update();
-})();
-
-/* ===== About content is faded out (a timed cross-fade, see .split.faded)
-   as soon as the Interests section's top edge has been scrolled up to just
-   below the "Hello!" text block (20px under its last line; 120px on
-   phones, so it starts a bit earlier there), and faded back
-   in when scrolling back above that point ===== */
-(function(){
-  const sec=document.getElementById('interests');
-  const about=document.getElementById('about');
-  const block=about&&about.querySelector('.blue .top');
-  if(!sec||!block)return;
-  let pending=false;
-  function update(){
-    pending=false;
-    // phones start a bit earlier: 120px below the text instead of 20px
-    const offset=innerWidth<=900?120:20;
-    const reached=sec.getBoundingClientRect().top<=block.getBoundingClientRect().bottom+offset;
-    about.classList.toggle('faded',reached);
+  function schedule(){
+    if(scheduled)return;
+    scheduled=true;
+    requestAnimationFrame(update);
   }
-  function schedule(){if(!pending){pending=true;requestAnimationFrame(update);}}
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule);
+  reduced.addEventListener('change',schedule);
   update();
 })();
 
@@ -1190,7 +1143,7 @@ addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passi
 })();
 
 
-/* ===== smooth-scroll for anchor nav links (decoupled from wheel easing below) ===== */
+/* ===== Anchor links ===== */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   if(a.closest('#nav'))return; // nav-bar links get their own offset-aware handler below
   a.addEventListener('click',e=>{
@@ -1238,7 +1191,7 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
       // reveal-on-scroll elements above the jump target won't have been
       // scrolled past yet, so force them visible immediately — otherwise a
       // direct nav jump can land on content that's still invisible/mid-fade
-      document.querySelectorAll('.reveal,.project').forEach(el=>{
+      document.querySelectorAll('.reveal,.project,.scroll-reveal').forEach(el=>{
         if(offsetTop(el)<=targetY+innerHeight-200){ // shifted up a bit so elements just past the fold (like "My Interests") keep their normal scroll-in animation instead of being force-shown instantly
           io.unobserve(el); // prevent the observer from replaying the fade-in later and flickering
           el.classList.add('visible');
@@ -1263,76 +1216,13 @@ document.querySelectorAll('#nav a[href^="#"]').forEach(a=>{
   });
 });
 
-/* ===== soft scroll gates =====
-   Real scroll-speed easing (not a visual effect): the wheel input itself
-   gets damped right at the very start, so the page actually accelerates
-   gently instead of jumping to full speed instantly. Everywhere else,
-   scrolling is completely untouched (native, full speed). */
-(function(){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const heroPin=document.querySelector('.hero-pin');
-
-  const zones=[];
-  if(heroPin){
-    /* ease-IN: right at the top of the page, scrolling starts slow and
-       ramps up to full speed over a short distance */
-    zones.push({start:0,end:()=>heroPin.offsetHeight*.22,strength:.5,fallOut:false});
-  }
-  if(!zones.length)return;
-
-  function smooth(t){return t*t*(3-2*t)}
-  function factorAt(y){
-    for(const z of zones){
-      const s=typeof z.start==='function'?z.start():z.start;
-      const e=typeof z.end==='function'?z.end():z.end;
-      if(e<=s)continue;
-      if(y<s||y>e)continue;
-      const t=(y-s)/(e-s);
-      return z.fallOut
-        ? 1-(1-z.strength)*smooth(t)   /* normal speed -> slow, approaching the boundary */
-        : z.strength+(1-z.strength)*smooth(t); /* slow -> normal speed, leaving the start */
-    }
-    return 1;
-  }
-
-  /* Always intercept and drive scrolling ourselves — never toggle between
-     native and manual handling mid-gesture. Chrome commits a whole trackpad
-     gesture to either native or main-thread handling based on the FIRST
-     wheel event; conditionally calling preventDefault() only once a zone is
-     entered gets that later preventDefault() ignored for the rest of the
-     gesture (that's why this previously froze scrolling in Chrome but only
-     janked in Safari). The damping factor now only scales how much of the
-     accumulated wheel input actually moves the page each frame, so outside
-     the zones (factor 1) this behaves like native scrolling. */
-  const maxY=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
-  let pending=0,ticking=false;
-  function tick(){
-    const consume=pending*.35;
-    pending-=consume;
-    const step=consume*factorAt(scrollY);
-    scrollTo({top:Math.max(0,Math.min(maxY(),scrollY+step)),left:0,behavior:'auto'});
-    if(Math.abs(pending)>.4){
-      requestAnimationFrame(tick);
-    }else{
-      pending=0;ticking=false;
-    }
-  }
-  function onWheel(e){
-    if(e.ctrlKey||e.metaKey)return; /* leave pinch-zoom / 3D-viewer zoom alone */
-    e.preventDefault();
-    pending+=e.deltaY;
-    if(!ticking){ticking=true;requestAnimationFrame(tick);}
-  }
-  addEventListener('wheel',onWheel,{passive:false});
-})();
-
 /* ===== sort projects: newest year first ===== */
 (function(){
   const frame=document.querySelector('#projects .frame');
   if(!frame)return;
   const arts=[...frame.querySelectorAll('article.project')];
   arts.sort((a,b)=>{
-    const y=el=>parseInt((el.querySelector('.p-year')||{}).textContent)||0;
+    const y=el=>Math.max(0,...((el.querySelector('.p-year')?.textContent||'').match(/\d{4}/g)||[]).map(Number));
     return y(b)-y(a);
   });
   arts.forEach(a=>frame.appendChild(a));
@@ -1444,7 +1334,7 @@ function wireZoom(m,getImg,gallery){
   let wasSwipe=false;
   m.addEventListener('click',e=>{
     if(wasSwipe){wasSwipe=false;return;}
-    if(e.target.closest('.sedge,.sdot,video'))return;
+    if(e.target.closest('.sedge,.sdot,video,iframe'))return;
     const img=getImg();
     if(!img)return;
     openLightbox(img,gallery);
@@ -1458,7 +1348,7 @@ function wireZoom(m,getImg,gallery){
 
 /* ===== slideshow for projects with multiple images ===== */
 document.querySelectorAll('.p-media').forEach(m=>{
-  const imgs=[...m.querySelectorAll('img,video')];
+  const imgs=[...m.querySelectorAll('img,video,iframe')];
   if(imgs.length<2){
     // single-image project: no gallery controls needed, just the zoom effects
     if(imgs[0]){imgs[0].classList.add('active');wireZoom(m,()=>imgs[0]);}
@@ -1475,14 +1365,15 @@ document.querySelectorAll('.p-media').forEach(m=>{
   // mismatched size (visible as a thin gap) the way a one-off JS
   // calculation could.
   const applyRatio=(im,animate)=>{
-    const width=im.videoWidth||im.naturalWidth;
-    const height=im.videoHeight||im.naturalHeight;
+    const width=im.videoWidth||im.naturalWidth||(im.tagName==='IFRAME'?Number(im.getAttribute('width')):0);
+    const height=im.videoHeight||im.naturalHeight||(im.tagName==='IFRAME'?Number(im.getAttribute('height')):0);
     if(!width||!height)return;
     m.classList.toggle('animate-h',!!animate);
     m.style.aspectRatio=width+' / '+height;
   };
   const setRatio=(i,animate=true)=>{
     const im=imgs[i];
+    if(im.tagName==='IFRAME'){applyRatio(im,animate);return;}
     const isVideo=im.tagName==='VIDEO';
     (isVideo?im.readyState>=1:im.complete)?applyRatio(im,animate):im.addEventListener(isVideo?'loadedmetadata':'load',()=>{if(imgs[idx]===im)applyRatio(im,animate)},{once:true});
   };
@@ -1544,34 +1435,31 @@ document.querySelectorAll('.p-media').forEach(m=>{
   });
 });
 
-const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){
-    const el=e.target;
-    io.unobserve(el);
+// Reveal groups rather than individual words; keep all scroll input native.
+const fadeTargets=document.querySelectorAll('.project,.reveal,.interest,.skill,.res-col > *,footer');
+const reduceFade=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(({target,isIntersecting})=>{
+    if(!isIntersecting)return;
+    target.classList.add('visible');
+    io.unobserve(target);
+  });
+},{threshold:.08,rootMargin:'0px 0px -32px 0px'});
+if(!reduceFade)document.documentElement.classList.add('fade-ready');
+// Avoid nested reveals: each visual content block animates independently.
+fadeTargets.forEach(el=>{
+  if((el.classList.contains('interests-grid')||el.classList.contains('skill-grid')||el.classList.contains('res-col'))){
     el.classList.add('visible');
-    // driven directly via the Web Animations API instead of a CSS
-    // class-triggered transition — Chrome can silently skip a CSS
-    // transition when the "before" state was never rendered in its own
-    // frame first, which kept happening for a couple of cards; an
-    // explicit .animate() call always plays its keyframes regardless
-    el.animate(
-      [{opacity:0,transform:'translateY(28px)'},{opacity:1,transform:'none'}],
-      {duration:700,easing:'cubic-bezier(.2,.6,.2,1)',fill:'forwards'}
-    );
+    return;
   }
-}),isTouchDevice
-  // on phones the viewport is short, so waiting until an element is 50px
-  // inside it (like on desktop) means scrolling almost all the way to it
-  // first — grow the trigger zone below the viewport instead, so it starts
-  // fading in while still approaching from below
-  ?{threshold:0,rootMargin:'0px 0px 3% 0px'}
-  :{threshold:.12,rootMargin:'0px 0px -12px 0px'}); // -50px eased by 10mm (~38px) to offset the hero section's bottom edge being extended by 10mm
-// wait for the 'load' event (fonts/images settled, layout stable) before
-// starting to observe — otherwise the very first intersection check can
-// fire while the page is still reflowing, and elements that happen to
-// already be in view at that point skip their fade/slide-in entirely
-function startReveal(){document.querySelectorAll('.project,.reveal').forEach(el=>io.observe(el));}
-if(document.readyState==='complete')startReveal();else addEventListener('load',startReveal);
+  el.classList.add('scroll-reveal');
+});
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  document.querySelectorAll('.scroll-reveal').forEach(el=>{
+    if(reduceFade)el.classList.add('visible');
+    else io.observe(el);
+  });
+}));
 
 /* ===== remember scroll position when leaving the page (fallback for any
    back-navigation that isn't a plain anchor link) ===== */
@@ -1611,7 +1499,7 @@ if(document.readyState==='complete')startReveal();else addEventListener('load',s
     // sections above the restored position won't be scrolled past by the
     // user, so make them visible immediately without the fade transition —
     // otherwise they can appear stuck invisible or awkwardly mid-fade
-    document.querySelectorAll('.reveal,.project').forEach(el=>{
+    document.querySelectorAll('.reveal,.project,.scroll-reveal').forEach(el=>{
       if(offsetTop(el)<=y+innerHeight)el.classList.add('visible');
     });
     const restore=()=>window.scrollTo(0,y);
