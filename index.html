@@ -231,6 +231,12 @@ nav{
   position:relative;z-index:1;
 }
 .hero-stack > .interests{position:relative;z-index:2}
+#about{transition:opacity .65s ease}
+#about.hero-fade-out{opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){
+  #about{transition:none}
+  #about.hero-fade-out{opacity:1;pointer-events:auto}
+}
 @media(max-width:900px){
   .split{grid-template-columns:1fr;overflow:visible;padding-top:4mm}
 }
@@ -602,7 +608,7 @@ footer .meta-center{flex:1;text-align:center}
 #projects{position:relative;z-index:2;background:#eeede9;padding-bottom:clamp(64px,8vw,112px);border-top:1px solid var(--line)}
 #projects .shell-head{margin-bottom:36px}
 #projects .shell-head h2{letter-spacing:-.02em}
-#projects .frame{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 40px;padding:0}
+#projects .frame{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 40px;padding:0}
 #projects .project{display:flex;flex-direction:column;gap:14px;border:0;padding:0;min-width:0}
 #projects .project-image{border-radius:var(--r-img);display:block;aspect-ratio:1.29;overflow:hidden;background:#e2e2e0}
 #projects .project-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
@@ -614,8 +620,8 @@ footer .meta-center{flex:1;text-align:center}
 #projects .p-info h3{font-size:clamp(1rem,1.65vw,1.35rem);line-height:1.25;letter-spacing:.035em;margin:0 0 10px}
 #projects .p-info .txt{font-size:.82rem;line-height:1.65;max-width:100%;margin:0 0 14px}
 #projects a:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
-@media(max-width:900px){#projects .frame{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 32px}}
-@media(max-width:580px){#projects .frame{grid-template-columns:1fr;gap:32px;padding-inline:8px}#projects .project{gap:12px}#projects .p-info h3{font-size:1.2rem}}
+@media(max-width:900px){#projects .frame{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 32px}}
+@media(max-width:580px){#projects .frame{grid-template-columns:1fr;gap:4px;padding-inline:8px}#projects .project{gap:12px}#projects .p-info h3{font-size:1.2rem}}
 @media(prefers-reduced-motion:reduce){#projects .project-image img{transition:none}}
 
 </style>
@@ -951,18 +957,24 @@ footer .meta-center{flex:1;text-align:center}
   if(reduced)draw(0);
 })();
 
-/* Subtle parallax: copy travels at 70% of page speed; portrait stays in normal flow. */
+/* Desktop parallax only: copy travels at 70% speed; mobile stays in normal flow. */
 (()=>{
   const hero=document.getElementById('about');
   const copy=hero&&hero.querySelector('.blue');
   if(!copy)return;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile=matchMedia('(max-width:900px)');
   let scheduled=false;
   function update(){
     scheduled=false;
     const rect=hero.getBoundingClientRect();
     const distance=Math.max(0,Math.min(-rect.top,rect.height));
-    copy.style.translate=reduced.matches?'none':`0 ${distance*.3}px`;
+    copy.style.translate=(reduced.matches||mobile.matches)?'none':`0 ${distance*.3}px`;
+    // Earlier trigger; the fade itself runs on a timer, not scroll distance.
+    const fadeTrigger=innerHeight*(mobile.matches ? .30 : .45);
+    const shouldFade=!reduced.matches&&rect.bottom<=fadeTrigger;
+    hero.classList.toggle('hero-fade-out',shouldFade);
+
   }
   function schedule(){
     if(scheduled)return;
@@ -972,6 +984,7 @@ footer .meta-center{flex:1;text-align:center}
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule);
   reduced.addEventListener('change',schedule);
+  mobile.addEventListener('change',schedule);
   update();
 })();
 
